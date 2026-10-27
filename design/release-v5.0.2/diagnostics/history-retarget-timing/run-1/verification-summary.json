@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "frozenCommit": "26aac163f39be608c079b6b39a782e34892af4ba",
+  "singleVMComparison": true,
+  "comparisonDemonstrated": true,
+  "cases": [
+    {
+      "case": "baseline",
+      "exitCode": 0,
+      "assertions": 80,
+      "failedAssertions": [],
+      "dx": 0,
+      "dy": 0,
+      "beforeRetargetM22": 3.911738275126978,
+      "retargetStartM22": 5.4764335851777695,
+      "distanceFromSettledRatio": 4.076433585177769,
+      "sampleWallSeconds": 0.10443158333333713,
+      "localSecondsSinceExpansionBegin": 0.1041816250000096,
+      "resumeLocalDeltaSeconds": 5.874999999377906e-06,
+      "resumedSpeed": 1,
+      "resumedBeginTime": 0,
+      "retargetAnimationBeginAfterResume": 76.28705487500001,
+      "retargetAnimationDurationAfterResume": 0.35
+    },
+    {
+      "case": "baseline-delayed",
+      "exitCode": 1,
+      "assertions": 80,
+      "failedAssertions": [
+        "History 中断扩轴从可见坐标接续保留采样点"
+      ],
+      "dx": 0,
+      "dy": 0,
+      "beforeRetargetM22": 1.0702843449332498,
+      "retargetStartM22": 1.4983980829065497,
+      "distanceFromSettledRatio": 0.09839808290654983,
+      "sampleWallSeconds": 0.3151347499999986,
+      "localSecondsSinceExpansionBegin": 0.31489791666666633,
+      "resumeLocalDeltaSeconds": 4.0833333372347624e-06,
+      "resumedSpeed": 1,
+      "resumedBeginTime": 0,
+      "retargetAnimationBeginAfterResume": 83.15883475000003,
+      "retargetAnimationDurationAfterResume": 0.35
+    },
+    {
+      "case": "fixed",
+      "exitCode": 0,
+      "assertions": 80,
+      "failedAssertions": [],
+      "dx": 0,
+      "dy": 7.105427357601002e-15,
+      "beforeRetargetM22": 3.943784422495149,
+      "retargetStartM22": 5.521298191493209,
+      "distanceFromSettledRatio": 4.121298191493208,
+      "sampleWallSeconds": 0.10482141666666678,
+      "localSecondsSinceExpansionBegin": 0.09999999999999432,
+      "resumeLocalDeltaSeconds": 9.812499999384272e-05,
+      "resumedSpeed": 1,
+      "resumedBeginTime": 0.008387458333345421,
+      "retargetAnimationBeginAfterResume": 89.81667870833334,
+      "retargetAnimationDurationAfterResume": 0.35
+    },
+    {
+      "case": "fixed-delayed",
+      "exitCode": 0,
+      "assertions": 80,
+      "failedAssertions": [],
+      "dx": 0,
+      "dy": 7.105427357601002e-15,
+      "beforeRetargetM22": 3.943784422495149,
+      "retargetStartM22": 5.521298191493209,
+      "distanceFromSettledRatio": 4.121298191493208,
+      "sampleWallSeconds": 0.31438708333334375,
+      "localSecondsSinceExpansionBegin": 0.09999999999999432,
+      "resumeLocalDeltaSeconds": 4.4583333334458075e-05,
+      "resumedSpeed": 1,
+      "resumedBeginTime": 0.21933749999999463,
+      "retargetAnimationBeginAfterResume": 96.56219929166669,
+      "retargetAnimationDurationAfterResume": 0.35
+    }
+  ],
+  "finding": "The delayed original failed only its mid-transition guard: projected coordinates and direct anchors remained continuous, but the remaining scale distance was below 0.5. Both fixed-phase cases preserve the original tolerances and pass every retained History assertion.",
+  "ownerExitCode": 1,
+  "ownerCleanupPassed": false,
+  "ownerCleanupWarnings": [
+    "Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.8DF8D128-0F65-483F-9B8F-4D110552A9F5",
+    "Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.1249871C-B9E8-43BE-A541-BBF4B9898BA6",
+    "Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.06D6EFB0-50D8-4A6D-8BAF-C575EED4A67B",
+    "Cleanup could not clear defaults domain: Wattson.SettingsCommandInteraction.097DCF7E-90A5-49CA-8B00-4FB7E3C50E17"
+  ],
+  "finalResourceAuditPassed": true,
+  "resourceObservationSeconds": 37.517,
+  "ownedCloneRemoved": true,
+  "originalVMStatesPreserved": {
+    "macOS-TestLab": true,
+    "macOS-TestLab-Base": true
+  },
+  "hostScratchRemaining": 0,
+  "limits": [
+    "The exact hosted-CI live values were not captured; the controlled local reproduction establishes the subcondition failure under late interruption.",
+    "The complete History section was retained, including contraction, three negative controls and the independent never-paused completion fixture. Earlier non-History suite sections were not replayed.",
+    "Presentation properties are sequential snapshots, not physical frame-delivery or FPS evidence.",
+    "Final resource absence does not clear the four owner defaults-delete warnings or exit 1."
+  ]
+}

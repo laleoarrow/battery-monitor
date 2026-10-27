@@ -1,0 +1,441 @@
+{
+  "allExtractedAssertionsPassed" : true,
+  "allHistoryAssertionsRetained" : true,
+  "checks" : [
+    {
+      "name" : "History 首帧直接呈现而不伪造滚动",
+      "passed" : true
+    },
+    {
+      "name" : "History 连续真实采样启动同步描边、填充与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 动画限于 180 ms 且没有重复、自动反向或常驻填充",
+      "passed" : true
+    },
+    {
+      "name" : "History 平移描边保持路径拓扑及真实采样位置",
+      "passed" : true
+    },
+    {
+      "name" : "History 短过渡完成后原生图层自行静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现前确实有活动动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现立即移除动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现期间新采样不重启动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复结束呈现状态不重播旧过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略前确实有活动动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略立即移除动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略期间新采样不重启动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复关闭动画策略状态不重播旧过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图前确实有活动动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图立即移除动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图期间新采样不重启动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复隐藏视图状态不重播旧过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口前确实有活动动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口立即移除动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口期间新采样不重启动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复脱离窗口状态不重播旧过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 新峰值扩轴使用有界的原生路径动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 扩轴描边保持路径拓扑及真实采样位置",
+      "passed" : true
+    },
+    {
+      "name" : "History 扩轴中间帧位于起始范围与目标范围之间",
+      "passed" : true
+    },
+    {
+      "name" : "History 变轴保持末端圆点尺寸固定",
+      "passed" : true
+    },
+    {
+      "name" : "History 变轴时描边宽度保持 1.6 点",
+      "passed" : true
+    },
+    {
+      "name" : "History 中断变轴直接接续实际描边中的保留采样点",
+      "passed" : true
+    },
+    {
+      "name" : "History 中断扩轴从可见坐标接续保留采样点",
+      "passed" : true
+    },
+    {
+      "name" : "History 扩缩范围始终以图表底边为原点",
+      "passed" : true
+    },
+    {
+      "name" : "History 中断后的扩轴完成并自动静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 旧峰值离开窗口后仍保留缩轴迟滞",
+      "passed" : true
+    },
+    {
+      "name" : "History 缩轴第1个两秒采样仍保持旧范围",
+      "passed" : true
+    },
+    {
+      "name" : "History 缩轴第2个两秒采样仍保持旧范围",
+      "passed" : true
+    },
+    {
+      "name" : "History 缩轴第3个两秒采样仍保持旧范围",
+      "passed" : true
+    },
+    {
+      "name" : "History 八秒迟滞结束后缩轴平滑展开低功率数据",
+      "passed" : true
+    },
+    {
+      "name" : "History 缩轴中间帧连续接近最终范围",
+      "passed" : true
+    },
+    {
+      "name" : "History 缩轴结束后原生图层自行静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 无限重复反例确实注入真实描边键",
+      "passed" : true
+    },
+    {
+      "name" : "History 无限重复反例在原一秒期限仍被拒绝",
+      "passed" : true
+    },
+    {
+      "name" : "History 无限重复反例仅清理注入键后恢复静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 两秒长动画反例确实注入真实描边键",
+      "passed" : true
+    },
+    {
+      "name" : "History 两秒长动画反例在原一秒期限仍被拒绝",
+      "passed" : true
+    },
+    {
+      "name" : "History 两秒长动画反例仅清理注入键后恢复静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 完成后保留反例确实注入真实描边键",
+      "passed" : true
+    },
+    {
+      "name" : "History 完成后保留反例在原一秒期限仍被拒绝",
+      "passed" : true
+    },
+    {
+      "name" : "History 完成后保留反例仅清理注入键后恢复静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现前确实有活动变轴动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现立即移除变轴与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 结束呈现期间新峰值不重启变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复结束呈现状态不重播旧变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略前确实有活动变轴动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略立即移除变轴与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭动画策略期间新峰值不重启变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复关闭动画策略状态不重播旧变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图前确实有活动变轴动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图立即移除变轴与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 隐藏视图期间新峰值不重启变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复隐藏视图状态不重播旧变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口前确实有活动变轴动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口立即移除变轴与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 脱离窗口期间新峰值不重启变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复脱离窗口状态不重播旧变轴",
+      "passed" : true
+    },
+    {
+      "name" : "History 新增采样首帧保留原区间的实际呈现中点",
+      "passed" : true
+    },
+    {
+      "name" : "History 末段回归夹具确实覆盖新增样本造成的切线变化",
+      "passed" : true
+    },
+    {
+      "name" : "History 完成检查从未暂停且已呈现的静态曲线开始",
+      "passed" : true
+    },
+    {
+      "name" : "History 末段完成检查确实启动有界描边、填充与末端动画",
+      "passed" : true
+    },
+    {
+      "name" : "History 控制点过渡到达新曲线后自动静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 生产弹窗把动画策略传至实际栏目",
+      "passed" : true
+    },
+    {
+      "name" : "History 关闭模块立即取消已有过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 模块关闭后采样不会重启过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 恢复模块直接呈现最新数据",
+      "passed" : true
+    },
+    {
+      "name" : "History 失败前的有效采样确实启动过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 读取失败立即取消过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 过期数据不重启过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 减少动态效果变化前确实启动过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 开启减少动态效果立即取消过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 减少动态效果期间采样保持静止",
+      "passed" : true
+    },
+    {
+      "name" : "History 收起前确实有活动过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 收起弹窗立即取消过渡",
+      "passed" : true
+    },
+    {
+      "name" : "History 弹窗关闭时新数据不会重启过渡",
+      "passed" : true
+    }
+  ],
+  "clocks" : [
+    {
+      "beginTime" : 0,
+      "localTime" : 76.181793208333346,
+      "mediaTime" : 76.181793208333346,
+      "phase" : "before-initial-expansion",
+      "speed" : 1,
+      "timeOffset" : 0
+    },
+    {
+      "beginTime" : 0,
+      "localTime" : 76.28918266666669,
+      "mediaTime" : 76.28918266666669,
+      "phase" : "before-resume",
+      "speed" : 1,
+      "timeOffset" : 0
+    },
+    {
+      "beginTime" : 0,
+      "localTime" : 76.28918854166669,
+      "mediaTime" : 76.28918854166669,
+      "phase" : "after-resume",
+      "speed" : 1,
+      "timeOffset" : 0
+    }
+  ],
+  "controlledDelaySeconds" : 0,
+  "fixedFixtureClock" : false,
+  "limitations" : "Layer-property snapshots are not display-frame or FPS evidence.",
+  "nonHistoryPrefixReplayed" : false,
+  "originalHalfPointTolerancePreserved" : true,
+  "originalOneSecondWaitPreserved" : true,
+  "retarget" : {
+    "after" : [
+      272.35621867378558,
+      23.943800062699744
+    ],
+    "anchorDX" : 0,
+    "anchorDY" : 0,
+    "applicationActive" : false,
+    "before" : [
+      272.35621867378558,
+      23.943800062699744
+    ],
+    "beforeRetargetM22" : 3.9117382751269778,
+    "beforeRetargetM41" : 4.4895520071189026,
+    "beforeStrokeLocalEnd" : 76.286232166666679,
+    "beforeStrokeLocalStart" : 76.286229041666687,
+    "beforeStrokeReadEnd" : 76.286232166666679,
+    "beforeStrokeReadStart" : 76.286229041666687,
+    "ceilingPredicate" : true,
+    "distanceFromSettledRatio" : 4.0764335851777691,
+    "dx" : 0,
+    "dy" : 0,
+    "expansionAnimation" : {
+      "beginTime" : 76.182047416666677,
+      "duration" : 0.34999999999999998,
+      "ownerLocalTime" : 76.288862125000023,
+      "removedOnCompletion" : true,
+      "repeatCount" : "0.0",
+      "speed" : 1,
+      "timeOffset" : 0
+    },
+    "expansionRequestedAt" : 76.181797458333349,
+    "extraDelayActualSeconds" : 4.1666666561468446e-08,
+    "extraDelayRequestedSeconds" : 0,
+    "midTransitionPredicate" : true,
+    "newAnchor" : [
+      272.35621867378558,
+      23.943800062699751
+    ],
+    "newCeiling" : 350,
+    "newReference" : 24,
+    "oldAnchor" : [
+      272.35621867378558,
+      23.943800062699751
+    ],
+    "oldCeiling" : 250,
+    "oldReference" : 22,
+    "retainedTimestamp" : 0,
+    "retainedWatts" : 40,
+    "retargetAnimation" : {
+      "beginTime" : 76.28705487500001,
+      "duration" : 0.34999999999999998,
+      "ownerLocalTime" : 76.288869666666685,
+      "removedOnCompletion" : true,
+      "repeatCount" : "0.0",
+      "speed" : 1,
+      "timeOffset" : 0
+    },
+    "retargetAnimationAfterResume" : {
+      "beginTime" : 76.28705487500001,
+      "duration" : 0.34999999999999998,
+      "ownerLocalTime" : 76.289192375000013,
+      "removedOnCompletion" : true,
+      "repeatCount" : "0.0",
+      "speed" : 1,
+      "timeOffset" : 0
+    },
+    "retargetStartM22" : 5.4764335851777695,
+    "retargetStartM41" : 9.9562186737855427,
+    "sampleElapsedSinceExpansionRequest" : 0.10443158333333713,
+    "settledRatio" : 1.3999999999999999,
+    "spinActualSeconds" : 0.10059400000000096,
+    "spinRequestedSeconds" : 0.10000000000000001,
+    "update300End" : 76.288178916666681,
+    "update300Start" : 76.286282791666679,
+    "visibleRect" : "{{0, 0}, {328, 112}}",
+    "windowNotOccluded" : true,
+    "windowVisible" : true,
+    "xPredicate" : true,
+    "yPredicate" : true
+  },
+  "schema" : 1,
+  "screenLocked" : false
+}

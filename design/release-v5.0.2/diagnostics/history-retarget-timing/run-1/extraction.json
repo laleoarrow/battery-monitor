@@ -1,0 +1,10 @@
+{
+  "originalHarnessSHA256": "ba2adb91a7cf070d44937a66fe4ec90999f0f40ea7b2fa2bace3554f240fca20",
+  "extractedHarnessSHA256": "46785c1ae8334e29b620aa0075149adb67daf1df7e08ae2d71a5b1a45cc65e35",
+  "globalRunApplicationUnchanged": true,
+  "allHistoryAssertionsRetained": true,
+  "earlierNonHistorySuiteReplayed": false,
+  "originalTolerance": 0.5,
+  "candidatePhaseSeconds": 0.1,
+  "extraDelaySeconds": 0.2
+}

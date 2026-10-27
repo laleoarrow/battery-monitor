@@ -1,0 +1,465 @@
+{
+  "schema": 1,
+  "results": [
+    {
+      "case": "baseline",
+      "exitCode": 0,
+      "originalAssertionsPassed": true,
+      "failedAssertions": [],
+      "retarget": {
+        "after": [
+          272.3562186737856,
+          23.943800062699744
+        ],
+        "anchorDX": 0,
+        "anchorDY": 0,
+        "applicationActive": false,
+        "before": [
+          272.3562186737856,
+          23.943800062699744
+        ],
+        "beforeRetargetM22": 3.911738275126978,
+        "beforeRetargetM41": 4.489552007118903,
+        "beforeStrokeLocalEnd": 76.28623216666668,
+        "beforeStrokeLocalStart": 76.28622904166669,
+        "beforeStrokeReadEnd": 76.28623216666668,
+        "beforeStrokeReadStart": 76.28622904166669,
+        "ceilingPredicate": true,
+        "distanceFromSettledRatio": 4.076433585177769,
+        "dx": 0,
+        "dy": 0,
+        "expansionAnimation": {
+          "beginTime": 76.18204741666668,
+          "duration": 0.35,
+          "ownerLocalTime": 76.28886212500002,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "expansionRequestedAt": 76.18179745833335,
+        "extraDelayActualSeconds": 4.1666666561468446e-08,
+        "extraDelayRequestedSeconds": 0,
+        "midTransitionPredicate": true,
+        "newAnchor": [
+          272.3562186737856,
+          23.94380006269975
+        ],
+        "newCeiling": 350,
+        "newReference": 24,
+        "oldAnchor": [
+          272.3562186737856,
+          23.94380006269975
+        ],
+        "oldCeiling": 250,
+        "oldReference": 22,
+        "retainedTimestamp": 0,
+        "retainedWatts": 40,
+        "retargetAnimation": {
+          "beginTime": 76.28705487500001,
+          "duration": 0.35,
+          "ownerLocalTime": 76.28886966666668,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetAnimationAfterResume": {
+          "beginTime": 76.28705487500001,
+          "duration": 0.35,
+          "ownerLocalTime": 76.28919237500001,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetStartM22": 5.4764335851777695,
+        "retargetStartM41": 9.956218673785543,
+        "sampleElapsedSinceExpansionRequest": 0.10443158333333713,
+        "settledRatio": 1.4,
+        "spinActualSeconds": 0.10059400000000096,
+        "spinRequestedSeconds": 0.1,
+        "update300End": 76.28817891666668,
+        "update300Start": 76.28628279166668,
+        "visibleRect": "{{0, 0}, {328, 112}}",
+        "windowNotOccluded": true,
+        "windowVisible": true,
+        "xPredicate": true,
+        "yPredicate": true
+      },
+      "clocks": [
+        {
+          "beginTime": 0,
+          "localTime": 76.18179320833335,
+          "mediaTime": 76.18179320833335,
+          "phase": "before-initial-expansion",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 76.28918266666669,
+          "mediaTime": 76.28918266666669,
+          "phase": "before-resume",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 76.28918854166669,
+          "mediaTime": 76.28918854166669,
+          "phase": "after-resume",
+          "speed": 1,
+          "timeOffset": 0
+        }
+      ]
+    },
+    {
+      "case": "baseline-delayed",
+      "exitCode": 1,
+      "originalAssertionsPassed": false,
+      "failedAssertions": [
+        "History 中断扩轴从可见坐标接续保留采样点"
+      ],
+      "retarget": {
+        "after": [
+          267.9750367164612,
+          53.04028830788352
+        ],
+        "anchorDX": 0,
+        "anchorDY": 0,
+        "applicationActive": false,
+        "before": [
+          267.9750367164612,
+          53.04028830788352
+        ],
+        "beforeRetargetM22": 1.0702843449332498,
+        "beforeRetargetM41": 0.10837004979453013,
+        "beforeStrokeLocalEnd": 83.15809104166668,
+        "beforeStrokeLocalStart": 83.15803800000002,
+        "beforeStrokeReadEnd": 83.15809104166668,
+        "beforeStrokeReadStart": 83.15803800000002,
+        "ceilingPredicate": true,
+        "distanceFromSettledRatio": 0.09839808290654983,
+        "dx": 0,
+        "dy": 0,
+        "expansionAnimation": {
+          "beginTime": 82.84314008333335,
+          "duration": 0.35,
+          "ownerLocalTime": 83.16081383333335,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "expansionRequestedAt": 82.84290325000002,
+        "extraDelayActualSeconds": 0.20431012500000634,
+        "extraDelayRequestedSeconds": 0.2,
+        "midTransitionPredicate": false,
+        "newAnchor": [
+          267.9750367164612,
+          53.04028830788352
+        ],
+        "newCeiling": 350,
+        "newReference": 24,
+        "oldAnchor": [
+          267.9750367164612,
+          53.04028830788352
+        ],
+        "oldCeiling": 250,
+        "oldReference": 22,
+        "retainedTimestamp": 0,
+        "retainedWatts": 40,
+        "retargetAnimation": {
+          "beginTime": 83.15883475000003,
+          "duration": 0.35,
+          "ownerLocalTime": 83.16082254166669,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetAnimationAfterResume": {
+          "beginTime": 83.15883475000003,
+          "duration": 0.35,
+          "ownerLocalTime": 83.16116562500002,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetStartM22": 1.4983980829065497,
+        "retargetStartM41": 5.57503671646117,
+        "sampleElapsedSinceExpansionRequest": 0.3151347499999986,
+        "settledRatio": 1.4,
+        "spinActualSeconds": 0.10768804166667678,
+        "spinRequestedSeconds": 0.1,
+        "update300End": 83.15971020833335,
+        "update300Start": 83.15817112500002,
+        "visibleRect": "{{0, 0}, {328, 112}}",
+        "windowNotOccluded": true,
+        "windowVisible": true,
+        "xPredicate": true,
+        "yPredicate": true
+      },
+      "clocks": [
+        {
+          "beginTime": 0,
+          "localTime": 82.84290008333335,
+          "mediaTime": 82.84290008333335,
+          "phase": "before-initial-expansion",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 83.16115870833335,
+          "mediaTime": 83.16115870833335,
+          "phase": "before-resume",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 83.16116279166668,
+          "mediaTime": 83.16116279166668,
+          "phase": "after-resume",
+          "speed": 1,
+          "timeOffset": 0
+        }
+      ]
+    },
+    {
+      "case": "fixed",
+      "exitCode": 0,
+      "originalAssertionsPassed": true,
+      "failedAssertions": [],
+      "retarget": {
+        "after": [
+          272.40562999844553,
+          23.615647513649677
+        ],
+        "anchorDX": 0,
+        "anchorDY": 3.552713678800501e-15,
+        "applicationActive": false,
+        "before": [
+          272.40562999844553,
+          23.61564751364967
+        ],
+        "beforeRetargetM22": 3.943784422495149,
+        "beforeRetargetM41": 4.538963331778859,
+        "beforeStrokeLocalEnd": 89.81667870833334,
+        "beforeStrokeLocalStart": 89.81667870833334,
+        "beforeStrokeReadEnd": 89.82216091666669,
+        "beforeStrokeReadStart": 89.82215695833335,
+        "ceilingPredicate": true,
+        "distanceFromSettledRatio": 4.121298191493208,
+        "dx": 0,
+        "dy": 7.105427357601002e-15,
+        "expansionAnimation": {
+          "beginTime": 89.71667870833335,
+          "duration": 0.35,
+          "ownerLocalTime": 89.81667870833334,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "expansionRequestedAt": 89.71733554166669,
+        "extraDelayActualSeconds": 4.1666666561468446e-08,
+        "extraDelayRequestedSeconds": 0,
+        "midTransitionPredicate": true,
+        "newAnchor": [
+          272.40562999844553,
+          23.615647513649677
+        ],
+        "newCeiling": 350,
+        "newReference": 24,
+        "oldAnchor": [
+          272.40562999844553,
+          23.61564751364968
+        ],
+        "oldCeiling": 250,
+        "oldReference": 22,
+        "retainedTimestamp": 0,
+        "retainedWatts": 40,
+        "retargetAnimation": {
+          "beginTime": 89.81667870833334,
+          "duration": 0.35,
+          "ownerLocalTime": 89.81667870833334,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetAnimationAfterResume": {
+          "beginTime": 89.81667870833334,
+          "duration": 0.35,
+          "ownerLocalTime": 89.816808875,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetStartM22": 5.521298191493209,
+        "retargetStartM41": 10.0056299984455,
+        "sampleElapsedSinceExpansionRequest": 0.10482141666666678,
+        "settledRatio": 1.4,
+        "spinActualSeconds": 0.10078775000000917,
+        "spinRequestedSeconds": 0.1,
+        "update300End": 89.82399920833335,
+        "update300Start": 89.82221408333335,
+        "visibleRect": "{{0, 0}, {328, 112}}",
+        "windowNotOccluded": true,
+        "windowVisible": true,
+        "xPredicate": true,
+        "yPredicate": true
+      },
+      "clocks": [
+        {
+          "beginTime": 0,
+          "localTime": 89.71667345833335,
+          "mediaTime": 89.71667345833335,
+          "phase": "before-initial-expansion",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 89.81667870833334,
+          "mediaTime": 89.82505320833336,
+          "phase": "before-resume",
+          "speed": 0,
+          "timeOffset": 89.81667870833334
+        },
+        {
+          "beginTime": 0.008387458333345421,
+          "localTime": 89.81677683333334,
+          "mediaTime": 89.82516429166668,
+          "phase": "after-resume",
+          "speed": 1,
+          "timeOffset": 0
+        }
+      ]
+    },
+    {
+      "case": "fixed-delayed",
+      "exitCode": 0,
+      "originalAssertionsPassed": true,
+      "failedAssertions": [],
+      "retarget": {
+        "after": [
+          272.40562999844553,
+          23.615647513649677
+        ],
+        "anchorDX": 0,
+        "anchorDY": 3.552713678800501e-15,
+        "applicationActive": false,
+        "before": [
+          272.40562999844553,
+          23.61564751364967
+        ],
+        "beforeRetargetM22": 3.943784422495149,
+        "beforeRetargetM41": 4.538963331778859,
+        "beforeStrokeLocalEnd": 96.56219929166669,
+        "beforeStrokeLocalStart": 96.56219929166669,
+        "beforeStrokeReadEnd": 96.7772486666667,
+        "beforeStrokeReadStart": 96.77718112500003,
+        "ceilingPredicate": true,
+        "distanceFromSettledRatio": 4.121298191493208,
+        "dx": 0,
+        "dy": 7.105427357601002e-15,
+        "expansionAnimation": {
+          "beginTime": 96.46219929166669,
+          "duration": 0.35,
+          "ownerLocalTime": 96.56219929166669,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "expansionRequestedAt": 96.46279404166668,
+        "extraDelayActualSeconds": 0.20529533333333916,
+        "extraDelayRequestedSeconds": 0.2,
+        "midTransitionPredicate": true,
+        "newAnchor": [
+          272.40562999844553,
+          23.615647513649677
+        ],
+        "newCeiling": 350,
+        "newReference": 24,
+        "oldAnchor": [
+          272.40562999844553,
+          23.61564751364968
+        ],
+        "oldCeiling": 250,
+        "oldReference": 22,
+        "retainedTimestamp": 0,
+        "retainedWatts": 40,
+        "retargetAnimation": {
+          "beginTime": 96.56219929166669,
+          "duration": 0.35,
+          "ownerLocalTime": 96.56219929166669,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetAnimationAfterResume": {
+          "beginTime": 96.56219929166669,
+          "duration": 0.35,
+          "ownerLocalTime": 96.56224941666669,
+          "removedOnCompletion": true,
+          "repeatCount": "0.0",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        "retargetStartM22": 5.521298191493209,
+        "retargetStartM41": 10.0056299984455,
+        "sampleElapsedSinceExpansionRequest": 0.31438708333334375,
+        "settledRatio": 1.4,
+        "spinActualSeconds": 0.10528949999999782,
+        "spinRequestedSeconds": 0.1,
+        "update300End": 96.77930066666669,
+        "update300Start": 96.77735416666668,
+        "visibleRect": "{{0, 0}, {328, 112}}",
+        "windowNotOccluded": true,
+        "windowVisible": true,
+        "xPredicate": true,
+        "yPredicate": true
+      },
+      "clocks": [
+        {
+          "beginTime": 0,
+          "localTime": 96.46219487500002,
+          "mediaTime": 96.46219487500002,
+          "phase": "before-initial-expansion",
+          "speed": 1,
+          "timeOffset": 0
+        },
+        {
+          "beginTime": 0,
+          "localTime": 96.56219929166669,
+          "mediaTime": 96.78152025000003,
+          "phase": "before-resume",
+          "speed": 0,
+          "timeOffset": 96.56219929166669
+        },
+        {
+          "beginTime": 0.21933749999999463,
+          "localTime": 96.56224387500002,
+          "mediaTime": 96.78158137500002,
+          "phase": "after-resume",
+          "speed": 1,
+          "timeOffset": 0
+        }
+      ]
+    }
+  ],
+  "baselineDelayedPreservesOriginalFailure": true,
+  "delayedFailureIsOnlyMidTransitionGuard": true,
+  "fixedClockBothTimingCasesPass": true,
+  "comparisonDemonstrated": true,
+  "scope": "All History assertions retained; preceding non-History suite not replayed.",
+  "ownerZeroMeans": "Expected contrast was recorded and owned collection completed; baseline failures remain failed."
+}

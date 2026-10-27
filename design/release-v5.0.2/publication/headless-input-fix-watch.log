@@ -731,3 +731,37 @@ JOBS
   ✓ Post Set up Node.js
   ✓ Post Check out the repository
   ✓ Complete job
+✓ main Headless CI · 40540261079
+Triggered via push about 12 minutes ago
+
+JOBS
+✓ SwiftPM and Python tests in 11m43s (ID 122316432910)
+  ✓ Set up job
+  ✓ Check out the repository
+  - Verify macOS 27 validation environment
+  ✓ Verify macOS 26 validation environment
+  - Probe macOS 27 system battery artwork
+  - Preserve macOS 27 system battery artwork
+  - Validate macOS 27 Display rendering and settings interaction
+  - Preserve macOS 27 Display validation
+  ✓ Build Swift package
+  ✓ Test Swift package
+  - Build macOS 27 Swift test bundle
+  - Execute macOS 27 Swift tests
+  - Preserve macOS 27 Swift diagnostics
+  ✓ Run the default headless Python suite
+  - Validate macOS 27 native interaction and animation lifecycles
+  - Verify macOS 27 universal App and helper build
+  ✓ Post Check out the repository
+  ✓ Complete job
+✓ Website build, test, lint, and export in 1m35s (ID 122316433502)
+  ✓ Set up job
+  ✓ Check out the repository
+  ✓ Set up Node.js
+  ✓ Install locked website dependencies
+  ✓ Build and test the rendered website
+  ✓ Lint the website
+  ✓ Export the GitHub Pages site
+  ✓ Post Set up Node.js
+  ✓ Post Check out the repository
+  ✓ Complete job

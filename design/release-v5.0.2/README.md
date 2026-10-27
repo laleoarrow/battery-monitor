@@ -55,3 +55,12 @@ retained animations. The extracted paired probe supports this change, but does
 not establish the underlying Core Animation cause or replace the complete
 interaction suite and candidate gate. Failed trials, visibility limitations and
 cleanup warnings remain in [the diagnostic record](diagnostics/).
+
+The next hosted attempt passed completion checks but exposed a separate
+wall-clock race in the interrupted-axis fixture. A controlled 0.2-second delay
+reproduced its failure with zero position error: the observation was too late
+for the existing mid-transition guard. The fixture now holds the actual layer
+at animation time 0.1 seconds during observation and retargeting, then resumes
+continuously before the original one-second completion check. Both normal and
+delayed extracted cases pass without changing production code or tolerances.
+The complete suite and hosted release gate remain required for this correction.

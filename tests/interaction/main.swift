@@ -3446,6 +3446,15 @@ if !screenLocked {
                            timing: .init(sampledAt: axisTimes, referenceTime: axisTimes.last!))
             CATransaction.flush()
         }
+        // Hold this fixture at a known phase while inspecting and retargeting
+        // its live paths; wall-clock scheduling must not consume that phase.
+        let axisTimeline = fixture.layer!
+        let axisPausedAt = axisTimeline.convertTime(CACurrentMediaTime(), from: nil)
+        PopoverStyle.setWithoutAnimation {
+            axisTimeline.speed = 0
+            axisTimeline.timeOffset = axisPausedAt
+        }
+        CATransaction.flush()
         updateAxis(appending: 180)
         let expansion = viewportAnimation()
         let expansionStart = expansion.flatMap { animationStart($0.1) }
@@ -3473,6 +3482,8 @@ if !screenLocked {
             abs($0.bounds.width - 5.2) < 0.000_001
                 && abs($0.bounds.height - 5.2) < 0.000_001 && $0.cornerRadius == 2.6
         }
+        PopoverStyle.setWithoutAnimation { axisTimeline.timeOffset = axisPausedAt + 0.1 }
+        CATransaction.flush()
         spin(0.1)
         let midExpansion = strokeLayer?.presentation()?.path.flatMap { path in
             fixture.chartPathForTest.flatMap { historyViewport(path, target: $0) }
@@ -3522,10 +3533,11 @@ if !screenLocked {
             let after = projectedSample(axisValues[0], sampledAt: retainedTimestamp,
                                         reference: axisTimes.last!, ceiling: fixture.chartCeilingForTest,
                                         transform: retargetStart)
-            check("History 中断扩轴从可见坐标接续保留采样点",
-                  fixture.chartCeilingForTest == 350
-                      && abs(before.x - after.x) < 0.5 && abs(before.y - after.y) < 0.5
-                      && abs(retargetStart.m22 - 350.0 / 250) > 0.5)
+            let continuous = fixture.chartCeilingForTest == 350
+                && abs(before.x - after.x) < 0.5 && abs(before.y - after.y) < 0.5
+                && abs(retargetStart.m22 - 350.0 / 250) > 0.5
+            check("History 中断扩轴从可见坐标接续保留采样点", continuous,
+                  continuous ? "" : "before=\(before) after=\(after) beforeM22=\(beforeRetarget.m22) retargetM22=\(retargetStart.m22) ceiling=\(fixture.chartCeilingForTest)")
         } else {
             check("History 中断扩轴从可见坐标接续保留采样点", false)
         }
@@ -3538,6 +3550,16 @@ if !screenLocked {
         } else {
             check("History 扩缩范围始终以图表底边为原点", false)
         }
+        // Resume continuously before checking natural completion; no live key
+        // is removed or re-added and the original one-second wait stays intact.
+        let axisResumeAt = axisTimeline.timeOffset
+        PopoverStyle.setWithoutAnimation {
+            axisTimeline.speed = 1
+            axisTimeline.timeOffset = 0
+            axisTimeline.beginTime = 0
+            axisTimeline.beginTime = axisTimeline.convertTime(CACurrentMediaTime(), from: nil) - axisResumeAt
+        }
+        CATransaction.flush()
         check("History 中断后的扩轴完成并自动静止", settleHistoryFixture("retargeted-axis"))
 
         // Evict the two high readings through the same 60-slot series. Only

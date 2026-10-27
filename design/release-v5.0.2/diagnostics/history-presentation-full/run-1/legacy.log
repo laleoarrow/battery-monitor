@@ -1,0 +1,523 @@
+✅ 长按只切换一次  — [InteractionTests.ClickIntent.press, InteractionTests.ClickIntent.primary, InteractionTests.ClickIntent.release]
+✅ 只送达 up 的轻触仍会切换
+✅ currentEvent 为 nil 时仍会切换
+✅ 连续两次轻触切换两次
+✅ 右键只切模式不开弹窗
+✅ control+点击视为右键
+✅ 按下仍会置 pressed
+✅ 三次快速右键仍按乐观状态逐次翻转
+✅ 同目标的旧右键回调不能冒充最新请求
+✅ 关闭时只缓存最新数据而不渲染隐藏弹窗
+✅ 初始未监听外部点击
+✅ 真实状态项完成初始屏幕定位后才模拟点击
+✅ 隐藏启动回归建立真实隐藏状态 glass=false
+✅ 菜单栏打开恢复隐藏 App 的实际弹窗 glass=false
+✅ 隐藏启动回归建立真实隐藏状态 glass=true
+✅ 菜单栏打开恢复隐藏 App 的实际弹窗 glass=true
+INITIAL_ANCHOR windowVisible=true hidden=false buttonFrame=(0.0, -1.0, 39.0, 24.0) buttonBounds=(0.0, 0.0, 39.0, 24.0) windowFrame=(761.0, 738.0, 39.0, 30.0) anchor=(761.0, 741.0, 39.0, 24.0) screens=["frame=(0.0, 0.0, 1024.0, 768.0) visible=(0.0, 60.0, 1024.0, 678.0)"] resolved=Optional(InteractionTests.PopoverPlacement(anchorFrame: (761.0, 741.0, 39.0, 24.0), contentSize: (360.0, 654.0), visibleFrame: (0.0, 60.0, 1024.0, 678.0), showsArrow: true))
+✅ 展示前恰好渲染一次最新缓存数据
+✅ 点击打开会安排一次平滑入场动画
+✅ 轻触图标弹窗打开
+✅ Classic 保留原 NSPopover 生命周期与全局监听
+✅ 打开后开始监听外部点击
+✅ 外部点击后立刻停止监听
+✅ 点击桌面/其他 app 后弹窗收起
+✅ 关闭中途重开不会从低透明度重播入场
+✅ 关闭动画中途再点可立即重开
+✅ 重开后仍在监听外部点击
+✅ 重开后的弹窗仍可被外部点击收起
+✅ AppKit 自行关闭后意图已复位
+✅ AppKit 自行关闭后监听已撤除
+✅ 自行关闭后下一次点击仍能打开
+✅ [I19-NATIVE] Classic 自动关闭委托保留同一次锚点按下
+✅ [I19-NATIVE] 原生自动关闭先于按钮动作仍只关闭一次
+✅ [I19-NATIVE] 被保护的关闭之后下一次图标点击仍能重开
+✅ [I19-WORKSPACE] Classic 激活通知先于同一次按钮动作仍只关闭一次
+✅ [I19-WORKSPACE] 激活通知保护之后下一次图标点击仍能重开
+✅ [I19-IDLE] 鼠标仅停在锚点时 Classic 原生关闭仍被允许
+✅ [I19-IDLE] 无按下时 Classic 自行关闭清理完整
+✅ [I19-IDLE] 鼠标停在锚点不阻止真正切换应用关闭 Classic
+✅ [I19-CACHED] 缓存 NSEventType(rawValue: 2) 不覆盖实时主键按下
+✅ [I19-CACHED] 缓存 NSEventType(rawValue: 10) 不覆盖实时主键按下
+✅ 真实状态窗口事件通过 target/action 打开 Classic
+✅ Classic 内容取得焦点后保留弹窗
+✅ 内容聚焦后的第二次点击实际执行按钮关闭动作
+✅ 第三次事件到达后继续调用按钮动作并重开 Classic
+✅ 四次快速真实按钮动作不会留下排队的原生重开
+✅ 真实点击本进程其他窗口仍关闭 Classic
+✅ 本进程外部窗口关闭后图标仍能实际重开
+✅ 打开时内容在动  — 18 个动画 ["root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/1-CALayer/0-CAGradientLayer:flow", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/4-NSViewBackingLayer/0-NSViewBackingLayer:breathe", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/2-NSViewBackingLayer/3-CALayer:spin", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/3-NSViewBackingLayer/2-CALayer/0-CALayer/0-CAGradientLayer:sweep", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/0-CAGradientLayer:breathing", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/1-CAGradientLayer:breathing"]
+✅ 运行中开启减少动态效果会立即停止内容动画  — 0 个无限动画，1 个总动画
+✅ 恢复减少动态效果设置后内容动画状态一致  — 18 个无限动画，20 个总动画
+✅ 收起后动画已停  — 0 个动画
+✅ 满电状态在关闭后更新仍不渲染也不重启呼吸动画
+✅ 中途重开后动画已恢复  — 18 个动画 ["root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/1-CALayer/0-CAGradientLayer:flow", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/2-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/3-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/4-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/5-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/6-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:ride", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/1-CALayer/7-CALayer:fade", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/1-NSViewBackingLayer/1-NSViewBackingLayer/4-NSViewBackingLayer/0-NSViewBackingLayer:breathe", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/2-NSViewBackingLayer/3-CALayer:spin", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/3-NSViewBackingLayer/2-CALayer/0-CALayer/0-CAGradientLayer:sweep", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/0-CAGradientLayer:breathing", "root/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/0-NSViewBackingLayer/5-NSViewBackingLayer/5-NSViewBackingLayer/1-CAGradientLayer:breathing"]
+✅ 重开再收起后动画仍会停
+✅ 反复开关后仍能正常打开
+✅ 反复开关后仍能正常收起
+✅ 静止选中片不超过一个档位的宽度  — 选中片 94.0，单档 94.0
+✅ 静止 Auto 选中片与轨道上下和左边无缝贴合  — 选中片 (0.0, 0.0, 94.0, 30.0)，轨道 (0.0, 0.0, 282.0, 30.0)
+✅ 静止选中片与轨道使用同心圆角  — host 15.0，selector 15.0，轨道 15.0
+✅ 旧系统路径不向普通 NSView 发送 Liquid Glass 属性
+✅ 旧系统静止时只缓存轨道像素，不叠加折射字形  — sampling=Optional(false) captures=1
+✅ 单纯按下不放大  — 1.00 × 1.00
+✅ 小于拖动阈值的抖动仍不放大  — 1.00 × 1.00
+✅ 旧系统只在越过拖动阈值后开启真实像素折射  — sampling=Optional(true) magnification=1.105
+✅ 拖动期间始终保持静止态尺寸  — 1.00 × 1.00
+✅ 旧系统透镜跟随拖动移动采样区且不逐帧截图  — first=(0.040212135509448646, 0.04751131221719458, 0.30165912518853694, 0.9049773755656109) moved=(0.18415861707476228, 0.04751131221719458, 0.30165912518853694, 0.9049773755656109) captures=1
+✅ 拖到两档正中时两侧文字各约一半亮度  — [0.5, 0.5, 0.0]
+✅ 拖动预览不会提前提交系统模式  — []
+✅ 旧系统释放后关闭折射，不让模型裁剪与呈现层动画错位
+✅ 拖到最右会选中 High Power  — [InteractionTests.EnergyMode.high]
+✅ 非精确落点松手仍有吸附弹簧动画
+✅ 拖动 60 帧只重着色跨档的那几次  — 2 次
+✅ 松手后吸附到 High 档位  — 旋钮 235.0 vs 档位 235.0
+✅ 能一路拖回 Low Power  — [InteractionTests.EnergyMode.high, InteractionTests.EnergyMode.low]
+✅ 拖回后吸附到 Low 档位
+✅ 回程同样不逐帧重着色
+✅ 不支持 High 时拖过去停在最近可用的 Low  — 选中索引 1 回调 [InteractionTests.EnergyMode.low]
+✅ 滑块命中测试返回自身而非装饰子视图  — ModeSliderView
+✅ 滑块放在 footer 的实际偏移位置仍能命中
+✅ 滑块偏移后的 frame 外不会误命中
+✅ 滑块接受 first mouse
+✅ 鼠标与键盘操作都不会绘制整条蓝色焦点外框
+✅ 点击 High Power 档位会切过去  — [InteractionTests.EnergyMode.high]
+✅ 点击第一帧真实玻璃仍留在 Low，目标文字不会抢先亮  — 玻璃 141.0，文字 [0.0, 1.0, 0.0]
+✅ 点击换档使用磁吸流动而非拖拽弹簧或瞬移
+✅ 点击后原生玻璃沿磁吸路径前进且不越过捕获范围  — 玻璃位置 234.9，起点 141.0，终点 235.0
+✅ 点击磁吸全程不进入拖动放大态  — 0.987 × 0.946
+✅ 点击移动中文字亮度随玻璃位置连续交叉渐变  — [0.0, 0.0006497731665149331, 0.9993502497673035]
+✅ 点击动画最终精确吸附到 High
+✅ 静止 High 选中片与轨道上下和右边无缝贴合  — 选中片 (188.0, 0.0, 94.0, 30.0)，轨道 (0.0, 0.0, 282.0, 30.0)
+✅ High 直接点击 Auto 会提交 Auto  — [InteractionTests.EnergyMode.auto]
+✅ High 到 Auto 第一帧真实玻璃仍在 High  — 235.0 vs 235.0
+✅ 布局与 1 Hz 更新不会把真实玻璃抢先推到 Auto  — 刷新前 235.0，刷新后 235.0
+✅ High 到 Auto 的真实玻璃沿反向路径前进  — 66.4，终点 47.0...235.0
+✅ High 到 Auto 会经过 Low 且文字随真实玻璃渐亮  — 终点 47.0，Low 峰值 1.000
+✅ 点击 Low Power 档位会切回来  — [InteractionTests.EnergyMode.low]
+✅ 轻触抖动 2pt 仍按点击处理  — [InteractionTests.EnergyMode.auto]
+✅ 点击当前档位不重复触发  — []
+✅ 点在两档之间选更近的一个  — [InteractionTests.EnergyMode.high]
+✅ Auto 直接点 High 的连续轨迹精确经过 Low 中心  — Low 亮度峰值 1.000
+✅ 离屏降帧时仍能看到 Low 渐亮并最终落到 High  — 呈现峰值 0.875，计算峰值 1.000，最近 11.7pt，终点 235.0
+✅ 不支持 High 时点它无效  — 选中索引 0 回调 []
+✅ 切换失败后回弹到原档位  — 选中索引 2 回调 [InteractionTests.EnergyMode.low]
+✅ 模式写入期间控件保持目标档位且不阻塞
+✅ 拖动后的 1 Hz 刷新不覆盖待确认预览
+✅ 异步确认后目标档位成为已提交状态
+✅ 连续选择会各自排队且最后一次保持待确认
+✅ 较旧写入的迟到回调不会覆盖最新预览
+✅ A 成功而 B 失败时回到实际落地的 A
+✅ 动画中重新抓取不发生位置跳变  — 抓取前 89.34，抓取后 89.34
+✅ 动画中失败回滚从当前可见位置反向启动  — 拒绝前 88.60，回滚起点 88.60
+✅ 动画中失败最终回到真实档位
+✅ 模式滑块向 VoiceOver 暴露单一可调控件
+✅ VoiceOver 增量可切到下一可用档
+✅ VoiceOver 不会进入禁用的 High Power
+✅ 键盘左箭头与可访问性动作使用同一切换路径
+✅ 同拓扑几何变化保留粒子 layer
+✅ 复用粒子的 ride path 跟随新几何  — [40.0679552, 40.0659392, 35.8701248, 38.4176] -> [34.0679552, 34.0659392, 29.8701248, 32.4176]
+✅ 更新路径不重启粒子相位
+✅ 泳道扫光行程覆盖整个填充条  — 行程 284.0，填充宽 142.0
+✅ 泳道宽度变化后更新行程但不重启相位
+✅ 总功率变化会重定时现有泳道动画
+✅ 默认显示循环次数并保留原四格布局
+✅ 设备实测输出不会自动覆盖已选循环次数
+✅ 选择外接设备输出后显示实测标签和功率
+✅ 实测零输出与不可用数据保持可区分
+✅ 选择的输出数据变为不可用时显示破折号
+✅ 恢复默认指标后显示循环次数
+✅ 三模块非粒子动画使用同一基准周期
+✅ 三模块非粒子动画使用同一功率倍率
+✅ 紧凑顶栏在充电/已满/电池/混合/偏差/高功率状态均不截断
+✅ 顶栏保留四种正常供电状态文案
+✅ 守恒偏差恰好 2 W 时仍显示正常状态
+✅ 守恒偏差超过 2 W 时右上角显示红色数据异常
+✅ 读取失败优先于守恒偏差
+✅ battery unknown phase disables mutation
+✅ battery pending is not reported as failure
+✅ battery reading has explicit feedback
+✅ battery unknown phase disables mutation
+✅ battery pending is not reported as failure
+✅ battery reading has explicit feedback
+✅ battery unknown phase disables mutation
+✅ battery pending is not reported as failure
+✅ battery reading has explicit feedback
+✅ battery read recovers checkbox and removes status
+✅ 外观默认关闭并保持原版控件和菜单按钮尺寸
+✅ 玻璃键盘交互前测试 App 已激活且窗口真正获得 key 状态  — active=true key=true canKey=true keyTitle=Wattson Appearance Interaction
+GLASS_FOCUS stage=glass-enabled active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+✅ 减少动态效果的全局玻璃使用三个 C 原生按钮并转移键盘焦点
+✅ 底部操作层使用单一容器且没有重复玻璃或不透明分段底槽
+✅ 原生玻璃菜单按钮可点击且不与档位控件重叠
+GLASS_FOCUS stage=before-menu-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+GLASS_FOCUS stage=after-menu-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+GLASS_MENU_HIT localPoint=(309.0, 55.0) localPointHit=PopoverFooterView parentPoint=(309.0, 23.0) parentPointHit=PopoverButton menuRequests=1
+✅ 嵌套玻璃不吞掉菜单点击或复制菜单动作
+GLASS_FOCUS stage=after-availability-update active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+✅ 玻璃按钮组保留可访问性标签、选中语义与禁用档位
+GLASS_FOCUS stage=after-selected-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+GLASS_FOCUS stage=after-disabled-click active=true key=true responder=NativeGlassModeButton title=Auto group=false child=true menu=false classic=false enabled=[true, true, false] selected=Optional(InteractionTests.EnergyMode.auto)
+✅ 已选模式重复点击不取消选择且禁用模式不发起请求
+GLASS_FOCUS stage=after-low-request active=true key=true responder=NativeGlassModeControl title= group=true child=true menu=false classic=false enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+✅ 真实键盘窗口中忙时焦点暂存于玻璃模式组而不退回窗口
+GLASS_FOCUS stage=after-busy-rejected-clicks active=true key=true responder=NativeGlassModeControl title= group=true child=true menu=false classic=false enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+✅ 玻璃模式等待确认时禁用全部按钮并拒绝重复请求
+GLASS_FOCUS stage=after-glass-disabled active=true key=true responder=ModeSliderView title= group=false child=false menu=false classic=true enabled=[false, false, false] selected=Optional(InteractionTests.EnergyMode.low)
+GLASS_RESTORE sliderVisible=true nativeHidden=true focus=true modeFrame=(0.0, 36.0, 282.0, 30.0) expectedModeFrame=(0.0, 36.0, 282.0, 30.0) menuFrame=(306.0, 42.0, 22.0, 20.0) expectedMenuFrame=(306.0, 42.0, 22.0, 20.0) nativeParent=true menuParent=true nativeBordered=Optional(true) expectedBordered=Optional(true) containerHidden=Optional(true) menuBordered=false selectedIndex=1 requests=1
+✅ 关闭全局玻璃恢复原版几何并保留待确认档位和焦点
+✅ 跨外观切换的失败回调仍回滚档位且没有重复写入
+✅ 再次开启玻璃复用原有操作宿主而不堆积容器
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 减少动态效果下玻璃按钮与经典原生分段切换正确转移焦点
+✅ 关闭玻璃不关闭用户的减少动态效果
+✅ 第二次模式请求仍暂存键盘焦点并禁用所有档位
+✅ 确认完成后焦点恢复到实际选中且可用的玻璃按钮
+✅ 用户已将焦点移到菜单时失败恢复不抢回模式焦点
+✅ A2 交互契约使用可见真实窗口
+✅ 正常动态效果选择 A2 并保持原有底栏高度
+✅ A2 透明光学留白不抢占邻接控件点击
+A2_SYSTEM_AX trusted=false windowsStatus=0
+✅ A2 公开系统 AX 完整读取唯一测试窗口
+✅ A2 原生 AX 树恰有三个固定顺序且完整命名的模式按钮  — count=3; labels=[Optional("Auto"), Optional("Low Power"), Optional("High Power")]
+✅ A2 AX 选中值和禁用 High Power 与显示状态一致
+A2_SYSTEM_AX press=Auto mainThread=true status=0
+A2_SYSTEM_AX press=High Power mainThread=true status=0
+✅ A2 AX 重复选择和禁用选择不产生请求
+✅ A2 共享拖动状态路径连续移动但不调用 helper 意图
+✅ A2 松手路径仅提交一次并立即进入 owner 忙态
+✅ A2 忙态拒绝点击键盘和拖动的重复请求
+✅ A2 待确认状态跨经典主题来回切换而不丢失
+✅ A2 失败回滚到 owner 最新观测并恢复可用模式
+✅ A2 Escape 取消共享拖动状态且迟到松手不提交
+✅ A2 AppKit 键盘入口产生一个可确认的模式请求
+✅ A2 确认后回车重复选择不会取消或重复提交
+A2_SYSTEM_AX trusted=false windowsStatus=0
+✅ A2 公开系统 AX 完整读取唯一测试窗口
+✅ A2 恰有一个原生可访问设置菜单按钮  — count=1
+A2_SYSTEM_AX press=Choose Modules mainThread=true status=0
+✅ A2 菜单使用真实宿主锚点且不产生电源模式写入  — press=true; menus=1; modeRequests=[InteractionTests.EnergyMode.low, InteractionTests.EnergyMode.low]
+✅ 运行时减少动态效果切到 C 并取消 A2 未提交拖动
+✅ 恢复动画复用同一 A2 宿主且隐藏 C 不增加请求
+✅ WATTSON_FORCE_REDUCE_TRANSPARENCY 优先使用可读的 C 并取消 A2 未提交状态
+✅ WATTSON_FORCE_REDUCE_TRANSPARENCY 关闭后恢复同一 A2 且模式保持不变
+✅ WATTSON_FORCE_INCREASE_CONTRAST 优先使用可读的 C 并取消 A2 未提交状态
+✅ WATTSON_FORCE_INCREASE_CONTRAST 关闭后恢复同一 A2 且模式保持不变
+✅ 设置菜单空白区域点击前画面已稳定且圆形区域完整可见  — entrance=0 key=true presentationOpacity=Optional(1.0) presentationTransform=Optional(__C.CATransform3D(m11: 1.0, m12: 0.0, m13: 0.0, m14: 0.0, m21: 0.0, m22: 1.0, m23: 0.0, m24: 0.0, m31: 0.0, m32: 0.0, m33: 1.0, m34: 0.0, m41: 0.0, m42: 0.0, m43: 0.0, m44: 1.0)) circle=(290.0, 36.0, 38.0, 38.0) visible=(-7.5, -552.0, 343.0, 630.0)
+✅ 设置圆形按钮的空白区域单击即打开菜单 (13.0, 7.0)
+✅ 设置圆形按钮的空白区域单击即打开菜单 (-13.0, -7.0)
+✅ 实际玻璃宿主自行关闭也取消 A2 拖动且拒绝迟到松手
+✅ 实际玻璃宿主重开复用 A2 并没有恢复旧拖动或新增请求
+✅ 重开后的新 A2 手势状态路径可正常提交一次  — requests=1; selected=low; enabled=[]
+✅ regular 交互内容位于玻璃背景上方且没有玻璃祖先
+✅ regular 背景使用单一原生材质并保持同一生产内容
+✅ regular 当前可见宿主确实挂载完整内容而非空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 透明度 0.0 仅改变背景并保留可见宿主和读数
+✅ regular 透明度 0.5 仅改变背景并保留可见宿主和读数
+✅ regular 透明度 1.0 仅改变背景并保留可见宿主和读数
+✅ [ARROW-OPTION] regular 关闭箭头让正文上移12点并回收受限视口  — bodyTopGain=12.0 viewportGain=12.0 expected=12.0
+✅ [ARROW-OPTION] regular 无箭头背景顶边连续且保留圆角裁切
+✅ [ARROW-OPTION] regular 在线切换保留宿主内容控件菜单和处理器
+✅ [ARROW-OPTION] regular 恢复箭头回到原始完整布局  — panelArrow=true materialArrow=true samePanel=true frameBefore=(568.0, 60.0, 424.0, 706.0) frameAfter=(568.0, 60.0, 424.0, 706.0) bodyBefore=(600.0, 92.0, 360.0, 630.0) bodyAfter=(600.0, 92.0, 360.0, 630.0) viewportBefore=630.0 viewportAfter=630.0 material=(32.0, 32.0, 360.0, 642.0) foreground=Optional((32.0, 32.0, 360.0, 630.0))
+✅ regular 重复打开复用当前面板且不留下空玻璃壳
+✅ regular 跟随 NSAppearanceNameDarkAqua 且不重建玻璃宿主或生产内容
+✅ regular 明暗切换保持全部展示文字、数值和布局且不写电源模式
+✅ regular 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 跟随 NSAppearanceNameAqua 且不重建玻璃宿主或生产内容
+✅ regular 明暗切换保持全部展示文字、数值和布局且不写电源模式
+✅ regular 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 用户主题 dark 即时生效并保留打开的面板
+✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 用户主题 light 即时生效并保留打开的面板
+✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 用户主题 system 即时生效并保留打开的面板
+✅ regular 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ regular 打开时安装局部和全局监听及生命周期观察
+✅ regular 面板内点击不关闭，其他本 App 窗口点击需要关闭
+✅ [I20-ARROW] regular 箭头对齐真实状态项且位于正文上方  — tip=(780.5, 734.0) anchor=(761.0, 741.0, 39.0, 24.0) bodyTop=722.0
+✅ regular 锚点鼠标按下留给状态按钮的单次 toggle
+✅ [I20-WINDOW-PICKS] regular 透明光学边距保持状态窗口中央及四边的原始命中  — statusProxy=4294967296 closed=[0, 0, 0, 0, 0] open=[0, 0, 0, 0, 0] body=148 panel=148
+✅ [I20-BODY-GRID] regular 透明正文包括空白的5×7网格全部保持面板命中  — hits=35/35 floor=1/255 panel=148
+✅ regular 状态窗口四边命中区不先关闭再重开
+✅ regular 无窗口事件按完整状态窗口区域识别锚点
+✅ regular 原生菜单跟踪期间保留菜单窗口与无窗口事件
+✅ regular 菜单期间 Escape 留给菜单而不关闭面板
+✅ regular 菜单结束后恢复普通外部点击分类
+✅ regular 背景搭配可见的生产 A2
+✅ regular 首次 Escape 仅取消拖动并保留面板
+✅ regular 第二次 Escape 关闭面板并撤除所有监听
+✅ regular 全局外部点击处理器关闭且清理全部生命周期资源
+✅ regular 状态按钮单次 toggle 只关闭不意外重开
+✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+✅ regular 同一次全局按下随后按钮动作只关闭一次
+✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+✅ regular 同一次全局按下随后按钮动作只关闭一次
+✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+✅ regular 同一次全局按下随后按钮动作只关闭一次
+✅ regular 全局监听先收到锚点按下仍保留单次按钮动作
+✅ regular 同一次全局按下随后按钮动作只关闭一次
+✅ regular 全局非锚点按下仍关闭且清理监听
+✅ [I19-WORKSPACE] regular 激活通知先于同一次按钮动作只关闭一次
+✅ [I19-IDLE] regular 指针停锚点不阻止真正切换应用关闭
+✅ regular 宿主自行关闭仍执行完整清理
+✅ [ARROW-OPTION] regular 保存关闭箭头后再次打开使用同一生产内容
+✅ [ARROW-OPTION] regular 无箭头时再次点击状态项收起并清理监听
+✅ [ARROW-OPTION] regular 无箭头重开后Escape仍关闭并清理监听
+✅ clear 交互内容位于玻璃背景上方且没有玻璃祖先
+✅ clear 背景使用单一原生材质并保持同一生产内容
+✅ clear 当前可见宿主确实挂载完整内容而非空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 透明度 0.0 仅改变背景并保留可见宿主和读数
+✅ clear 透明度 0.5 仅改变背景并保留可见宿主和读数
+✅ clear 透明度 1.0 仅改变背景并保留可见宿主和读数
+✅ [ARROW-OPTION] clear 关闭箭头让正文上移12点并回收受限视口  — bodyTopGain=12.0 viewportGain=12.0 expected=12.0
+✅ [ARROW-OPTION] clear 无箭头背景顶边连续且保留圆角裁切
+✅ [ARROW-OPTION] clear 在线切换保留宿主内容控件菜单和处理器
+✅ [ARROW-OPTION] clear 恢复箭头回到原始完整布局  — panelArrow=true materialArrow=true samePanel=true frameBefore=(590.0, 60.0, 380.0, 684.0) frameAfter=(590.0, 60.0, 380.0, 684.0) bodyBefore=(600.0, 70.0, 360.0, 652.0) bodyAfter=(600.0, 70.0, 360.0, 652.0) viewportBefore=652.0 viewportAfter=652.0 material=(10.0, 10.0, 360.0, 664.0) foreground=Optional((10.0, 10.0, 360.0, 652.0))
+✅ clear 重复打开复用当前面板且不留下空玻璃壳
+✅ clear 跟随 NSAppearanceNameDarkAqua 且不重建玻璃宿主或生产内容
+✅ clear 明暗切换保持全部展示文字、数值和布局且不写电源模式
+✅ clear 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 跟随 NSAppearanceNameAqua 且不重建玻璃宿主或生产内容
+✅ clear 明暗切换保持全部展示文字、数值和布局且不写电源模式
+✅ clear 明暗切换后生产内容仍在当前窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 用户主题 dark 即时生效并保留打开的面板
+✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 用户主题 light 即时生效并保留打开的面板
+✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 用户主题 system 即时生效并保留打开的面板
+✅ clear 主题选择后内容仍完整  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ clear 打开时安装局部和全局监听及生命周期观察
+✅ clear 面板内点击不关闭，其他本 App 窗口点击需要关闭
+✅ [I20-ARROW] clear 箭头对齐真实状态项且位于正文上方  — tip=(780.5, 734.0) anchor=(761.0, 741.0, 39.0, 24.0) bodyTop=722.0
+✅ clear 锚点鼠标按下留给状态按钮的单次 toggle
+✅ [I20-WINDOW-PICKS] clear 透明光学边距保持状态窗口中央及四边的原始命中  — statusProxy=4294967296 closed=[0, 0, 0, 0, 0] open=[0, 0, 0, 0, 0] body=161 panel=161
+✅ [I20-BODY-GRID] clear 透明正文包括空白的5×7网格全部保持面板命中  — hits=35/35 floor=1/255 panel=161
+✅ clear 状态窗口四边命中区不先关闭再重开
+✅ clear 无窗口事件按完整状态窗口区域识别锚点
+✅ clear 原生菜单跟踪期间保留菜单窗口与无窗口事件
+✅ clear 菜单期间 Escape 留给菜单而不关闭面板
+✅ clear 菜单结束后恢复普通外部点击分类
+✅ clear 背景搭配可见的生产 A2
+✅ clear 首次 Escape 仅取消拖动并保留面板
+✅ clear 第二次 Escape 关闭面板并撤除所有监听
+✅ clear 全局外部点击处理器关闭且清理全部生命周期资源
+✅ clear 状态按钮单次 toggle 只关闭不意外重开
+✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+✅ clear 同一次全局按下随后按钮动作只关闭一次
+✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+✅ clear 同一次全局按下随后按钮动作只关闭一次
+✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+✅ clear 同一次全局按下随后按钮动作只关闭一次
+✅ clear 全局监听先收到锚点按下仍保留单次按钮动作
+✅ clear 同一次全局按下随后按钮动作只关闭一次
+✅ clear 全局非锚点按下仍关闭且清理监听
+✅ [I19-WORKSPACE] clear 激活通知先于同一次按钮动作只关闭一次
+✅ [I19-IDLE] clear 指针停锚点不阻止真正切换应用关闭
+✅ clear 宿主自行关闭仍执行完整清理
+✅ [ARROW-OPTION] clear 保存关闭箭头后再次打开使用同一生产内容
+✅ [ARROW-OPTION] clear 无箭头时再次点击状态项收起并清理监听
+✅ [ARROW-OPTION] clear 无箭头重开后Escape仍关闭并清理监听
+✅ 拖动中由 B 切换 C 撤销旧手势、替换宿主并复用同一 A2 内容
+✅ B 转 C 后内容挂载在新玻璃宿主而非退休窗口  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ 关闭全局玻璃恢复 Classic 系统外观及原生 NSPopover
+✅ 关闭玻璃后实际 Classic 窗口内容非空  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ [ARROW-OPTION] Classic忽略玻璃箭头选择 false，保留原生窗口及几何
+✅ [ARROW-OPTION] Classic忽略玻璃箭头选择 true，保留原生窗口及几何
+✅ Classic 用户主题 dark 即时生效并保留当前窗口
+✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ Classic 用户主题 light 即时生效并保留当前窗口
+✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ Classic 用户主题 system 即时生效并保留当前窗口
+✅ Classic 主题选择后内容仍完整  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ Classic 关闭中转玻璃后，退休宿主迟到回调不能关闭新面板  — native-fade-observed=true
+✅ 退休 Classic 关闭回调后新玻璃窗口仍持有完整内容  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ 玻璃转回 Classic 使用新的干净原生计数且保留内容
+✅ 玻璃转回 Classic 后内容确实属于新原生窗口  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ 跨宿主后 Classic 仍支持快速关闭重开且不会被迟到 didClose 拆除
+✅ 跨宿主后 Classic 关闭重开没有丢失内容  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ 跨宿主及重复重开最终关闭后所有监听归零且没有模式写入
+✅ 同 run loop 来回切换最终 glass=false 宿主和内容一致  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ 关闭重开与来回切换交错最终 glass=false 不出现空壳  — glass=false rootAttached=true fields=69 footer=true correctHost=true
+✅ 快速迁移最终 glass=false 关闭后监听清空且没有系统写入
+✅ 同 run loop 来回切换最终 glass=true 宿主和内容一致  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ 关闭重开与来回切换交错最终 glass=true 不出现空壳  — glass=true rootAttached=true fields=69 footer=true correctHost=true
+✅ 快速迁移最终 glass=true 关闭后监听清空且没有系统写入
+✅ 释放测试先安装了真实玻璃面板监听
+✅ 打开状态释放 controller 不被监视器保留且面板不继续可见
+✅ Settings 命令位于标准应用菜单
+✅ 应用菜单保留退出命令
+✅ 执行 Settings 前弹窗真实打开  — open=true, watch=true
+✅ Settings 回调前先清除弹窗意图和外部监听
+✅ 快捷菜单使 Settings 可见并成为键盘窗口  — visible=true, key=true, active=true, keyTitle=Wattson Settings, canKey=true, same=true
+✅ 重复 Settings 命令复用同一窗口
+✅ Command-Comma 前弹窗和显示时钟都正在运行
+✅ Command-Comma 在安排 Settings 窗口前同步停止弹窗和显示时钟
+✅ Command-Comma 关闭后重开同一窗口  — handled=true, visible=true, key=true, active=true, keyTitle=Wattson Settings
+✅ Settings 未改变 LSUIElement 的 accessory 激活策略
+✅ 状态项从共享系统电池图标缓存同步
+✅ 系统电池图标观察者不阻止 StatusItem 释放
+✅ 打开控制器创建有效的单采样 timer
+✅ 周期回调使旧 timer 失效并安排唯一有效替代
+✅ 手动周期回调不读取硬件且不要求额外 fresh follow-up
+✅ timer 重建后真实打开回调仍请求一次 fresh follow-up  — requests=[(history: false, fresh: false, supersedes: false), (history: false, fresh: true, supersedes: false)]
+✅ 关闭显示保留有效后台采样而不是停止全部采样
+✅ 关闭后的真实 timer 仍能请求采样并继续重排
+✅ 快速关闭重开只保留当前打开的有效 timer
+✅ 真实关闭重开拒绝旧打开回调且保留一次当前 fresh 请求  — requests=[(history: false, fresh: true, supersedes: false)]
+✅ 单采样 timer 和采集拦截器不会保留控制器
+✅ 短屏保持自然内容高度并提供原生滚动 viewport
+✅ 短屏可滚到内容底部而不是裁掉 footer
+✅ 恢复足够高度后全量内容重新可见
+✅ 无 window 的失效状态项 anchor 不展示也不遗留监听
+✅ 独立续航行在全部供电状态和读取失败时实际布局不截断
+✅ 续航独立分区有细分割线，左侧时钟与右侧标题时间对齐
+✅ Classic 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=356.0→444.0; height=489.0→401.0
+✅ Classic 关闭重开后继续隐藏已取消勾选的续航
+✅ Classic 重新开启续航后仪表与真实宿主恢复原坐标
+✅ Standard 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=349.0→437.0; height=539.0→451.0
+✅ Standard 关闭重开后继续隐藏已取消勾选的续航
+✅ Standard 重新开启续航后仪表与真实宿主恢复原坐标
+✅ Clear 关闭续航后真实仪表与宿主移除完整续航栏目高度  — footer=349.0→437.0; height=495.0→407.0
+✅ Clear 关闭重开后继续隐藏已取消勾选的续航
+✅ Clear 重新开启续航后仪表与真实宿主恢复原坐标
+✅ 系统时间光点恒亮而无循环动画
+✅ 控制器时间光点缓慢呼吸而无星轨
+✅ 相同时间来源连续采样不会重新启动呼吸周期
+✅ 计算中加快呼吸并启动星轨
+✅ 计算光点呼吸、星轨和尘埃共享起点与3.3秒周期
+✅ 来源光点结束呈现前确有动画
+✅ 来源光点结束呈现立即移除呼吸星轨与尾迹动画
+✅ 来源光点结束呈现期间新采样不重启动画
+✅ 来源光点关闭动画策略前确有动画
+✅ 来源光点关闭动画策略立即移除呼吸星轨与尾迹动画
+✅ 来源光点关闭动画策略期间新采样不重启动画
+✅ 来源光点隐藏视图前确有动画
+✅ 来源光点隐藏视图立即移除呼吸星轨与尾迹动画
+✅ 来源光点隐藏视图期间新采样不重启动画
+✅ 来源光点脱离窗口前确有动画
+✅ 来源光点脱离窗口立即移除呼吸星轨与尾迹动画
+✅ 来源光点脱离窗口期间新采样不重启动画
+✅ 计算开始0.2秒星点已在移动，不再等待三秒
+✅ 真实星轨在2.8秒内仅完成一圈  — winding=6.212606514560479
+✅ 星点一圈对应一次从暗到亮再暗的呼吸
+✅ 每圈后半秒星点和尾迹均不可见，主光点保持暗态
+✅ 停歇结束星轨和呼吸从同一相位开始下一圈
+✅ 计算中持续采样不重置星轨等待时间
+✅ 系统预测恢复立即清除呼吸星轨及所有尾迹动画
+✅ 读取失败仅保留红色状态灯呼吸而不动画展示过期功率
+✅ 减少动态效果保留红色来源状态及说明并停止全部动画
+✅ 减少动态效果期间失败刷新也不重启动画
+✅ 进程键盘焦点回归具有真实 key window
+✅ 进程行接受真实键盘焦点 compact=false
+✅ 重排时选择和行焦点均跟随进程身份 compact=false
+✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=false
+✅ 进程行接受真实键盘焦点 compact=true
+✅ 重排时选择和行焦点均跟随进程身份 compact=true
+✅ 真实 window 分发空格只取消原进程选择并保留焦点 compact=true
+✅ 选择 B 与焦点 A 分离时重排分别保留各自身份
+✅ 真实 window 下箭头从 A 的新排名移到 C
+✅ 后移 重排时原生强退按钮焦点跟随原进程
+✅ 后移 后焦点按钮仅请求原进程身份而不误操作新排名
+✅ 前移 重排时原生强退按钮焦点跟随原进程
+✅ 前移 后焦点按钮仅请求原进程身份而不误操作新排名
+✅ 移除 清除选择并退离已换绑或隐藏的进程焦点
+✅ 掉出 Top N 清除选择并退离已换绑或隐藏的进程焦点
+✅ 仅 audit token 更换 清除选择并退离已换绑或隐藏的进程焦点
+✅ 外部文本框可取得实际 field editor
+✅ 进程重排不抢占外部文本编辑焦点
+✅ 进程列表缩小 Top N不抢占外部文本编辑焦点
+✅ 进程列表空列表不抢占外部文本编辑焦点
+✅ 进程列表失效不抢占外部文本编辑焦点
+✅ History 首帧直接呈现而不伪造滚动
+✅ History 连续真实采样启动同步描边、填充与末端动画
+✅ History 动画限于 180 ms 且没有重复、自动反向或常驻填充
+✅ History 平移描边保持路径拓扑及真实采样位置
+✅ History 短过渡完成后原生图层自行静止
+✅ History 结束呈现前确实有活动动画
+✅ History 结束呈现立即移除动画
+✅ History 结束呈现期间新采样不重启动画
+✅ History 恢复结束呈现状态不重播旧过渡
+✅ History 关闭动画策略前确实有活动动画
+✅ History 关闭动画策略立即移除动画
+✅ History 关闭动画策略期间新采样不重启动画
+✅ History 恢复关闭动画策略状态不重播旧过渡
+✅ History 隐藏视图前确实有活动动画
+✅ History 隐藏视图立即移除动画
+✅ History 隐藏视图期间新采样不重启动画
+✅ History 恢复隐藏视图状态不重播旧过渡
+✅ History 脱离窗口前确实有活动动画
+✅ History 脱离窗口立即移除动画
+✅ History 脱离窗口期间新采样不重启动画
+✅ History 恢复脱离窗口状态不重播旧过渡
+✅ History 新峰值扩轴使用有界的原生路径动画
+✅ History 扩轴描边保持路径拓扑及真实采样位置
+✅ History 扩轴中间帧位于起始范围与目标范围之间
+✅ History 变轴保持末端圆点尺寸固定
+✅ History 变轴时描边宽度保持 1.6 点
+✅ History 中断变轴直接接续实际描边中的保留采样点
+✅ History 中断扩轴从可见坐标接续保留采样点
+✅ History 扩缩范围始终以图表底边为原点
+✅ History 中断后的扩轴完成并自动静止
+✅ History 旧峰值离开窗口后仍保留缩轴迟滞
+✅ History 缩轴第1个两秒采样仍保持旧范围
+✅ History 缩轴第2个两秒采样仍保持旧范围
+✅ History 缩轴第3个两秒采样仍保持旧范围
+✅ History 八秒迟滞结束后缩轴平滑展开低功率数据
+✅ History 缩轴中间帧连续接近最终范围
+✅ History 缩轴结束后原生图层自行静止
+✅ History 无限重复反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-无限重复 elapsed=1.1060330416666488 remaining=history.stroke:0.18s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=275.41008487500005 speed=1.0 offset=0.0 begin=0.0 presentationNow=275.41008487500005 animationBegin=274.3027390833334 duration=0.18 animationSpeed=1.0 animationOffset=0.0 removed=true
+✅ History 无限重复反例在原一秒期限仍被拒绝
+✅ History 无限重复反例仅清理注入键后恢复静止
+✅ History 两秒长动画反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-两秒长动画 elapsed=1.0824418333332915 remaining=history.stroke:2.0s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=276.49444929166674 speed=1.0 offset=0.0 begin=0.0 presentationNow=276.49444929166674 animationBegin=275.41075654166673 duration=2.0 animationSpeed=1.0 animationOffset=0.0 removed=true
+✅ History 两秒长动画反例在原一秒期限仍被拒绝
+✅ History 两秒长动画反例仅清理注入键后恢复静止
+✅ History 完成后保留反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-完成后保留 elapsed=1.0884723333333 remaining=history.stroke:0.18s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=277.5847814583334 speed=1.0 offset=0.0 begin=0.0 presentationNow=277.5847814583334 animationBegin=276.49540004166676 duration=0.18 animationSpeed=1.0 animationOffset=0.0 removed=false
+✅ History 完成后保留反例在原一秒期限仍被拒绝
+✅ History 完成后保留反例仅清理注入键后恢复静止
+✅ History 结束呈现前确实有活动变轴动画
+✅ History 结束呈现立即移除变轴与末端动画
+✅ History 结束呈现期间新峰值不重启变轴
+✅ History 恢复结束呈现状态不重播旧变轴
+✅ History 关闭动画策略前确实有活动变轴动画
+✅ History 关闭动画策略立即移除变轴与末端动画
+✅ History 关闭动画策略期间新峰值不重启变轴
+✅ History 恢复关闭动画策略状态不重播旧变轴
+✅ History 隐藏视图前确实有活动变轴动画
+✅ History 隐藏视图立即移除变轴与末端动画
+✅ History 隐藏视图期间新峰值不重启变轴
+✅ History 恢复隐藏视图状态不重播旧变轴
+✅ History 脱离窗口前确实有活动变轴动画
+✅ History 脱离窗口立即移除变轴与末端动画
+✅ History 脱离窗口期间新峰值不重启变轴
+✅ History 恢复脱离窗口状态不重播旧变轴
+✅ History 新增采样首帧保留原区间的实际呈现中点
+✅ History 末段回归夹具确实覆盖新增样本造成的切线变化
+✅ History 完成检查从未暂停且已呈现的静态曲线开始
+✅ History 末段完成检查确实启动有界描边、填充与末端动画
+✅ History 控制点过渡到达新曲线后自动静止
+✅ History 生产弹窗把动画策略传至实际栏目
+✅ History 关闭模块立即取消已有过渡
+✅ History 模块关闭后采样不会重启过渡
+HISTORY_HOSTED_RESTORE_READY ready=true baselineCommitted=true elapsed=0.0157337083333573 visibleRect=(-16.0, -60.0, 360.0, 262.0) bounds=(0.0, 0.0, 328.0, 112.0) windowVisible=true hidden=false
+✅ History 恢复模块直接呈现最新数据
+✅ History 失败前的有效采样确实启动过渡
+✅ History 读取失败立即取消过渡
+✅ History 过期数据不重启过渡
+✅ History 减少动态效果变化前确实启动过渡
+✅ History 开启减少动态效果立即取消过渡
+✅ History 减少动态效果期间采样保持静止
+✅ History 收起前确实有活动过渡
+✅ History 收起弹窗立即取消过渡
+✅ History 弹窗关闭时新数据不会重启过渡
+
+ALL_INTERACTION_CHECKS_PASSED

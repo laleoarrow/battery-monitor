@@ -1,0 +1,89 @@
+✅ History 首帧直接呈现而不伪造滚动
+✅ History 连续真实采样启动同步描边、填充与末端动画
+✅ History 动画限于 180 ms 且没有重复、自动反向或常驻填充
+✅ History 平移描边保持路径拓扑及真实采样位置
+✅ History 短过渡完成后原生图层自行静止
+✅ History 结束呈现前确实有活动动画
+✅ History 结束呈现立即移除动画
+✅ History 结束呈现期间新采样不重启动画
+✅ History 恢复结束呈现状态不重播旧过渡
+✅ History 关闭动画策略前确实有活动动画
+✅ History 关闭动画策略立即移除动画
+✅ History 关闭动画策略期间新采样不重启动画
+✅ History 恢复关闭动画策略状态不重播旧过渡
+✅ History 隐藏视图前确实有活动动画
+✅ History 隐藏视图立即移除动画
+✅ History 隐藏视图期间新采样不重启动画
+✅ History 恢复隐藏视图状态不重播旧过渡
+✅ History 脱离窗口前确实有活动动画
+✅ History 脱离窗口立即移除动画
+✅ History 脱离窗口期间新采样不重启动画
+✅ History 恢复脱离窗口状态不重播旧过渡
+✅ History 新峰值扩轴使用有界的原生路径动画
+✅ History 扩轴描边保持路径拓扑及真实采样位置
+✅ History 扩轴中间帧位于起始范围与目标范围之间
+✅ History 变轴保持末端圆点尺寸固定
+✅ History 变轴时描边宽度保持 1.6 点
+✅ History 中断变轴直接接续实际描边中的保留采样点
+✅ History 中断扩轴从可见坐标接续保留采样点
+✅ History 扩缩范围始终以图表底边为原点
+✅ History 中断后的扩轴完成并自动静止
+✅ History 旧峰值离开窗口后仍保留缩轴迟滞
+✅ History 缩轴第1个两秒采样仍保持旧范围
+✅ History 缩轴第2个两秒采样仍保持旧范围
+✅ History 缩轴第3个两秒采样仍保持旧范围
+✅ History 八秒迟滞结束后缩轴平滑展开低功率数据
+✅ History 缩轴中间帧连续接近最终范围
+✅ History 缩轴结束后原生图层自行静止
+✅ History 无限重复反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-无限重复 elapsed=1.0315975833333368 remaining=history.stroke:0.18s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=98.79383887500002 speed=1.0 offset=0.0 begin=0.0 presentationNow=98.79383887500002 animationBegin=97.76064862500003 duration=0.18 animationSpeed=1.0 animationOffset=0.0 removed=true
+✅ History 无限重复反例在原一秒期限仍被拒绝
+✅ History 无限重复反例仅清理注入键后恢复静止
+✅ History 两秒长动画反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-两秒长动画 elapsed=1.0043105000000025 remaining=history.stroke:2.0s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=99.80145750000003 speed=1.0 offset=0.0 begin=0.0 presentationNow=99.80145750000003 animationBegin=98.7953479166667 duration=2.0 animationSpeed=1.0 animationOffset=0.0 removed=true
+✅ History 两秒长动画反例在原一秒期限仍被拒绝
+✅ History 两秒长动画反例仅清理注入键后恢复静止
+✅ History 完成后保留反例确实注入真实描边键
+HISTORY_COMPLETION_TIMEOUT negative-control-完成后保留 elapsed=1.0300568749999996 remaining=history.stroke:0.18s
+HISTORY_OWNER_CLOCK key=history.stroke localNow=100.83708879166669 speed=1.0 offset=0.0 begin=0.0 presentationNow=100.83708879166669 animationBegin=99.80403295833337 duration=0.18 animationSpeed=1.0 animationOffset=0.0 removed=false
+✅ History 完成后保留反例在原一秒期限仍被拒绝
+✅ History 完成后保留反例仅清理注入键后恢复静止
+✅ History 结束呈现前确实有活动变轴动画
+✅ History 结束呈现立即移除变轴与末端动画
+✅ History 结束呈现期间新峰值不重启变轴
+✅ History 恢复结束呈现状态不重播旧变轴
+✅ History 关闭动画策略前确实有活动变轴动画
+✅ History 关闭动画策略立即移除变轴与末端动画
+✅ History 关闭动画策略期间新峰值不重启变轴
+✅ History 恢复关闭动画策略状态不重播旧变轴
+✅ History 隐藏视图前确实有活动变轴动画
+✅ History 隐藏视图立即移除变轴与末端动画
+✅ History 隐藏视图期间新峰值不重启变轴
+✅ History 恢复隐藏视图状态不重播旧变轴
+✅ History 脱离窗口前确实有活动变轴动画
+✅ History 脱离窗口立即移除变轴与末端动画
+✅ History 脱离窗口期间新峰值不重启变轴
+✅ History 恢复脱离窗口状态不重播旧变轴
+✅ History 新增采样首帧保留原区间的实际呈现中点
+✅ History 末段回归夹具确实覆盖新增样本造成的切线变化
+✅ History 完成检查从未暂停且已呈现的静态曲线开始
+✅ History 末段完成检查确实启动有界描边、填充与末端动画
+✅ History 控制点过渡到达新曲线后自动静止
+✅ History 生产弹窗把动画策略传至实际栏目
+✅ History 关闭模块立即取消已有过渡
+✅ History 模块关闭后采样不会重启过渡
+HISTORY_HOSTED_RESTORE_READY ready=true baselineCommitted=true elapsed=0.016209708333335016 visibleRect=(-16.0, -60.0, 360.0, 262.0) bounds=(0.0, 0.0, 328.0, 112.0) windowVisible=true hidden=false
+✅ History 恢复模块直接呈现最新数据
+✅ History 失败前的有效采样确实启动过渡
+✅ History 读取失败立即取消过渡
+✅ History 过期数据不重启过渡
+✅ History 减少动态效果变化前确实启动过渡
+✅ History 开启减少动态效果立即取消过渡
+✅ History 减少动态效果期间采样保持静止
+✅ History 收起前确实有活动过渡
+✅ History 收起弹窗立即取消过渡
+✅ History 弹窗关闭时新数据不会重启过渡
+
+ALL_INTERACTION_CHECKS_PASSED

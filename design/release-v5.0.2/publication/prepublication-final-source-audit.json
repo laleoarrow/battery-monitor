@@ -1,0 +1,32 @@
+{
+  "checkedAtUTC": "2026-10-27T16:37:10.221917+00:00",
+  "sourceSHA": "26aac163f39be608c079b6b39a782e34892af4ba",
+  "priorFrozenSHA": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "nativeAcceptanceProductSHA": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "independentReadOnlyReviewPassed": true,
+  "protectedPaths": [
+    "Core",
+    "MenuBar",
+    "Popover",
+    "Helper",
+    "Resources",
+    "scripts",
+    "VERSION",
+    "Package.swift",
+    "main.swift",
+    "BatteryPowerApp.entitlements",
+    ".github/workflows",
+    "website",
+    "design/releases/v5.0.2",
+    "design/release-v5.0.2/communication",
+    "design/release-v5.0.2/installation"
+  ],
+  "protectedPathChanges": [],
+  "testOnlyCorrections": [
+    "finite fixture input staged in an owned temporary file to avoid Apple Python 3.9 communicate retry deadlock",
+    "History completion observes presentation before the original one-second animation-key check; three negative controls retain rejection coverage"
+  ],
+  "mailAndReleaseClaimsStillMatchImplementation": true,
+  "noHistoricalSourceSHADefaults": true,
+  "releaseGateSatisfiedByThisAudit": false
+}

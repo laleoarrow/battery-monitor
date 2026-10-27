@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "completeInteractionHarness": true,
+  "originalRunnerAndDeadlinesPreserved": true,
+  "allPassed": true,
+  "variants": [
+    {
+      "variant": "normal",
+      "exitCode": 0,
+      "passedAssertions": 499,
+      "failedAssertions": 0,
+      "negativeControlRejections": [
+        "✅ History 无限重复反例在原一秒期限仍被拒绝",
+        "✅ History 两秒长动画反例在原一秒期限仍被拒绝",
+        "✅ History 完成后保留反例在原一秒期限仍被拒绝"
+      ],
+      "unexpectedHistoryTimeouts": [],
+      "passed": true
+    },
+    {
+      "variant": "legacy",
+      "exitCode": 0,
+      "passedAssertions": 497,
+      "failedAssertions": 0,
+      "negativeControlRejections": [
+        "✅ History 无限重复反例在原一秒期限仍被拒绝",
+        "✅ History 两秒长动画反例在原一秒期限仍被拒绝",
+        "✅ History 完成后保留反例在原一秒期限仍被拒绝"
+      ],
+      "unexpectedHistoryTimeouts": [],
+      "passed": true
+    },
+    {
+      "variant": "legacy-accessibility",
+      "exitCode": 0,
+      "passedAssertions": 491,
+      "failedAssertions": 0,
+      "negativeControlRejections": [
+        "✅ History 无限重复反例在原一秒期限仍被拒绝",
+        "✅ History 两秒长动画反例在原一秒期限仍被拒绝",
+        "✅ History 完成后保留反例在原一秒期限仍被拒绝"
+      ],
+      "unexpectedHistoryTimeouts": [],
+      "passed": true
+    }
+  ]
+}
