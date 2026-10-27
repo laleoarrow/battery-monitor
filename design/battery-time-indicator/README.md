@@ -19,6 +19,16 @@ setting. Failure alone overrides the tint with red. Integrate with the actual
 instrument palette if implementation proceeds; the Swift draft still needs
 this correction as well as the immediate first lap and 0.5-second inter-lap pause.
 
+The clock design now follows the upper power-flow icons: a neutral thin outline,
+a lightly tinted diagonal face gradient, theme-colored hands and center, and a
+subtle theme-tinted rounded well border. It stays static and retains its theme
+color when the separate source light reports a red failure.
+
+Calculating now shares one timeline for orbit and light: one 2.8-second lap is
+one smooth dim–bright–dim breath, followed by a shared 0.5-second dim pause.
+The first lap starts immediately. The Swift prototype has not yet adopted this
+design change; integration still awaits visual approval.
+
 The preview's state/theme controls, moving orbit and narrow-width fit were
 checked before the timing edits. `design-preview.png` records that
 earlier light-appearance preview.

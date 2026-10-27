@@ -17,8 +17,11 @@
 #wattson-planet-draft .wp-label { color:var(--wp-muted); font-size:12px; margin-bottom:14px; text-align:center; }
 #wattson-planet-draft .wp-window { background:var(--wp-surface); border:1px solid var(--wp-line); border-radius:17px; padding:12px 16px; box-shadow:0 10px 28px light-dark(#24242a14,#00000030); }
 #wattson-planet-draft .wp-runtime { height:88px; display:flex; align-items:center; gap:12px; padding:0 12px; }
-#wattson-planet-draft .wp-clock { width:44px; height:44px; flex-shrink:0; border-radius:11px; background:var(--wp-well); border:1px solid var(--wp-line); position:relative; display:grid; place-items:center; color:var(--wp-muted); }
-#wattson-planet-draft .wp-clock svg { width:24px; height:24px; }
+#wattson-planet-draft .wp-clock { width:44px; height:44px; flex-shrink:0; border-radius:11px; background:var(--wp-well); border:1px solid color-mix(in srgb,var(--wp-theme-accent) 34%,var(--wp-line)); position:relative; display:grid; place-items:center; color:light-dark(#565662,#c7c7cc); }
+#wattson-planet-draft .wp-clock::before { content:""; position:absolute; width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,color-mix(in srgb,var(--wp-theme-accent) 8%,transparent),color-mix(in srgb,var(--wp-theme-accent) 30%,transparent)); }
+#wattson-planet-draft .wp-clock svg { width:28px !important; height:28px !important; position:relative; stroke-width:1.25; }
+#wattson-planet-draft .wp-clock svg :is(path,polyline,line) { stroke:var(--wp-theme-accent); stroke-width:1.7; }
+#wattson-planet-draft .wp-clock::after { content:""; position:absolute; width:3px; height:3px; border-radius:50%; background:var(--wp-theme-accent); }
 #wattson-planet-draft .wp-copy { flex:1; min-width:0; text-align:right; }
 #wattson-planet-draft .wp-caption { display:flex; align-items:center; justify-content:flex-end; white-space:nowrap; gap:4px; color:var(--wp-muted); font-size:11.5px; height:20px; }
 #wattson-planet-draft .wp-value { font-size:24px; line-height:31px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
@@ -28,16 +31,18 @@
 #wattson-planet-draft .wp-planet { position:absolute; width:8px; height:8px; left:6px; top:6px; border-radius:50%; background:radial-gradient(circle at 30% 25%,var(--wp-bright),var(--wp-accent) 48%,var(--wp-deep)); }
 #wattson-planet-draft .wp-particle { position:absolute; border-radius:50%; background:var(--wp-bright); opacity:0; left:10px; top:10px; }
 #wattson-planet-draft .wp-detail { width:140px; flex-shrink:0; text-align:center; }
+#wattson-planet-draft .wp-clock-detail { display:grid; place-items:center; height:106px; margin-bottom:10px; }
+#wattson-planet-draft .wp-clock-detail .wp-clock { transform:scale(1.8); }
 #wattson-planet-draft .wp-enlarged { height:120px; display:grid; place-items:center; }
 #wattson-planet-draft .wp-enlarged .wp-badge { transform:scale(4); }
 #wattson-planet-draft .wp-corner .wp-clock .wp-badge { position:absolute; right:-4px; bottom:-4px; }
 #wattson-planet-draft .wp-statusline { color:var(--wp-muted); font-size:12px; text-align:center; min-height:38px; padding:8px 16px; }
 #wattson-planet-draft[data-state="fallback"] .wp-planet { animation:wp-breathe 3.6s ease-in-out infinite; }
-#wattson-planet-draft[data-state="calculating"] .wp-planet { animation:wp-breathe 1.8s ease-in-out infinite; }
+#wattson-planet-draft[data-state="calculating"] .wp-planet { opacity:.52; }
 #wattson-planet-draft[data-state="unavailable"] { --wp-accent:var(--wp-red); }
 #wattson-planet-draft[data-state="unavailable"] .wp-planet { animation:wp-breathe 2.4s ease-in-out infinite; }
 #wattson-planet-draft[data-state="fallback"] .wp-halo { animation:wp-glow 3.6s ease-in-out infinite; }
-#wattson-planet-draft[data-state="calculating"] .wp-halo { animation:wp-glow 1.8s ease-in-out infinite; }
+#wattson-planet-draft[data-state="calculating"] .wp-halo { opacity:calc(var(--wp-glow) * .52); }
 #wattson-planet-draft[data-state="unavailable"] .wp-halo { animation:wp-glow 2.4s ease-in-out infinite; }
 @keyframes wp-breathe { 0%,100% { opacity:1; } 50% { opacity:.48; } }
 @keyframes wp-glow { 0%,100% { opacity:var(--wp-glow); } 50% { opacity:calc(var(--wp-glow) * .48); } }
@@ -50,21 +55,23 @@
   <label class="wp-palette">仪表配色示例 <select aria-label="仪表配色示例"><option value="neutral">银灰</option><option value="green">绿色</option><option value="blue">蓝色</option><option value="amber">琥珀</option></select><span>星球、微光与星点尾迹同步取色</span></label>
   <div class="viz-carousel viz-dotted-background" aria-label="光点位置方案" data-previous-label="上一个方案" data-next-label="下一个方案">
     <section data-variant="文字旁" aria-label="文字旁的星球标签">
-      <div class="wp-stage"><div class="wp-context"><div class="wp-label">实际大小 · 时间栏目</div><div class="wp-window"><div class="wp-runtime"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div><div class="wp-copy"><div class="wp-caption"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span><span>Estimated Battery Runtime</span></div><div class="wp-value">Calculating…</div></div></div></div></div><div class="wp-detail"><div class="wp-label">细节放大 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div></div>
+      <div class="wp-stage"><div class="wp-context"><div class="wp-label">实际大小 · 时间栏目</div><div class="wp-window"><div class="wp-runtime"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div><div class="wp-copy"><div class="wp-caption"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span><span>Estimated Battery Runtime</span></div><div class="wp-value">Calculating…</div></div></div></div></div><div class="wp-detail"><div class="wp-label">渐变时钟 ×1.8</div><div class="wp-clock-detail"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div></div><div class="wp-label">同步呼吸与星轨 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div></div>
     </section>
     <section data-variant="时钟角标" aria-label="时钟角标的星球标签" hidden>
-      <div class="wp-stage"><div class="wp-context"><div class="wp-label">实际大小 · 时间栏目</div><div class="wp-window wp-corner"><div class="wp-runtime"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div><div class="wp-copy"><div class="wp-caption"><span>Estimated Battery Runtime</span></div><div class="wp-value">Calculating…</div></div></div></div></div><div class="wp-detail"><div class="wp-label">细节放大 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div></div>
+      <div class="wp-stage"><div class="wp-context"><div class="wp-label">实际大小 · 时间栏目</div><div class="wp-window wp-corner"><div class="wp-runtime"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div><div class="wp-copy"><div class="wp-caption"><span>Estimated Battery Runtime</span></div><div class="wp-value">Calculating…</div></div></div></div></div><div class="wp-detail"><div class="wp-label">渐变时钟 ×1.8</div><div class="wp-clock-detail"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div></div><div class="wp-label">同步呼吸与星轨 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div></div>
     </section>
   </div>
-  <div class="wp-statusline" aria-live="polite">计算中 · 立即绕行，每圈结束后停 0.5 秒再继续</div>
+  <div class="wp-statusline" aria-live="polite">计算中 · 一圈一次呼吸，圈末一起收暗，停 0.5 秒后继续</div>
 </div>
 <script>
 (() => {
   const root = document.getElementById('wattson-planet-draft');
-  const states = { system:['4h 25m','系统数据 · 主题色恒亮'], fallback:['≈4h 25m','后备估算 · 缓慢、连续的呼吸光'], calculating:['Calculating…','计算中 · 立即绕行，每圈结束后停 0.5 秒再继续'], unavailable:['Unavailable','无法计算 · 柔和红色脉动'] };
+  const states = { system:['4h 25m','系统数据 · 主题色恒亮'], fallback:['≈4h 25m','后备估算 · 缓慢、连续的呼吸光'], calculating:['Calculating…','计算中 · 一圈一次呼吸，圈末一起收暗，停 0.5 秒后继续'], unavailable:['Unavailable','无法计算 · 柔和红色脉动'] };
   const ui = { state:'calculating', theme:'auto', palette:'neutral', glow:1 };
   let origin=performance.now();
   const particles=[];
+  const planets=Array.from(root.querySelectorAll('.wp-planet'));
+  const halos=Array.from(root.querySelectorAll('.wp-halo'));
   root.querySelectorAll('.wp-badge').forEach(badge=>{
     for(let i=0;i<8;i++) { const node=document.createElement('span'); node.className='wp-particle'; const size=i===0?1.9:Math.max(.45,1.5-i*.15); node.style.width=size+'px'; node.style.height=size+'px'; node.style.margin=(-size/2)+'px'; if(i>0)node.style.background='var(--wp-accent)'; badge.appendChild(node); particles.push({node,i}); }
   });
@@ -72,8 +79,10 @@
     root.dataset.state=ui.state;
     root.dataset.palette=ui.palette;
     root.querySelector('.wp-palette select').value=ui.palette;
-    root.style.colorScheme=ui.theme==='auto'?'':ui.theme;
+    root.querySelectorAll('.wp-window,.wp-clock-detail,.wp-enlarged').forEach(node=>node.style.colorScheme=ui.theme==='auto'?'':ui.theme);
     root.style.setProperty('--wp-glow',ui.glow);
+    planets.forEach(node=>node.style.removeProperty('opacity'));
+    halos.forEach(node=>node.style.removeProperty('opacity'));
     root.querySelectorAll('[data-state]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.state===ui.state)));
     root.querySelectorAll('[data-theme]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.theme===ui.theme)));
     root.querySelectorAll('.wp-value').forEach(value=>value.textContent=states[ui.state][0]);
@@ -91,6 +100,11 @@
     const t=((now-origin)/1000)%3.3;
     const visible=ui.state==='calculating'&&!reduced.matches&&!document.hidden&&t<2.8;
     const fade=visible?Math.min(1,t/.2,(2.8-t)/.25):0;
+    if(ui.state==='calculating'){
+      const pulse=reduced.matches?1:.52+.48*Math.sin(Math.PI*Math.min(t/2.8,1))**2;
+      planets.forEach(node=>node.style.opacity=String(pulse));
+      halos.forEach(node=>node.style.opacity=String(ui.glow*pulse));
+    }
     particles.forEach(({node,i})=>{
       node.style.opacity=String(fade*(i===0?1:.7*Math.pow(.72,i-1)));
       if(visible){const a=t/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)>0?'2':'-1';}
