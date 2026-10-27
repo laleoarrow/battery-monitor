@@ -1787,10 +1787,15 @@ html&gt;body{padding:0}&lt;/style&gt;
 })();
 &lt;/script&gt;
 &lt;style&gt;
-#wattson-planet-draft { --wp-surface:light-dark(#f6f6f8,#242428); --wp-ink:light-dark(#222228,#f2f2f7); --wp-muted:light-dark(#65656d,#aaaab4); --wp-line:light-dark(#d5d5dc,#414149); --wp-well:light-dark(#e5e5eb,#303036); --wp-accent:light-dark(#0064cf,#0a84ff); --wp-bright:light-dark(#acd4ff,#b1dbff); --wp-deep:light-dark(#0052aa,#086bd1); --wp-red:light-dark(#c72528,#ff453a); --wp-glow:.3; font:13px/1.5 -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,sans-serif; color:var(--wp-ink); }
+#wattson-planet-draft { --wp-surface:light-dark(#f6f6f8,#242428); --wp-ink:light-dark(#222228,#f2f2f7); --wp-muted:light-dark(#65656d,#aaaab4); --wp-line:light-dark(#d5d5dc,#414149); --wp-well:light-dark(#e5e5eb,#303036); --wp-theme-accent:light-dark(#565662,#c7c7cc); --wp-accent:var(--wp-theme-accent); --wp-bright:color-mix(in srgb,var(--wp-accent),white 65%); --wp-deep:color-mix(in srgb,var(--wp-accent),black 18%); --wp-red:light-dark(#c72528,#ff453a); --wp-glow:.3; font:13px/1.5 -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,sans-serif; color:var(--wp-ink); }
+#wattson-planet-draft[data-palette=&quot;green&quot;] { --wp-theme-accent:light-dark(#18783a,#30d158); }
+#wattson-planet-draft[data-palette=&quot;blue&quot;] { --wp-theme-accent:light-dark(#0064cf,#0a84ff); }
+#wattson-planet-draft[data-palette=&quot;amber&quot;] { --wp-theme-accent:light-dark(#9b5700,#ff9f0a); }
 #wattson-planet-draft * { box-sizing:border-box; }
 #wattson-planet-draft .wp-top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; align-items:center; padding:8px 100px 14px 0; }
 #wattson-planet-draft .wp-themes { display:flex; gap:4px; }
+#wattson-planet-draft .wp-palette { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:14px; color:var(--wp-muted); font-size:12px; }
+#wattson-planet-draft .wp-palette select { font:inherit; color:var(--wp-ink); background:var(--wp-surface); border:1px solid var(--wp-line); border-radius:8px; padding:6px 10px; }
 #wattson-planet-draft button { font:inherit; border:1px solid var(--wp-line); background:var(--wp-surface); color:var(--wp-muted); border-radius:8px; padding:6px 12px; }
 #wattson-planet-draft button[aria-pressed=&quot;true&quot;] { color:var(--wp-ink); border-color:var(--wp-muted); background:var(--wp-well); }
 #wattson-planet-draft .wp-states { display:flex; gap:7px; flex-wrap:wrap; padding-bottom:18px; }
@@ -1817,7 +1822,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 #wattson-planet-draft .wp-statusline { color:var(--wp-muted); font-size:12px; text-align:center; min-height:38px; padding:8px 16px; }
 #wattson-planet-draft[data-state=&quot;fallback&quot;] .wp-planet { animation:wp-breathe 3.6s ease-in-out infinite; }
 #wattson-planet-draft[data-state=&quot;calculating&quot;] .wp-planet { animation:wp-breathe 1.8s ease-in-out infinite; }
-#wattson-planet-draft[data-state=&quot;unavailable&quot;] { --wp-accent:var(--wp-red); --wp-bright:light-dark(#ffc4bd,#ffbdb8); --wp-deep:light-dark(#a11e21,#d13830); }
+#wattson-planet-draft[data-state=&quot;unavailable&quot;] { --wp-accent:var(--wp-red); }
 #wattson-planet-draft[data-state=&quot;unavailable&quot;] .wp-planet { animation:wp-breathe 2.4s ease-in-out infinite; }
 #wattson-planet-draft[data-state=&quot;fallback&quot;] .wp-halo { animation:wp-glow 3.6s ease-in-out infinite; }
 #wattson-planet-draft[data-state=&quot;calculating&quot;] .wp-halo { animation:wp-glow 1.8s ease-in-out infinite; }
@@ -1827,9 +1832,10 @@ html&gt;body{padding:0}&lt;/style&gt;
 @media(max-width:620px) { #wattson-planet-draft .wp-stage { flex-direction:column; gap:18px; min-height:430px; padding:22px 8px; } #wattson-planet-draft .wp-detail { width:100%; } #wattson-planet-draft .wp-enlarged { height:100px; } #wattson-planet-draft .wp-runtime { padding:0 0; gap:8px; } #wattson-planet-draft .wp-window { padding:12px; } #wattson-planet-draft .wp-top { padding-right:80px; } }
 @media(prefers-reduced-motion:reduce) { #wattson-planet-draft .wp-planet,#wattson-planet-draft .wp-halo { animation:none !important; } }
 &lt;/style&gt;
-&lt;div id=&quot;wattson-planet-draft&quot; data-state=&quot;calculating&quot; aria-label=&quot;Wattson 星球状态灯设计稿&quot;&gt;
+&lt;div id=&quot;wattson-planet-draft&quot; data-state=&quot;calculating&quot; data-palette=&quot;neutral&quot; aria-label=&quot;Wattson 星球状态灯设计稿&quot;&gt;
   &lt;div class=&quot;wp-top&quot;&gt;&lt;span&gt;星球状态灯 · 动态设计稿&lt;/span&gt;&lt;div class=&quot;wp-themes&quot; aria-label=&quot;预览主题&quot;&gt;&lt;button type=&quot;button&quot; data-theme=&quot;auto&quot; aria-pressed=&quot;true&quot;&gt;跟随&lt;/button&gt;&lt;button type=&quot;button&quot; data-theme=&quot;light&quot; aria-pressed=&quot;false&quot;&gt;浅色&lt;/button&gt;&lt;button type=&quot;button&quot; data-theme=&quot;dark&quot; aria-pressed=&quot;false&quot;&gt;深色&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
   &lt;div class=&quot;wp-states&quot; aria-label=&quot;预览状态&quot;&gt;&lt;button type=&quot;button&quot; data-state=&quot;system&quot; aria-pressed=&quot;false&quot;&gt;系统数据&lt;/button&gt;&lt;button type=&quot;button&quot; data-state=&quot;fallback&quot; aria-pressed=&quot;false&quot;&gt;后备估算&lt;/button&gt;&lt;button type=&quot;button&quot; data-state=&quot;calculating&quot; aria-pressed=&quot;true&quot;&gt;计算中&lt;/button&gt;&lt;button type=&quot;button&quot; data-state=&quot;unavailable&quot; aria-pressed=&quot;false&quot;&gt;无法计算&lt;/button&gt;&lt;/div&gt;
+  &lt;label class=&quot;wp-palette&quot;&gt;仪表配色示例 &lt;select aria-label=&quot;仪表配色示例&quot;&gt;&lt;option value=&quot;neutral&quot;&gt;银灰&lt;/option&gt;&lt;option value=&quot;green&quot;&gt;绿色&lt;/option&gt;&lt;option value=&quot;blue&quot;&gt;蓝色&lt;/option&gt;&lt;option value=&quot;amber&quot;&gt;琥珀&lt;/option&gt;&lt;/select&gt;&lt;span&gt;星球、微光与星点尾迹同步取色&lt;/span&gt;&lt;/label&gt;
   &lt;div class=&quot;viz-carousel viz-dotted-background&quot; aria-label=&quot;光点位置方案&quot; data-previous-label=&quot;上一个方案&quot; data-next-label=&quot;下一个方案&quot;&gt;
     &lt;section data-variant=&quot;文字旁&quot; aria-label=&quot;文字旁的星球标签&quot;&gt;
       &lt;div class=&quot;wp-stage&quot;&gt;&lt;div class=&quot;wp-context&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;实际大小 · 时间栏目&lt;/div&gt;&lt;div class=&quot;wp-window&quot;&gt;&lt;div class=&quot;wp-runtime&quot;&gt;&lt;div class=&quot;wp-clock&quot;&gt;&lt;i data-lucide=&quot;clock-3&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;div class=&quot;wp-copy&quot;&gt;&lt;div class=&quot;wp-caption&quot;&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span&gt;Estimated Battery Runtime&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;wp-value&quot;&gt;Calculating…&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wp-detail&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;细节放大 ×4&lt;/div&gt;&lt;div class=&quot;wp-enlarged&quot;&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1838,20 +1844,22 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;div class=&quot;wp-stage&quot;&gt;&lt;div class=&quot;wp-context&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;实际大小 · 时间栏目&lt;/div&gt;&lt;div class=&quot;wp-window wp-corner&quot;&gt;&lt;div class=&quot;wp-runtime&quot;&gt;&lt;div class=&quot;wp-clock&quot;&gt;&lt;i data-lucide=&quot;clock-3&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;wp-copy&quot;&gt;&lt;div class=&quot;wp-caption&quot;&gt;&lt;span&gt;Estimated Battery Runtime&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;wp-value&quot;&gt;Calculating…&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wp-detail&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;细节放大 ×4&lt;/div&gt;&lt;div class=&quot;wp-enlarged&quot;&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
     &lt;/section&gt;
   &lt;/div&gt;
-  &lt;div class=&quot;wp-statusline&quot; aria-live=&quot;polite&quot;&gt;计算中 · 稍快呼吸，等待 0.5 秒后星点斜绕一圈&lt;/div&gt;
+  &lt;div class=&quot;wp-statusline&quot; aria-live=&quot;polite&quot;&gt;计算中 · 立即绕行，每圈结束后停 0.5 秒再继续&lt;/div&gt;
 &lt;/div&gt;
 &lt;script&gt;
 (() =&gt; {
   const root = document.getElementById(&#x27;wattson-planet-draft&#x27;);
-  const states = { system:[&#x27;4h 25m&#x27;,&#x27;系统数据 · 主题色恒亮&#x27;], fallback:[&#x27;≈4h 25m&#x27;,&#x27;后备估算 · 缓慢、连续的呼吸光&#x27;], calculating:[&#x27;Calculating…&#x27;,&#x27;计算中 · 稍快呼吸，等待 0.5 秒后星点斜绕一圈&#x27;], unavailable:[&#x27;Unavailable&#x27;,&#x27;无法计算 · 柔和红色脉动&#x27;] };
-  const ui = { state:&#x27;calculating&#x27;, theme:&#x27;auto&#x27;, glow:1 };
+  const states = { system:[&#x27;4h 25m&#x27;,&#x27;系统数据 · 主题色恒亮&#x27;], fallback:[&#x27;≈4h 25m&#x27;,&#x27;后备估算 · 缓慢、连续的呼吸光&#x27;], calculating:[&#x27;Calculating…&#x27;,&#x27;计算中 · 立即绕行，每圈结束后停 0.5 秒再继续&#x27;], unavailable:[&#x27;Unavailable&#x27;,&#x27;无法计算 · 柔和红色脉动&#x27;] };
+  const ui = { state:&#x27;calculating&#x27;, theme:&#x27;auto&#x27;, palette:&#x27;neutral&#x27;, glow:1 };
   let origin=performance.now();
   const particles=[];
   root.querySelectorAll(&#x27;.wp-badge&#x27;).forEach(badge=&gt;{
-    for(let i=0;i&lt;8;i++) { const node=document.createElement(&#x27;span&#x27;); node.className=&#x27;wp-particle&#x27;; const size=i===0?1.9:Math.max(.45,1.5-i*.15); node.style.width=size+&#x27;px&#x27;; node.style.height=size+&#x27;px&#x27;; node.style.margin=(-size/2)+&#x27;px&#x27;; badge.appendChild(node); particles.push({node,i}); }
+    for(let i=0;i&lt;8;i++) { const node=document.createElement(&#x27;span&#x27;); node.className=&#x27;wp-particle&#x27;; const size=i===0?1.9:Math.max(.45,1.5-i*.15); node.style.width=size+&#x27;px&#x27;; node.style.height=size+&#x27;px&#x27;; node.style.margin=(-size/2)+&#x27;px&#x27;; if(i&gt;0)node.style.background=&#x27;var(--wp-accent)&#x27;; badge.appendChild(node); particles.push({node,i}); }
   });
   function render(){
     root.dataset.state=ui.state;
+    root.dataset.palette=ui.palette;
+    root.querySelector(&#x27;.wp-palette select&#x27;).value=ui.palette;
     root.style.colorScheme=ui.theme===&#x27;auto&#x27;?&#x27;&#x27;:ui.theme;
     root.style.setProperty(&#x27;--wp-glow&#x27;,ui.glow);
     root.querySelectorAll(&#x27;[data-state]&#x27;).forEach(button=&gt;button.setAttribute(&#x27;aria-pressed&#x27;,String(button.dataset.state===ui.state)));
@@ -1859,20 +1867,21 @@ html&gt;body{padding:0}&lt;/style&gt;
     root.querySelectorAll(&#x27;.wp-value&#x27;).forEach(value=&gt;value.textContent=states[ui.state][0]);
     root.querySelector(&#x27;.wp-statusline&#x27;).textContent=states[ui.state][1];
   }
-  function restore(saved){ const s=saved?.privateContent; if(states[s?.state])ui.state=s.state; if([&#x27;auto&#x27;,&#x27;light&#x27;,&#x27;dark&#x27;].includes(s?.theme))ui.theme=s.theme; render(); }
-  function save(){ if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{previewState:ui.state,theme:ui.theme},privateContent:{state:ui.state,theme:ui.theme}}).catch(()=&gt;{}); }
+  function restore(saved){ const s=saved?.privateContent; if(states[s?.state])ui.state=s.state; if([&#x27;auto&#x27;,&#x27;light&#x27;,&#x27;dark&#x27;].includes(s?.theme))ui.theme=s.theme; if([&#x27;neutral&#x27;,&#x27;green&#x27;,&#x27;blue&#x27;,&#x27;amber&#x27;].includes(s?.palette))ui.palette=s.palette; render(); }
+  function save(){ if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{previewState:ui.state,theme:ui.theme,palette:ui.palette},privateContent:{state:ui.state,theme:ui.theme,palette:ui.palette}}).catch(()=&gt;{}); }
   root.querySelectorAll(&#x27;button[data-state]&#x27;).forEach(button=&gt;button.addEventListener(&#x27;click&#x27;,()=&gt;{ui.state=button.dataset.state;origin=performance.now();render();save();}));
   root.querySelectorAll(&#x27;button[data-theme]&#x27;).forEach(button=&gt;button.addEventListener(&#x27;click&#x27;,()=&gt;{ui.theme=button.dataset.theme;render();save();}));
+  root.querySelector(&#x27;.wp-palette select&#x27;).addEventListener(&#x27;change&#x27;,event=&gt;{ui.palette=event.target.value;render();save();});
   restore(window.openai?.widgetState);
   window.addEventListener(&#x27;openai:set_globals&#x27;,event=&gt;{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
   const reduced=matchMedia(&#x27;(prefers-reduced-motion:reduce)&#x27;);
   function frame(now){
-    const t=((now-origin)/1000)%8;
-    const visible=ui.state===&#x27;calculating&#x27;&amp;&amp;!reduced.matches&amp;&amp;!document.hidden&amp;&amp;t&gt;=.5&amp;&amp;t&lt;3.3;
-    const fade=visible?Math.min(1,(t-.5)/.2,(3.3-t)/.25):0;
+    const t=((now-origin)/1000)%3.3;
+    const visible=ui.state===&#x27;calculating&#x27;&amp;&amp;!reduced.matches&amp;&amp;!document.hidden&amp;&amp;t&lt;2.8;
+    const fade=visible?Math.min(1,t/.2,(2.8-t)/.25):0;
     particles.forEach(({node,i})=&gt;{
       node.style.opacity=String(fade*(i===0?1:.7*Math.pow(.72,i-1)));
-      if(visible){const a=(t-.5)/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)&gt;0?&#x27;2&#x27;:&#x27;-1&#x27;;}
+      if(visible){const a=t/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)&gt;0?&#x27;2&#x27;:&#x27;-1&#x27;;}
     });
     requestAnimationFrame(frame);
   }
