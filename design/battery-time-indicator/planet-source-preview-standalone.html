@@ -1838,12 +1838,12 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;div class=&quot;wp-stage&quot;&gt;&lt;div class=&quot;wp-context&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;实际大小 · 时间栏目&lt;/div&gt;&lt;div class=&quot;wp-window wp-corner&quot;&gt;&lt;div class=&quot;wp-runtime&quot;&gt;&lt;div class=&quot;wp-clock&quot;&gt;&lt;i data-lucide=&quot;clock-3&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;wp-copy&quot;&gt;&lt;div class=&quot;wp-caption&quot;&gt;&lt;span&gt;Estimated Battery Runtime&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;wp-value&quot;&gt;Calculating…&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;wp-detail&quot;&gt;&lt;div class=&quot;wp-label&quot;&gt;细节放大 ×4&lt;/div&gt;&lt;div class=&quot;wp-enlarged&quot;&gt;&lt;span class=&quot;wp-badge&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;wp-halo&quot;&gt;&lt;/span&gt;&lt;span class=&quot;wp-planet&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
     &lt;/section&gt;
   &lt;/div&gt;
-  &lt;div class=&quot;wp-statusline&quot; aria-live=&quot;polite&quot;&gt;计算中 · 稍快呼吸，等待 3 秒后星点斜绕一圈&lt;/div&gt;
+  &lt;div class=&quot;wp-statusline&quot; aria-live=&quot;polite&quot;&gt;计算中 · 稍快呼吸，等待 2 秒后星点斜绕一圈&lt;/div&gt;
 &lt;/div&gt;
 &lt;script&gt;
 (() =&gt; {
   const root = document.getElementById(&#x27;wattson-planet-draft&#x27;);
-  const states = { system:[&#x27;4h 25m&#x27;,&#x27;系统数据 · 主题色恒亮&#x27;], fallback:[&#x27;≈4h 25m&#x27;,&#x27;后备估算 · 缓慢、连续的呼吸光&#x27;], calculating:[&#x27;Calculating…&#x27;,&#x27;计算中 · 稍快呼吸，等待 3 秒后星点斜绕一圈&#x27;], unavailable:[&#x27;Unavailable&#x27;,&#x27;无法计算 · 柔和红色脉动&#x27;] };
+  const states = { system:[&#x27;4h 25m&#x27;,&#x27;系统数据 · 主题色恒亮&#x27;], fallback:[&#x27;≈4h 25m&#x27;,&#x27;后备估算 · 缓慢、连续的呼吸光&#x27;], calculating:[&#x27;Calculating…&#x27;,&#x27;计算中 · 稍快呼吸，等待 2 秒后星点斜绕一圈&#x27;], unavailable:[&#x27;Unavailable&#x27;,&#x27;无法计算 · 柔和红色脉动&#x27;] };
   const ui = { state:&#x27;calculating&#x27;, theme:&#x27;auto&#x27;, glow:1 };
   let origin=performance.now();
   const particles=[];
@@ -1868,11 +1868,11 @@ html&gt;body{padding:0}&lt;/style&gt;
   const reduced=matchMedia(&#x27;(prefers-reduced-motion:reduce)&#x27;);
   function frame(now){
     const t=((now-origin)/1000)%8;
-    const visible=ui.state===&#x27;calculating&#x27;&amp;&amp;!reduced.matches&amp;&amp;!document.hidden&amp;&amp;t&gt;=3&amp;&amp;t&lt;5.8;
-    const fade=visible?Math.min(1,(t-3)/.2,(5.8-t)/.25):0;
+    const visible=ui.state===&#x27;calculating&#x27;&amp;&amp;!reduced.matches&amp;&amp;!document.hidden&amp;&amp;t&gt;=2&amp;&amp;t&lt;4.8;
+    const fade=visible?Math.min(1,(t-2)/.2,(4.8-t)/.25):0;
     particles.forEach(({node,i})=&gt;{
       node.style.opacity=String(fade*(i===0?1:.7*Math.pow(.72,i-1)));
-      if(visible){const a=(t-3)/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)&gt;0?&#x27;2&#x27;:&#x27;-1&#x27;;}
+      if(visible){const a=(t-2)/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)&gt;0?&#x27;2&#x27;:&#x27;-1&#x27;;}
     });
     requestAnimationFrame(frame);
   }
