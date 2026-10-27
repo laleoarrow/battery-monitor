@@ -1,0 +1,357 @@
+{
+  "checkedAtUTC": "2026-10-27T18:06:54.550034+00:00",
+  "scope": "Independent read-only run metadata, both native architecture installation logs, exact tap commit, Latest, and completed Pages deployment audit; website resource downloads are intentionally handled separately.",
+  "auditPassed": true,
+  "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+  "tapCommit": "ffbb03d48a885b20a801b4639b6cf0a0cc1731b4",
+  "publicInstallArchitectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "bothArchitecturesInstalledSuccessfully": true,
+  "bothHelperHealthAndUninstallCleanupPassed": true,
+  "workflowRequiresNativeUnameAndExactTapCommit": true,
+  "homebrewWorkflowSHA256": "0ab977befb3b01023781a471d0cc8aa8619546ea66e6f6f785a93892f712aacc",
+  "tapPushCISucceededAtExactCommit": true,
+  "latestVersion": "v5.0.2",
+  "pagesCompletedSuccessfullyAtFrozenSource": true,
+  "remoteMainUnchangedAfterPagesCompleted": true,
+  "websiteResourceBytesVerifiedByThisAudit": false,
+  "remoteMutationPerformed": false,
+  "workflowDispatchPerformed": false,
+  "blockingFindings": [],
+  "observedEvidence": {
+    "homebrew": {
+      "id": 40556143970,
+      "path": ".github/workflows/homebrew-install-test.yml",
+      "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "headBranch": "main",
+      "event": "workflow_dispatch",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40556143970"
+    },
+    "homebrewJobs": [
+      {
+        "id": 122372608595,
+        "name": "Verify the public release and tested Homebrew cask",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Resolve the release tag from the current main commit",
+            "conclusion": "success"
+          },
+          {
+            "name": "Require the exact tested public cask",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 122372705520,
+        "name": "Homebrew lifecycle on macos-26",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Validate the hosted runner and stable release",
+            "conclusion": "success"
+          },
+          {
+            "name": "Validate the public Homebrew cask",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test public cask install and uninstall",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 122372705651,
+        "name": "Homebrew lifecycle on macos-15-intel",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Validate the hosted runner and stable release",
+            "conclusion": "success"
+          },
+          {
+            "name": "Validate the public Homebrew cask",
+            "conclusion": "success"
+          },
+          {
+            "name": "Test public cask install and uninstall",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 122373389911,
+        "name": "Deploy site after both public cask lifecycles pass",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Mark the fully validated stable release as latest",
+            "conclusion": "success"
+          },
+          {
+            "name": "Dispatch the stable-release Pages deployment",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "tap": {
+      "id": 40555255849,
+      "path": ".github/workflows/tests.yml",
+      "headSHA": "ffbb03d48a885b20a801b4639b6cf0a0cc1731b4",
+      "headBranch": "main",
+      "event": "push",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/40555255849"
+    },
+    "pages": {
+      "id": 40556384932,
+      "path": ".github/workflows/pages.yml",
+      "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "headBranch": "main",
+      "event": "workflow_dispatch",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40556384932"
+    },
+    "pagesJobs": [
+      {
+        "id": 122373457776,
+        "name": "Build the static Pages artifact",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Check out the repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify the stable release identity",
+            "conclusion": "success"
+          },
+          {
+            "name": "Set up Node.js",
+            "conclusion": "success"
+          },
+          {
+            "name": "Configure GitHub Pages",
+            "conclusion": "success"
+          },
+          {
+            "name": "Install locked website dependencies",
+            "conclusion": "success"
+          },
+          {
+            "name": "Build and test the rendered website",
+            "conclusion": "success"
+          },
+          {
+            "name": "Lint the website",
+            "conclusion": "success"
+          },
+          {
+            "name": "Export and validate the project-scoped static site",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload the Pages artifact",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Set up Node.js",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Check out the repository",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 122374342934,
+        "name": "Deploy GitHub Pages",
+        "headSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "latest": {
+      "id": 425803134,
+      "tag": "v5.0.2",
+      "draft": false,
+      "prerelease": false
+    },
+    "mainAfterPages": {
+      "ref": "refs/heads/main",
+      "type": "commit",
+      "sha": "35339ef0e764a2672a9aa2a6990d56b64894f005"
+    },
+    "lifecycleLogs": [
+      {
+        "architecture": "arm64",
+        "jobId": 122372705520,
+        "logBytes": 27760,
+        "logSHA256": "0e6dd1ef2e304ac5ab697efb0c6cfc051b600467075205c210ca3b7b76dc9331",
+        "selectedActualOutput": [
+          {
+            "line": 17,
+            "text": "2026-10-27T18:02:17.8057980Z Image: macos-26-arm64"
+          },
+          {
+            "line": 80,
+            "text": "2026-10-27T18:02:18.1056500Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 82,
+            "text": "2026-10-27T18:02:18.1058030Z   EXPECTED_ARCHITECTURE: arm64"
+          },
+          {
+            "line": 119,
+            "text": "2026-10-27T18:02:22.2130190Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 121,
+            "text": "2026-10-27T18:02:22.2131120Z   EXPECTED_ARCHITECTURE: arm64"
+          },
+          {
+            "line": 341,
+            "text": "2026-10-27T18:02:25.2742350Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 343,
+            "text": "2026-10-27T18:02:25.2743370Z   EXPECTED_ARCHITECTURE: arm64"
+          },
+          {
+            "line": 355,
+            "text": "2026-10-27T18:02:30.7071970Z installer: The install was successful."
+          },
+          {
+            "line": 356,
+            "text": "2026-10-27T18:02:31.3614320Z 🍺  wattson was successfully installed!"
+          },
+          {
+            "line": 369,
+            "text": "2026-10-27T18:02:36.2138530Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+          }
+        ]
+      },
+      {
+        "architecture": "x86_64",
+        "jobId": 122372705651,
+        "logBytes": 27837,
+        "logSHA256": "0239f7c86a3f1065e87772b0c2c43dc6aecfa933fd3989cfd75a5e8bf6cb9405",
+        "selectedActualOutput": [
+          {
+            "line": 79,
+            "text": "2026-10-27T18:02:21.8844930Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 81,
+            "text": "2026-10-27T18:02:21.8848050Z   EXPECTED_ARCHITECTURE: x86_64"
+          },
+          {
+            "line": 118,
+            "text": "2026-10-27T18:02:36.4649170Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 120,
+            "text": "2026-10-27T18:02:36.4652070Z   EXPECTED_ARCHITECTURE: x86_64"
+          },
+          {
+            "line": 340,
+            "text": "2026-10-27T18:03:07.2916960Z   EXPECTED_TAP_SHA: ffbb03d48a885b20a801b4639b6cf0a0cc1731b4"
+          },
+          {
+            "line": 342,
+            "text": "2026-10-27T18:03:07.2919810Z   EXPECTED_ARCHITECTURE: x86_64"
+          },
+          {
+            "line": 356,
+            "text": "2026-10-27T18:03:15.6222380Z installer: The install was successful."
+          },
+          {
+            "line": 357,
+            "text": "2026-10-27T18:03:16.6076530Z 🍺  wattson was successfully installed!"
+          },
+          {
+            "line": 370,
+            "text": "2026-10-27T18:03:27.6836800Z Public Homebrew cask install, helper health, and uninstall cleanup passed."
+          }
+        ]
+      }
+    ]
+  }
+}

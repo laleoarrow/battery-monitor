@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-27T18:18:36.286772+00:00",
+  "scope": "Resources owned by this battery-time indicator and 5.0.2 release task only; no whole-machine cleanup claim.",
+  "emptyNamespaceParentsRemoved": [
+    "artifact-v5.0.2.noindex",
+    "candidate2-diagnostics.noindex",
+    "history-diagnostic-vm.noindex",
+    "history-full-vm.noindex",
+    "history-presentation-vm.noindex",
+    "history-retarget-vm.noindex",
+    "history-runloop-vm.noindex",
+    "process-whitelist-vm.noindex",
+    "public-install-auth.noindex",
+    "public-install-v5.0.2.noindex",
+    "public-v5.0.2.noindex",
+    "tap-sync-v5.0.2.noindex",
+    "animation-stress.noindex",
+    "local.noindex",
+    "swift-tests.noindex",
+    "tests.noindex"
+  ],
+  "alreadyAbsent": [],
+  "removalMethod": "Path.rmdir; nonempty directories refused",
+  "independentReadOnlyReview": {
+    "canonicalAppMatchesVerifiedPublicPayload": true,
+    "onlyOneCanonicalAppInstance": true,
+    "existingSettingsRetained": 18,
+    "taskTemporaryProcessesRemaining": 0,
+    "taskMountsRemaining": 0,
+    "ownedTestVMsRemoved": true,
+    "originalVMsPreserved": [
+      "macOS-TestLab",
+      "macOS-TestLab-Base"
+    ],
+    "mainRepositoryRemoteBranches": [
+      "main"
+    ],
+    "tapRepositoryRemoteBranches": [
+      "main"
+    ],
+    "failedOrCancelledCandidateArtifactCounts": [
+      0,
+      0,
+      0
+    ],
+    "successfulCandidateArtifactsRetained": 7
+  },
+  "preserved": [
+    "Canonical installation and production settings",
+    "All final distribution packages and verification evidence",
+    "SwiftPM reusable cache",
+    "Historical evidence and pre-existing local branch codex/local-cleanup-recheck-20261026",
+    "Published releases, tags, historical gallery, CI audit history and successful candidate artifacts"
+  ],
+  "privilegedAuthentication": {
+    "taskOwnedAuthReaderRemoved": true,
+    "sudoTimestampInvalidated": true,
+    "sudoNoninteractiveCheckAfterCleanup": "password required",
+    "credentialWrittenToScriptLogOrRepository": false,
+    "PAMOrPrivacySettingsChanged": false
+  },
+  "allTaskCleanupChecksPassed": true
+}

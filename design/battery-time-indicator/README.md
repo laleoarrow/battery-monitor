@@ -76,5 +76,11 @@ cleanup. The preview installation was still waiting for administrator
 authentication when the user requested public release. Its owned authorization
 request was stopped before an installer began, avoiding a duplicate upgrade;
 the canonical 5.0.1 payload and settings were verified unchanged. See
-`installation/preview-install-deferred.json`. Canonical synchronization will use
-the exact reviewed public 5.0.2 PKG after its public release gates pass.
+`installation/preview-install-deferred.json`.
+
+The subsequent public release passed all gates. The exact reviewed public
+5.0.2 PKG is now installed in `/Applications/Wattson.app`, with matching helper
+and receipt and all 18 existing settings retained. Verification scratch and
+registrations were cleaned. The Mac was locked during CUA access, so a direct
+canonical menu-bar click is not claimed. See the
+[public installation record](../release-v5.0.2/installation/RESULTS.md).

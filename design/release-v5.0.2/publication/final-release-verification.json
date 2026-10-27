@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "version": "5.0.2",
+  "verifiedAtUTC": "2026-10-27T18:17:58.901987+00:00",
+  "frozenSourceCommit": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+  "annotatedTag": "v5.0.2",
+  "releaseID": 425803134,
+  "releaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.2",
+  "latest": true,
+  "allPublicReleaseGatesPassed": true,
+  "gates": {
+    "headlessPush": {
+      "runID": 40548956767,
+      "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "conclusion": "success",
+      "evidence": "headless-retarget-final.json",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40548956767"
+    },
+    "candidate": {
+      "runID": 40550917831,
+      "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "conclusion": "success",
+      "evidence": "candidate-final.json",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40550917831"
+    },
+    "tap": {
+      "runID": 40555255849,
+      "sourceSHA": "ffbb03d48a885b20a801b4639b6cf0a0cc1731b4",
+      "conclusion": "success",
+      "evidence": "tap-ci-final.json",
+      "url": "https://github.com/laleoarrow/homebrew-tap/actions/runs/40555255849"
+    },
+    "publicHomebrew": {
+      "runID": 40556143970,
+      "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "conclusion": "success",
+      "evidence": "homebrew-final.json",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40556143970"
+    },
+    "pages": {
+      "runID": 40556384932,
+      "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "conclusion": "success",
+      "evidence": "pages-final.json",
+      "url": "https://github.com/laleoarrow/battery-monitor/actions/runs/40556384932"
+    }
+  },
+  "fourPublicAssetsMatchReviewedCandidate": true,
+  "publicAssetsRebuiltOrReplaced": false,
+  "packageSHA256": "977b8d198b6b7cb5f097aacb95752fdb59ddf1db3073382cb75be9967775f88a",
+  "signing": "Community: ad-hoc App/helper; unsigned PKG/DMG; not notarized",
+  "publicSite": "https://laleoarrow.github.io/battery-monitor/",
+  "publicGallery": "https://laleoarrow.github.io/battery-monitor/design/v5.0.2/",
+  "galleryChecksummedEntries": 42,
+  "galleryChecksumManifestAlsoVerified": true,
+  "svgZIPs": 4,
+  "svgMasters": 20,
+  "historicalGallerySamplesUnchanged": 3,
+  "canonicalInstalledVersion": "5.0.2",
+  "canonicalPayloadSignaturesAndHelperVerified": true,
+  "existingSettingsRetained": 18,
+  "canonicalClickAcceptance": false,
+  "canonicalClickLimitation": "CUA reported the Mac locked. No actual canonical status-item click/open/close is claimed; separate production-renderer and native AppKit interaction tests passed in a disposable GUI VM.",
+  "finalSourceNativeInteractionAssertions": 1487,
+  "finalSourceNativeOwnerAndCleanupPassed": true,
+  "newMacOS27ValidationClaimed": false,
+  "featureCommitIncluded": "a7621f735b01308ae8299b946da83f2c13dcd2e5",
+  "releaseEmailSentAndReadBackVerified": true,
+  "releaseEmailReceipt": "../communication/sent-receipt.json",
+  "evidenceSHA256": {
+    "design/release-v5.0.2/publication/artifact-public-provenance.json": "f6deb38a3e9fe93cf67b7bf74730e0e7b2ab84c2e487225324fb3253ccab2c74",
+    "design/release-v5.0.2/publication/public-site-verification.json": "b4bba6a9cf25a1d103bab49ebf62f8cf66a8893c77ad66e93e5a51af2ca03239",
+    "design/release-v5.0.2/publication/public-historical-gallery-verification.json": "5298f84ab1ea9e545a5fa92d3227a1ba3148a49c5076446354a2b195fe49a66c",
+    "design/release-v5.0.2/publication/candidate-reviewed.json": "286e8f422a6318dfb694adad16f41d22ba7ce8a332cd685ded953444af0b93db",
+    "design/release-v5.0.2/publication/candidate-build-review.json": "de1ba4a360e407c6f9872771e928d2f33a367c999dc77bc8c93f965cb898bff5",
+    "design/release-v5.0.2/publication/independent-tag-release-audit.json": "e6dbf625ea92efc6fc325653a20ebd3b55fb28a05b0ba1d5f6aa3c620fd40d56",
+    "design/release-v5.0.2/publication/independent-tap-audit.json": "422884c6c5c2d5e7049303b3410c7e0bfa3b6cd9ddae7a84c6eb2c68b59825e3",
+    "design/release-v5.0.2/publication/independent-homebrew-pages-audit.json": "a556b9932ba0a89dd637da35225407e73457609ad7947c04c9f7c16f38f7cbb9",
+    "design/release-v5.0.2/installation/verified-public-5.0.2/public-install-verified.json": "2e5419945bfa7abc7176f371133cf689a05f80d0f5b6da117e7890928da5f4ed",
+    "design/release-v5.0.2/communication/sent-receipt.json": "3fb7db2c87b83fd32a246eb14fc94f0989ba86018480f4974cff9a730ad40d24",
+    "design/release-v5.0.2/diagnostics/history-presentation-full/run-2/verification-summary.json": "2ac0722f64fe7a3196b14a8d666155dc003cb42b146440f4a696a616c3b61146",
+    "design/release-v5.0.2/installation/canonical-ui-access.json": "d2bed554fe5db79b3a98bdab076b06760e267d64dcdadd0b1e5456fc5e38e580",
+    "design/release-v5.0.2/publication/final-task-cleanup.json": "4fdc8c6b37e8b8ad8a2db5d00db92f65cd749bbb56af5cd4158e61d1b420ee9c"
+  },
+  "taskCleanupVerified": true,
+  "cleanupEvidence": "final-task-cleanup.json"
+}

@@ -1,0 +1,13 @@
+diff --git a/Casks/wattson.rb b/Casks/wattson.rb
+index 7de59e4..1314655 100644
+--- a/Casks/wattson.rb
++++ b/Casks/wattson.rb
+@@ -1,6 +1,6 @@
+ cask "wattson" do
+-  version "5.0.1"
+-  sha256 "5bc42648e9238e8e3665672c172e7e1d7fc5c60cca70ff9c40db8331602f6362"
++  version "5.0.2"
++  sha256 "977b8d198b6b7cb5f097aacb95752fdb59ddf1db3073382cb75be9967775f88a"
+ 
+   url "https://github.com/laleoarrow/battery-monitor/releases/download/v#{version}/Wattson-v#{version}-macos-universal.pkg"
+   name "Wattson"

@@ -1,0 +1,78 @@
+{
+  "checkedAtUTC": "2026-10-27T17:56:14.349732+00:00",
+  "scope": "Independent read-only GitHub API metadata and release-notes audit; public download verification is handled separately.",
+  "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+  "candidateRunId": 40550917831,
+  "annotatedTagVerified": true,
+  "tagPeeledCommitMatchesCandidate": true,
+  "remoteMainMatchesCandidate": true,
+  "stablePublishedReleaseVerified": true,
+  "exactlyFourAssets": true,
+  "allAPIDigestsMatchReviewedCandidate": true,
+  "allAPISizesMatchRetainedCandidate": true,
+  "communitySigningAndNotarizationNotesAccurate": true,
+  "releaseNotesMatchCreatedSnapshot": true,
+  "releaseNotesSHA256": "eccd15026cdf37484192d0edfbe459ce957f4b89b13d276389eefd86627a7689",
+  "observedRemote": {
+    "tag": {
+      "ref": "refs/tags/v5.0.2",
+      "objectType": "tag",
+      "objectSHA": "b1b73822b5d42f4189d2b756b38f0a1530df9fdb",
+      "tag": "v5.0.2",
+      "targetType": "commit",
+      "targetSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+      "annotation": "Wattson 5.0.2: battery-time source indicator and gradient clock\n"
+    },
+    "main": {
+      "ref": "refs/heads/main",
+      "objectType": "commit",
+      "sha": "35339ef0e764a2672a9aa2a6990d56b64894f005"
+    },
+    "release": {
+      "id": 425803134,
+      "url": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.2",
+      "tag": "v5.0.2",
+      "draft": false,
+      "prerelease": false,
+      "publishedAt": "2026-10-27T17:54:58Z",
+      "assets": [
+        {
+          "id": 682400583,
+          "name": "SHA256SUMS.txt",
+          "size": 300,
+          "state": "uploaded",
+          "digest": "sha256:6b74808b5a37dad110bccc6ad6a0a00b78e05cd551d28ef1aa454c0ed0069e75",
+          "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/SHA256SUMS.txt"
+        },
+        {
+          "id": 682400567,
+          "name": "Wattson-v5.0.2-macos-universal.dmg",
+          "size": 6912851,
+          "state": "uploaded",
+          "digest": "sha256:4548f0273568170251318f5daef5c7ce6ffa21b8c97b7064c4768e88136d0549",
+          "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/Wattson-v5.0.2-macos-universal.dmg"
+        },
+        {
+          "id": 682400562,
+          "name": "Wattson-v5.0.2-macos-universal.pkg",
+          "size": 7016020,
+          "state": "uploaded",
+          "digest": "sha256:977b8d198b6b7cb5f097aacb95752fdb59ddf1db3073382cb75be9967775f88a",
+          "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/Wattson-v5.0.2-macos-universal.pkg"
+        },
+        {
+          "id": 682400561,
+          "name": "Wattson-v5.0.2-release-info.txt",
+          "size": 393,
+          "state": "uploaded",
+          "digest": "sha256:a5117673d31fa4d2b2671ce50ee6437cd2bac4c2b0615f67c584cc8b1eee930e",
+          "url": "https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.2/Wattson-v5.0.2-release-info.txt"
+        }
+      ]
+    }
+  },
+  "publicDownloadVerifiedByThisAudit": false,
+  "releaseMutationPerformed": false,
+  "workflowDispatchPerformed": false,
+  "blockingFindings": []
+}

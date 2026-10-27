@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "version": "5.0.2",
+  "messageID": "1a17e92b6d39c6e7",
+  "threadID": "1a17e92b6d39c6e7",
+  "sentAtUTC": "2026-10-27T18:15:06.000Z",
+  "sentLabelVerified": true,
+  "recipientCount": 2,
+  "recipientsMatchVerifiedPriorCorrespondence": true,
+  "subject": "Wattson 5.0.2｜剩余时间，一眼看清依据",
+  "mimeType": "multipart/alternative",
+  "plainTextAndHTMLBodiesMatchReviewedFiles": true,
+  "bodyFilesSHA256": {
+    "subject.txt": "358f5734e34052bf1892317bb7980f7305175238db6c6871d19987c67f415453",
+    "email.html": "cdbcf9223e0f76ca29b878f603154a4ec52b039884cace832438a0649eeba9ee",
+    "email.txt": "64565a6f0cd13a1075b5847f56b0a2712c5048ef018adafb8085443ec13370b8"
+  },
+  "duplicateSentPreflightMatches": 0,
+  "attachmentsSent": false,
+  "publicLinksVerifiedBeforeSending": true,
+  "canonicalPublicInstallationVerifiedBeforeSending": true,
+  "privateRecipientAddressesOmitted": true
+}

@@ -1,7 +1,9 @@
-# Wattson 5.0.2 communication drafts
+# Wattson 5.0.2 release communication
 
-Prepared copy only. These files neither publish the release nor send mail. No
-recipient address or personal contact data is stored here.
+The reviewed HTML card and matching text were sent to Cody after the public
+release, website and canonical installation gates passed. `sent-receipt.json`
+records the verified Sent message and exact body hashes. Private recipient
+addresses are not stored here.
 
 - `subject.txt`: Chinese release-email subject.
 - `email.html`: presentation-table email card with inline base styles, readable
@@ -13,23 +15,24 @@ The content follows `.agent/release.md` and the 5.0.1 release notes/gallery
 structure. No local 5.0.1 HTML email source was present. The email has no scripts,
 remote fonts, external stylesheets, tracking pixels or runtime screenshots.
 
-## Pending publication handoff
+## Completed publication checks
 
-1. The two design-preview URLs are now fixed as
+1. The two design-preview URLs are
    `previews/time-source-light.png` and `previews/time-source-dark.png` under the
    versioned gallery URL. They show the source indicators and gradient clock.
-   Captions identify them as design previews, not runtime screenshots. Verify
-   the final approved artwork is available at these public URLs before sending.
+   Captions identify them as design previews, not runtime screenshots. Anonymous
+   public downloads matched the frozen artwork before sending.
 2. Release, PKG, DMG, checksum and gallery links use the repository's established
-   versioned URL structure. Their 5.0.2 availability has **not** been verified by
-   this drafting task. Verify them without authentication after the release and
-   Pages gates pass. These drafts do not assert that 5.0.2 is already public.
-3. Confirm the final distribution metadata still says `community-ad-hoc`. The
-   signing text must match the exact published artifacts.
-4. The sending agent owns recipient confirmation from prior correspondence,
-   Sent-mail duplicate checking, final facts, artwork approval and sending HTML
-   plus plain text as `multipart/alternative`. Use download links, not installer
-   attachments. Remove the draft-only HTML comment when preparing the final MIME.
+   versioned URL structure. All were verified after the release and Pages gates
+   passed; see `../publication/public-site-verification.json` and the separate
+   anonymous installer provenance record.
+3. The published artifacts retain `community-ad-hoc` metadata, matching the
+   email's signing and notarization description.
+4. The sending agent confirmed the recipients from prior correspondence,
+   found no Sent duplicate for 5.0.2, sent both alternatives, then read back the
+   Sent label, recipients, subject and exact MIME bodies. Only download links
+   were sent, without installer attachments. The retained HTML is exactly the
+   sent body, including its invisible preflight comment.
 
 All time readings are described as dynamic estimates. The PKG/helper versus
 app-only DMG distinction is retained.

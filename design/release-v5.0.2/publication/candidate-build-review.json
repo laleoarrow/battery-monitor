@@ -1,0 +1,112 @@
+{
+  "scope": "Build job log and frozen workflow; candidate artifacts and install matrix are reviewed separately.",
+  "runId": 40550917831,
+  "jobId": 122354109354,
+  "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+  "buildJobConclusion": "success",
+  "buildReviewPassed": true,
+  "overallCandidateVerified": false,
+  "log": {
+    "path": "design/release-v5.0.2/publication/candidate-build.log",
+    "bytes": 585708,
+    "lines": 4590,
+    "sha256": "c07cd84acf127e145837ee7597a2c3071477e13ed151cdfb23e1defa3c245602"
+  },
+  "swift": {
+    "tests": 735,
+    "failures": 0,
+    "summaryLine": 2154,
+    "defaultsRegistered": 183,
+    "defaultsRemaining": 0,
+    "cleanupLine": 2159
+  },
+  "python": {
+    "discoveredTests": 653,
+    "passedTests": 649,
+    "skippedTests": 4,
+    "skipReason": "Real AppKit interaction opt-in wrappers; native replay runs separately in the next step.",
+    "summaryLines": [
+      2816,
+      2818
+    ]
+  },
+  "nativeConfigurations": [
+    {
+      "legacyKnob": false,
+      "reduceMotion": false,
+      "reduceTransparency": false,
+      "passMarkerLine": 3365,
+      "passedAssertions": 498,
+      "expectedNegativeTimeouts": 3,
+      "negativeRejectionChecks": 3,
+      "negativeCleanupChecks": 3,
+      "hostedRestoreReady": true
+    },
+    {
+      "legacyKnob": true,
+      "reduceMotion": false,
+      "reduceTransparency": false,
+      "passMarkerLine": 3888,
+      "passedAssertions": 496,
+      "expectedNegativeTimeouts": 3,
+      "negativeRejectionChecks": 3,
+      "negativeCleanupChecks": 3,
+      "hostedRestoreReady": true
+    },
+    {
+      "legacyKnob": true,
+      "reduceMotion": true,
+      "reduceTransparency": true,
+      "passMarkerLine": 4406,
+      "passedAssertions": 491,
+      "expectedNegativeTimeouts": 3,
+      "negativeRejectionChecks": 3,
+      "negativeCleanupChecks": 3,
+      "hostedRestoreReady": true
+    }
+  ],
+  "unexpectedHistoryTimeouts": 0,
+  "animationStress": {
+    "iterations": 20000,
+    "elapsedSeconds": 0.137,
+    "passMarkerLine": 4407
+  },
+  "releaseVerification": {
+    "version": "5.0.2",
+    "universalBuildVerifiedLine": 4456,
+    "pkgAndDmgAppsByteIdenticalLine": 4470,
+    "threeArtifactChecksumsPassedLines": [
+      4471,
+      4472,
+      4473
+    ],
+    "releaseArtifactsCreatedLine": 4474
+  },
+  "communityDeclaration": {
+    "mode": "community-ad-hoc",
+    "appSignature": "ad-hoc",
+    "helperSignature": "ad-hoc",
+    "packageSignature": "unsigned",
+    "dmgSignature": "unsigned",
+    "notarized": false,
+    "evidenceLines": [
+      4419,
+      4455,
+      4463,
+      4464,
+      4467,
+      4475
+    ],
+    "developerIdImportSkipped": true,
+    "signingCredentialsScrubStep": "success",
+    "scope": "Log declarations and frozen release.sh expectations; downloaded binary signatures are not verified in this build-only review."
+  },
+  "cleanup": {
+    "swiftPreferenceInventoryExplicitlyVerified": true,
+    "managedEntrypointsExitedSuccessfully": true,
+    "cleanupFailureMarkers": 0,
+    "cleanupRegressionTestsPassed": true,
+    "remoteRunnerResidualInventoryIndependentlyInspected": false
+  },
+  "blockingFindings": []
+}

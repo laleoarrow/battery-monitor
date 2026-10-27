@@ -1,0 +1,26 @@
+{
+  "checkedAtUTC": "2026-10-27T18:08:16.456617+00:00",
+  "sourceSHA": "35339ef0e764a2672a9aa2a6990d56b64894f005",
+  "anonymous": true,
+  "allPassed": true,
+  "checks": [
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.1/index.html",
+      "status": 200,
+      "bytesMatchFrozenHistoricalSource": true,
+      "sha256": "670777db261b4a434324a8a9b088016e4214f8c83d7372172abb6d317bdb6a70"
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.1/previews/power-state-matrix.png",
+      "status": 200,
+      "bytesMatchFrozenHistoricalSource": true,
+      "sha256": "8a1c76304a556dc02b9e94b6af0e4be13b52dcb55a56d085578ac44175e6082d"
+    },
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.1/Wattson-v5.0.1-Power-SVG.zip",
+      "status": 200,
+      "bytesMatchFrozenHistoricalSource": true,
+      "sha256": "e2c3497983408ee83632a94695e1aa540e122f35f8ef89213ad0ad1d2dedfd62"
+    }
+  ]
+}

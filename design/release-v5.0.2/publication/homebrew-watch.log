@@ -1,0 +1,116 @@
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Test public Homebrew install · 40556143970
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* Verify the public release and tested Homebrew cask (ID 122372608595)
+  ✓ Set up job
+  ✓ Resolve the release tag from the current main commit
+  * Require the exact tested public cask
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Test public Homebrew install · 40556143970
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+✓ Verify the public release and tested Homebrew cask in 8s (ID 122372608595)
+  ✓ Set up job
+  ✓ Resolve the release tag from the current main commit
+  ✓ Require the exact tested public cask
+  ✓ Complete job
+* Homebrew lifecycle on macos-26 (ID 122372705520)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  * Test public cask install and uninstall
+* Homebrew lifecycle on macos-15-intel (ID 122372705651)
+  ✓ Set up job
+  * Validate the hosted runner and stable release
+  * Validate the public Homebrew cask
+  * Test public cask install and uninstall
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Test public Homebrew install · 40556143970
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+✓ Verify the public release and tested Homebrew cask in 8s (ID 122372608595)
+  ✓ Set up job
+  ✓ Resolve the release tag from the current main commit
+  ✓ Require the exact tested public cask
+  ✓ Complete job
+✓ Homebrew lifecycle on macos-26 in 21s (ID 122372705520)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  ✓ Test public cask install and uninstall
+  ✓ Complete job
+* Homebrew lifecycle on macos-15-intel (ID 122372705651)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  * Validate the public Homebrew cask
+  * Test public cask install and uninstall
+
+ANNOTATIONS
+- Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times.
+Homebrew lifecycle on macos-26: .github#1
+
+Refreshing run status every 20 seconds. Press Ctrl+C to quit.
+
+* main Test public Homebrew install · 40556143970
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+✓ Verify the public release and tested Homebrew cask in 8s (ID 122372608595)
+  ✓ Set up job
+  ✓ Resolve the release tag from the current main commit
+  ✓ Require the exact tested public cask
+  ✓ Complete job
+✓ Homebrew lifecycle on macos-26 in 21s (ID 122372705520)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  ✓ Test public cask install and uninstall
+  ✓ Complete job
+* Homebrew lifecycle on macos-15-intel (ID 122372705651)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  * Test public cask install and uninstall
+
+ANNOTATIONS
+- Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times.
+Homebrew lifecycle on macos-26: .github#1
+
+✓ main Test public Homebrew install · 40556143970
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+✓ Verify the public release and tested Homebrew cask in 8s (ID 122372608595)
+  ✓ Set up job
+  ✓ Resolve the release tag from the current main commit
+  ✓ Require the exact tested public cask
+  ✓ Complete job
+✓ Homebrew lifecycle on macos-26 in 21s (ID 122372705520)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  ✓ Test public cask install and uninstall
+  ✓ Complete job
+✓ Homebrew lifecycle on macos-15-intel in 1m10s (ID 122372705651)
+  ✓ Set up job
+  ✓ Validate the hosted runner and stable release
+  ✓ Validate the public Homebrew cask
+  ✓ Test public cask install and uninstall
+  ✓ Complete job
+✓ Deploy site after both public cask lifecycles pass in 5s (ID 122373389911)
+  ✓ Set up job
+  ✓ Mark the fully validated stable release as latest
+  ✓ Dispatch the stable-release Pages deployment
+  ✓ Complete job
+
+ANNOTATIONS
+- Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times.
+Homebrew lifecycle on macos-26: .github#1
+
