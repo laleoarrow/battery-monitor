@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "recordedDate": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "candidateRun": 40531167341,
+  "candidateHead": "e4dcd5a78eed2dbe94a1e984b0dab9f2371cd443",
+  "candidateConclusion": "cancelled",
+  "candidateJob": 122284049199,
+  "ciEvidence": {
+    "directlyObserved": [
+      "Swift 735 tests passed at 15:30:08Z.",
+      "Swift defaults cleanup reported registered=183 remaining=0 at 15:30:41Z.",
+      "Last completed Python test was test_cleanup_failure_after_success_is_an_error at 15:32:19.2109970Z.",
+      "No later test completion appears before cancellation at 16:12:52.1392100Z.",
+      "Runner final cleanup reported two Python orphan processes."
+    ],
+    "inference": "The next alphabetically ordered test, test_communicate_retries_preserve_input_output_and_timeout, likely hung in incomplete stdin communication. The CI log has no Python stack trace or partial non-newline test-start record, so the exact live stack is not directly observed.",
+    "finalJSON": "../../publication/candidate-second-final.json",
+    "completeCancelledJobLog": "../../publication/candidate-second-failure.log",
+    "logRetrieval": "gh run view --log-failed returned empty output for the cancelled run; the saved log clearly labels the fallback to --job 122284049199 --log."
+  },
+  "localReproduction": {
+    "pythonVersion": "3.9.6",
+    "stdlibSubprocessSHA256": "d2f73c7128a3931f74411b46352146ba85322a8dc8f12a721d4801dc43d9766e",
+    "baselineRuns": 2,
+    "inputBytes": 140000,
+    "childDelayBeforeStdinReadSeconds": 0.3,
+    "innerTimeoutSeconds": 1,
+    "outerOwnerTimeoutSeconds": 20,
+    "results": [
+      {
+        "text": false,
+        "result": "TimeoutExpired",
+        "elapsedSeconds": 1.06,
+        "stdout": null,
+        "stderr": null
+      },
+      {
+        "text": true,
+        "result": "TimeoutExpired",
+        "elapsedSeconds": 1.061,
+        "stdout": null,
+        "stderr": null
+      }
+    ],
+    "mechanism": "Apple Python 3.9.6 _communicate only registers stdin for EVENT_WRITE when self.stdin and input. The wrapper sets input=None after its first 100 ms TimeoutExpired, so any incomplete write is never resumed and EOF is not delivered. communicate also rejects nonempty input once _communication_started is true."
+  },
+  "fix": {
+    "scope": [
+      "tests/local_runtime.py",
+      "tests/test_local_runtime_cleanup.py"
+    ],
+    "finiteInputTransport": "An owner-local TemporaryFile is written and rewound before Popen; the parent closes its handle once the child has inherited stdin. This changes finite fixture stdin from a pipe to a seekable regular file.",
+    "preserved": [
+      "Complete finite byte and text payloads",
+      "Encoding and errors options",
+      "Empty input EOF",
+      "input/stdin mutual exclusion",
+      "input=None and caller-provided stdin",
+      "100 ms output polling and deferred signal delivery",
+      "Process ownership and cleanup"
+    ],
+    "callerAudit": "The only non-regression input caller is the finite JSON-to-Perl sanitizer fixture in tests/test_system_battery_support.py. It has no FIFO or non-seekability dependency. This helper is for fixture input, not credentials."
+  },
+  "checks": [
+    {
+      "suite": "LocalRuntimeCleanupTests",
+      "tests": 17,
+      "seconds": 33.132,
+      "result": "passed",
+      "outerOwnerTimeoutSeconds": 180
+    },
+    {
+      "suite": "SystemBatterySupportSocketTests",
+      "tests": 8,
+      "seconds": 5.318,
+      "result": "passed",
+      "outerOwnerTimeoutSeconds": 90
+    }
+  ],
+  "cleanup": {
+    "baselineOwnedWorkspacesRemoved": true,
+    "afterTestsScratchEntries": 0,
+    "afterReproductionScratchEntries": 0,
+    "gitDiffCheck": "passed",
+    "basis": "Recorded completion output and existing post-run read-only scratch audit. This record does not claim a new hosted-run cleanup audit."
+  },
+  "sourceHashes": {
+    "tests/local_runtime.py": {
+      "frozenSHA256": "7a112b85f1f5b1039da480f201201eafd2a2de13be7efcc1c9d44488ff8001c2",
+      "fixedSHA256": "671fb4c808c1578716db72a23e4b84fd25666479dec187e739376df1cc8cd009"
+    },
+    "tests/test_local_runtime_cleanup.py": {
+      "frozenSHA256": "0b0507ba465fe9d97873c606f7f52370a93e9d86f404b35ddfe8dbfb779bcc2f",
+      "fixedSHA256": "f023ae30bb5884e2be0961475f9a90a0708150a824eb79a597eb069a0f24d40d"
+    }
+  },
+  "independentReview": "history_ci_failure reviewed lifetime, encoding, EOF, owner registration and caller semantics read-only; no additional correction requested.",
+  "formalCI": "Not rerun. The original cancelled candidate remains cancelled; no release gate has been converted to pass.",
+  "recordProvenance": "This directory records already completed observations. Creating it did not rerun any reproduction or test."
+}

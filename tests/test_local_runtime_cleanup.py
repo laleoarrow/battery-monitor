@@ -140,13 +140,21 @@ printf 'body-final\\n' >> "$SOURCE_ONLY_EVENTS"
 
     def test_communicate_retries_preserve_input_output_and_timeout(self):
         command = [sys.executable, "-c",
-                   "import sys,time; data=sys.stdin.buffer.read(); "
+                   # Delay stdin beyond the first 100 ms communication poll.
+                   # Python 3.9 previously abandoned the unfinished write.
+                   "import sys,time; time.sleep(.3); data=sys.stdin.buffer.read(); "
                    "sys.stdout.buffer.write(data[:17]); sys.stdout.flush(); "
                    "sys.stderr.write('first'); sys.stderr.flush(); time.sleep(.25); "
                    "sys.stdout.buffer.write(data[17:]); sys.stderr.write('last')"]
         for text in (False, True):
             with self.subTest(text=text):
                 payload = "fixture" * 20000 if text else b"fixture" * 20000
+                result = local_runtime.run(command, input=payload, capture_output=True,
+                                           text=text, check=True, timeout=2)
+                self.assertEqual(result.stdout, payload)
+                self.assertEqual(result.stderr, "firstlast" if text else b"firstlast")
+                # Preserve timeout=None support only after the bounded case
+                # proved progress; an old implementation fails above in 2 s.
                 result = local_runtime.run(command, input=payload, capture_output=True,
                                            text=text, check=True, timeout=None)
                 self.assertEqual(result.stdout, payload)
@@ -159,6 +167,28 @@ printf 'body-final\\n' >> "$SOURCE_ONLY_EVENTS"
         self.assertEqual(caught.exception.timeout, .25)
         self.assertEqual(caught.exception.output, b"partial\n")
         self.assertEqual(caught.exception.stderr, b"error\n")
+
+    def test_finite_input_preserves_encoding_empty_eof_and_stdin_contract(self):
+        command = [sys.executable, "-c",
+                   "import sys; sys.stdout.buffer.write(sys.stdin.buffer.read())"]
+        cases = (
+            (b"", {}, b""),
+            ("", {"text": True}, ""),
+            ("续航 ⚡", {"encoding": "utf-8"}, "续航 ⚡"),
+            ("énergie", {"encoding": "latin-1"}, "énergie"),
+            ("a⚡", {"encoding": "ascii", "errors": "replace"}, "a?"),
+            ("line\n", {"universal_newlines": True}, "line\n"),
+        )
+        for payload, options, expected in cases:
+            with self.subTest(payload=payload, options=options):
+                result = local_runtime.run(command, input=payload, stdin=None,
+                                           capture_output=True, timeout=2, **options)
+                self.assertEqual(result.stdout, expected)
+        with self.assertRaisesRegex(ValueError, "stdin and input"):
+            local_runtime.run(command, input=b"", stdin=subprocess.PIPE)
+        result = local_runtime.run(command, input=None, stdin=subprocess.DEVNULL,
+                                   capture_output=True, timeout=2)
+        self.assertEqual(result.stdout, b"")
 
     def test_signals_inside_popen_wait_locks_do_not_reenter_cleanup(self):
         for phase in ("wait", "poll"):

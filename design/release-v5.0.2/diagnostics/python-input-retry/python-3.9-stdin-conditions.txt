@@ -1,0 +1,17 @@
+Previously inspected local /usr/bin/python3: 3.9.6.
+Relevant actual standard-library code excerpts (Popen):
+
+communicate:
+    if self._communication_started and input:
+        raise ValueError("Cannot send input after starting communication")
+
+_communicate:
+    self._save_input(input)
+    if self._input:
+        input_view = memoryview(self._input)
+    with _PopenSelector() as selector:
+        if self.stdin and input:
+            selector.register(self.stdin, selectors.EVENT_WRITE)
+
+These are local standard-library observations. The hosted runner used
+/usr/bin/python3, but its exact Python version was not printed in that job log.

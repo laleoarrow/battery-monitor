@@ -192,24 +192,42 @@ def run(*args, input=None, capture_output=False, timeout=120, check=False,
     if capture_output:
         kwargs["stdout"] = subprocess.PIPE
         kwargs["stderr"] = subprocess.PIPE
-    if input is not None:
-        kwargs["stdin"] = subprocess.PIPE
     with _defer_interrupts():
-        process = subprocess.Popen(*args, **kwargs)
-        process.cleanup_grace = cleanup_grace
-        workspace.processes.append(process)
+        input_stream = None
+        try:
+            if input is not None:
+                if kwargs.get("stdin") is not None:
+                    raise ValueError("stdin and input arguments may not both be used.")
+                # Apple Python 3.9 stops resuming piped stdin after a timed
+                # communicate() retry. These finite fixture inputs use an
+                # owned, seekable file; stdout/stderr still drain in short polls.
+                text_mode = any(kwargs.get(key) for key in
+                                ("text", "universal_newlines", "encoding", "errors"))
+                input_stream = tempfile.TemporaryFile(
+                    mode="w+" if text_mode else "w+b", dir=workspace.name,
+                    encoding=kwargs.get("encoding") if text_mode else None,
+                    errors=kwargs.get("errors") if text_mode else None,
+                )
+                input_stream.write(input)
+                input_stream.seek(0)
+                kwargs["stdin"] = input_stream
+            process = subprocess.Popen(*args, **kwargs)
+            process.cleanup_grace = cleanup_grace
+            workspace.processes.append(process)
+        finally:
+            if input_stream is not None:
+                input_stream.close()
     try:
         deadline = None if timeout is None else time.monotonic() + timeout
         while True:
             interval = 0.1 if deadline is None else max(0, min(0.1, deadline - time.monotonic()))
             try:
-                # communicate retains partial input/output across timeouts.
+                # communicate retains partial output across timeouts.
                 # Deliver signals only after its internal wait locks release.
                 with _defer_interrupts():
-                    stdout, stderr = process.communicate(input, timeout=interval)
+                    stdout, stderr = process.communicate(timeout=interval)
                 break
             except subprocess.TimeoutExpired as error:
-                input = None
                 if deadline is not None and time.monotonic() >= deadline:
                     error.timeout = timeout
                     raise

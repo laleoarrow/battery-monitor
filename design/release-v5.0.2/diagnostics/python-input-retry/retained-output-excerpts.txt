@@ -1,0 +1,22 @@
+Excerpts transcribed from already completed command outputs; no command was rerun to produce this record.
+
+Old implementation, owned isolated reproduction:
+Python: 3.9.6
+{'text': False, 'result': 'expected old-path timeout', 'duration': 1.06, 'stdout': 'None', 'stderr': 'None'}
+{'text': True, 'result': 'expected old-path timeout', 'duration': 1.061, 'stdout': 'None', 'stderr': 'None'}
+Owned reproduction workspaces removed.
+
+Fixed implementation, full cleanup and signal suite:
+Ran 17 tests in 33.132s
+OK
+
+Fixed implementation, actual JSON input caller's socket/sanitizer suite:
+Ran 8 tests in 5.318s
+OK
+
+Existing post-run audit:
+test scratch entries: 0
+reproduction scratch entries: 0
+
+git diff --check -- tests/local_runtime.py tests/test_local_runtime_cleanup.py
+Exit code: 0; no output.
