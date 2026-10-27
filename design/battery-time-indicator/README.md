@@ -7,12 +7,12 @@ The Swift changes are a draft prototype, not accepted product work.
 `planet-source-preview.html` compares four states, light/dark appearance and two
 placements: beside the caption or on the clock corner. It shows the actual size
 and a magnified detail. This browser mockup is not native-rendering evidence.
-The user's latest change sets the orbit's initial wait to **2 seconds**. Apply
+The user's latest change sets the orbit's initial wait to **0.5 seconds**. Apply
 that approved timing to the draft Swift prototype if implementation proceeds;
 the prototype still has its initial 3-second wait and caption-adjacent placement.
 
 The preview's state/theme controls, moving orbit and narrow-width fit were
-checked before the two-second timing edit. `design-preview.png` records that
+checked before the timing edits. `design-preview.png` records that
 earlier light-appearance preview.
 
 Prototype verification so far:

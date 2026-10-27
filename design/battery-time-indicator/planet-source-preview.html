@@ -50,12 +50,12 @@
       <div class="wp-stage"><div class="wp-context"><div class="wp-label">实际大小 · 时间栏目</div><div class="wp-window wp-corner"><div class="wp-runtime"><div class="wp-clock"><i data-lucide="clock-3" aria-hidden="true"></i><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div><div class="wp-copy"><div class="wp-caption"><span>Estimated Battery Runtime</span></div><div class="wp-value">Calculating…</div></div></div></div></div><div class="wp-detail"><div class="wp-label">细节放大 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div></div>
     </section>
   </div>
-  <div class="wp-statusline" aria-live="polite">计算中 · 稍快呼吸，等待 2 秒后星点斜绕一圈</div>
+  <div class="wp-statusline" aria-live="polite">计算中 · 稍快呼吸，等待 0.5 秒后星点斜绕一圈</div>
 </div>
 <script>
 (() => {
   const root = document.getElementById('wattson-planet-draft');
-  const states = { system:['4h 25m','系统数据 · 主题色恒亮'], fallback:['≈4h 25m','后备估算 · 缓慢、连续的呼吸光'], calculating:['Calculating…','计算中 · 稍快呼吸，等待 2 秒后星点斜绕一圈'], unavailable:['Unavailable','无法计算 · 柔和红色脉动'] };
+  const states = { system:['4h 25m','系统数据 · 主题色恒亮'], fallback:['≈4h 25m','后备估算 · 缓慢、连续的呼吸光'], calculating:['Calculating…','计算中 · 稍快呼吸，等待 0.5 秒后星点斜绕一圈'], unavailable:['Unavailable','无法计算 · 柔和红色脉动'] };
   const ui = { state:'calculating', theme:'auto', glow:1 };
   let origin=performance.now();
   const particles=[];
@@ -80,11 +80,11 @@
   const reduced=matchMedia('(prefers-reduced-motion:reduce)');
   function frame(now){
     const t=((now-origin)/1000)%8;
-    const visible=ui.state==='calculating'&&!reduced.matches&&!document.hidden&&t>=2&&t<4.8;
-    const fade=visible?Math.min(1,(t-2)/.2,(4.8-t)/.25):0;
+    const visible=ui.state==='calculating'&&!reduced.matches&&!document.hidden&&t>=.5&&t<3.3;
+    const fade=visible?Math.min(1,(t-.5)/.2,(3.3-t)/.25):0;
     particles.forEach(({node,i})=>{
       node.style.opacity=String(fade*(i===0?1:.7*Math.pow(.72,i-1)));
-      if(visible){const a=(t-2)/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)>0?'2':'-1';}
+      if(visible){const a=(t-.5)/2.8*Math.PI*2-i*.13; const x=8.5*Math.cos(a),y=4.6*Math.sin(a),tilt=-Math.PI/5;node.style.transform=`translate(${x*Math.cos(tilt)-y*Math.sin(tilt)}px,${x*Math.sin(tilt)+y*Math.cos(tilt)}px)`;node.style.zIndex=Math.sin(a)>0?'2':'-1';}
     });
     requestAnimationFrame(frame);
   }
