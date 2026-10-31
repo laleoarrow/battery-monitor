@@ -43,9 +43,12 @@ payload, signatures and both architectures pass, helper health/v5 pass, and all
 18 prior settings are unchanged. The App stays running. Credential handling
 was memory-only; temporary reader/scratch were removed and sudo invalidated.
 
-The Mac was locked and a subsequent CUA access timed out. Canonical popup
-open/close is explicitly unverified; disposable VM and hosted native UI checks
-are complete. See `installation/RESULTS.md`.
+Initial canonical UI access was blocked by the locked Mac. After the user
+unlocked it on 2026-10-31, real popup open/close/reopen and all three mode
+selections were verified. Native popup captures showed the full-charge orbits
+moving and the selector correctly aligned and rounded. macOS confirmed
+Auto → Low → High → Auto; both supply-mode settings returned to their original
+zero values. See `installation/canonical-ui-unlocked-check.json`.
 
 The Chinese card email “Wattson 5.0.3｜满电，自有节奏” was sent once after all
 public gates and link checks. Sent-message readback verified both confirmed

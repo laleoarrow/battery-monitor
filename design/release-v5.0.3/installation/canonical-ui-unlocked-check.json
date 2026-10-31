@@ -1,0 +1,42 @@
+{
+  "version": "5.0.3",
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "canonicalApp": "/Applications/Wattson.app",
+  "pidBeforeAndAfter": 98244,
+  "appBuildAndReceiptVersionVerified": true,
+  "batteryState": "AC power, 100%, charged",
+  "windowTitle": "Wattson Power Monitor",
+  "method": "Native CUA accessibility and actual popup screenshots, with independent read-only pmset and popup-event logs",
+  "popupOpenCloseReopenVerified": true,
+  "popupLogExamplesLocal": [
+    {"time": "16:53:35.317", "source": "status-action", "openBefore": false, "openAfter": true, "anchorHit": true},
+    {"time": "16:56:27.283", "source": "global-mouse", "openBefore": true, "openAfter": false},
+    {"time": "16:56:29.305", "source": "status-action", "openBefore": false, "openAfter": true, "anchorHit": true}
+  ],
+  "fullChargeIndicator": {
+    "label": "Fully Charged",
+    "sphereAndOrbitingStarsVisible": true,
+    "changingOrbitPositionsObserved": true,
+    "taperedTrailsVisible": true,
+    "noVisibleStuckStateOrObviousJumpObserved": true,
+    "currentPalette": "blue",
+    "limitations": "Sampled native popup observations, not an exported frame-rate recording. Exact orbit periods and other palettes were not remeasured; earlier native renderer and motion evidence remains separate."
+  },
+  "modeSelector": {
+    "sequence": ["Auto", "Low Power", "High Power", "Auto"],
+    "systemModesObserved": [0, 1, 2, 0],
+    "eachAXSelectionMatched": true,
+    "currentSizeAlignmentAndRoundedOutlinesPassed": true,
+    "noVisibleClipping": true,
+    "finalLiveMode": 0,
+    "finalBatteryMode": 0,
+    "finalACMode": 0,
+    "originalModesRestored": true,
+    "dragAndResizeNotRemeasured": true
+  },
+  "freshBuildOrInstallationPerformed": false,
+  "temporaryAppsOrPreferenceSuitesCreated": false,
+  "emailResent": false,
+  "priorPopupAcceptancePendingResolved": true
+}

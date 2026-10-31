@@ -20,10 +20,16 @@ timestamp invalidated. No PAM, authorization or privacy settings changed.
 - All 18 existing settings are unchanged; only hashes were recorded.
 - Owned verification scratch and temporary App registrations are absent.
 
-The Mac was locked when CUA was first queried; a second attempt after
-installation returned a Computer Use timeout. An actual canonical menu-bar
-popup open/close is therefore explicitly unverified. The separate disposable
-GUI VM and hosted native interaction/animation acceptance remain valid.
+The Mac was locked during the initial post-install UI check. After the user
+unlocked and opened the actual monitoring popup on 2026-10-31, CUA observed
+the full-charge orbits moving, and all three selector positions displayed
+correct alignment and rounded outlines. UI selection and read-only `pmset`
+checks confirmed Auto (0), Low Power (1), High Power (2), then Auto (0).
+Both Battery and AC settings returned to their original zero values.
+Popup-event logs independently confirmed real status-item opening, outside
+closing and reopening. The formerly pending canonical UI check is complete;
+see `canonical-ui-unlocked-check.json`. The original installation snapshot's
+`popupInteractionVerified: false` remains unchanged as historical evidence.
 
 This direct-PKG installation completed while the independent Homebrew CI trust
 compatibility fix was being validated. The email remains gated on successful
