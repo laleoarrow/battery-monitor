@@ -13,6 +13,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/macos-helper-install.yml"><img alt="Release candidate build and installation checks" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/macos-helper-install.yml?branch=main&amp;event=workflow_dispatch&amp;style=for-the-badge&amp;logo=githubactions&amp;logoColor=white&amp;label=Release%20QA&amp;labelColor=242938"></a>
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/homebrew-install-test.yml"><img alt="Public Homebrew installation checks" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/homebrew-install-test.yml?branch=main&amp;event=workflow_dispatch&amp;style=for-the-badge&amp;logo=homebrew&amp;logoColor=white&amp;label=Homebrew%20Install&amp;labelColor=242938"></a>
+  <a href="https://github.com/laleoarrow/homebrew-tap/actions/workflows/tests.yml"><img alt="Homebrew tap CI" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/homebrew-tap/tests.yml?branch=main&amp;event=push&amp;style=for-the-badge&amp;logo=homebrew&amp;logoColor=white&amp;label=Tap%20CI&amp;labelColor=242938"></a>
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/pages.yml"><img alt="Website deployment" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/pages.yml?branch=main&amp;event=workflow_dispatch&amp;style=for-the-badge&amp;logo=githubpages&amp;logoColor=white&amp;label=Website&amp;labelColor=242938"></a>
+</p>
+
+<p align="center">
   <a href="https://laleoarrow.github.io/battery-monitor/">Website</a>
   ·
   <a href="https://github.com/laleoarrow/battery-monitor/releases/latest">Download</a>
@@ -183,6 +190,15 @@ The release build produces a universal `arm64` + `x86_64` app targeting macOS
 12, a full App/helper PKG, an app-only DMG with an Applications shortcut, release
 metadata, and `SHA256SUMS.txt`. The App in the DMG must be byte-identical to the
 App in the same PKG. Building these artifacts does not publish a release.
+
+<details>
+<summary>Maintainer workflows</summary>
+
+<p>
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/homebrew-tap.yml"><img alt="Automatic Homebrew tap synchronization" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/homebrew-tap.yml?branch=main&amp;event=workflow_dispatch&amp;style=for-the-badge&amp;logo=homebrew&amp;logoColor=white&amp;label=Tap%20Sync&amp;labelColor=242938"></a>
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/promote-release.yml"><img alt="Developer ID release promotion workflow" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/promote-release.yml?branch=main&amp;event=workflow_dispatch&amp;style=for-the-badge&amp;logo=githubactions&amp;logoColor=white&amp;label=Signed%20Promote&amp;labelColor=242938"></a>
+</p>
+</details>
 
 ## Project links
 
