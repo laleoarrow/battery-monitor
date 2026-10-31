@@ -1,0 +1,44 @@
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	﻿2026-10-31T05:40:32.3173970Z ##[group]Run set -euo pipefail
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3174430Z [36;1mset -euo pipefail[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3174650Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3174920Z [36;1mreadonly CASK_JSON="$RUNNER_TEMP/wattson-public-cask.json"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3175900Z [36;1mreadonly EXPECTED_URL="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3176760Z [36;1m[[ "$EXPECTED_TAP_SHA" =~ ^[0-9a-f]{40}$ ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3177090Z [36;1m[[ "$EXPECTED_PKG_SHA" =~ ^[0-9a-f]{64}$ ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3177400Z [36;1m[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3177600Z [36;1mbrew tap laleoarrow/tap[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3177940Z [36;1mTAP_REPOSITORY="$(brew --repository laleoarrow/tap)"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3178300Z [36;1mreadonly TAP_REPOSITORY[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3178640Z [36;1m[[ -d "$TAP_REPOSITORY/.git" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3179010Z [36;1m[[ -f "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3199020Z [36;1m[[ ! -L "$TAP_REPOSITORY/Casks/wattson.rb" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3199660Z [36;1mCURRENT_TAP_SHA="$(git -C "$TAP_REPOSITORY" rev-parse HEAD)"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3200040Z [36;1mreadonly CURRENT_TAP_SHA[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3200320Z [36;1m[[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3200700Z [36;1m/usr/bin/grep -Fxq "  version \"$WATTSON_VERSION\"" \[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3201030Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3201370Z [36;1m/usr/bin/grep -Fxq "  sha256 \"$EXPECTED_PKG_SHA\"" \[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3201750Z [36;1m  "$TAP_REPOSITORY/Casks/wattson.rb"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3202140Z [36;1mbrew info --cask --json=v2 laleoarrow/tap/wattson > "$CASK_JSON"[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3202740Z [36;1m[[ "$(/usr/bin/jq -r '.casks | length' "$CASK_JSON")" == "1" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3203260Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].token' "$CASK_JSON")" == "wattson" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3203750Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].version' "$CASK_JSON")" == "$WATTSON_VERSION" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3204320Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].sha256' "$CASK_JSON")" == "$EXPECTED_PKG_SHA" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3204860Z [36;1m[[ "$(/usr/bin/jq -r '.casks[0].url' "$CASK_JSON")" == "$EXPECTED_URL" ]][0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3246260Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3246620Z env:
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3248970Z   GH_TOKEN: ***
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3249200Z   RELEASE_TAG: v5.0.3
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3249490Z   EXPECTED_TAP_SHA: 7050d7cc1444fe9f353d1dff8ed76222fd4db629
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3249940Z   EXPECTED_PKG_SHA: e0b97f9c21f8c0c0488133af421306be7eb9c2b48a4eb61c1ef59d76cda39fd5
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3250420Z   EXPECTED_ARCHITECTURE: arm64
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3250650Z   HOMEBREW_NO_AUTO_UPDATE: 1
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3250890Z   HOMEBREW_NO_ENV_HINTS: 1
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3251110Z   WATTSON_VERSION: 5.0.3
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.3251330Z ##[endgroup]
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.9639990Z [34m==>[0m [1mTapping laleoarrow/tap[0m
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:32.9920260Z Cloning into '/opt/homebrew/Library/Taps/laleoarrow/homebrew-tap'...
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:33.9030700Z Tapped 2 casks (18 files, 70.2KB).
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:35.0961420Z ##[error]Refusing to load cask laleoarrow/tap/wattson from untrusted tap laleoarrow/tap.
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	Run `brew trust --cask laleoarrow/tap/wattson` or `brew trust laleoarrow/tap` to trust it.
+Homebrew lifecycle on macos-26	Validate the public Homebrew cask	2026-10-31T05:40:35.0995630Z ##[error]Process completed with exit code 1.

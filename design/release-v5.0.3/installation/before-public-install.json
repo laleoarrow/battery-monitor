@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-31T05:44:47.219784+00:00",
+  "expectedVersion": "5.0.3",
+  "sourceCommit": "aaa50d1ee1e8b04ded88706bb8e65e035034d7b7",
+  "packageSHA256": "e0b97f9c21f8c0c0488133af421306be7eb9c2b48a4eb61c1ef59d76cda39fd5",
+  "packagePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v5.0.3-verify/Wattson-v5.0.3-macos-universal.pkg",
+  "settingsValueHashes": {
+    "0": {
+      "popover.ringMetrics": "8d6cfee78019a3a31cb7758b0b9828af820a2abfc04c127f2d2552cba36c5df4",
+      "popover.module.topProcesses": "f18276674d15bfd03109bb490842d8dc2c47322a0c2c0412ba655c62d75c7fa2",
+      "menubar.showsPercentage": "f18276674d15bfd03109bb490842d8dc2c47322a0c2c0412ba655c62d75c7fa2",
+      "popover.module.flow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.module.history": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.showPopoverArrow": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.liquidGlassEnabled": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "menubar.iconStyle": "b89c0c4a5bf5a1503d1164e8bb848954dc932ec0d81fc84c3885d790c71c6cf1",
+      "popover.moduleOrder": "ef0301491453cdeb78d8a93a0a3968b002a99070bb96a0c9703632d743100ee0",
+      "popover.module.lanes": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "popover.topProcessCount": "e32a9aa8e562ff823b65a4ec71e352d5ac7d51f6d17d3ebd09c6134c034f7214",
+      "appearance.liquidGlassTransparency": "493455bbe9a59db288581df46c01217b1fbcb961185f7c037c8e48b42a561be4",
+      "popover.processWhitelist": "68499eca47958d7bf7a0ca58639e600b63eab39400a7dd4fe2ef511114a3a656",
+      "popover.topProcessesCompact": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.liquidGlassStyle": "8ceb88eddb90bff6a2609c105d57fee0d837d73e8e4c3eefb390db5c8e6f5c13",
+      "appearance.colorScheme": "363e99de0def95bed2a65d60cbe5ddcf926c8322de947b904da2d93a22b21083",
+      "popover.module.runtime": "a400edf4c9fc846ddc64ca632a0c97c112649530d8e9c5dc2b8894da8358dd17",
+      "appearance.inAppLogoStyle": "406a922d115aac36236e06601aa422a46bef9956389cbfb8cc89b4b52e718dd0"
+    }
+  },
+  "productSettingsCount": 18,
+  "canonicalBefore": {
+    "version": "5.0.2",
+    "buildVersion": "5.0.2",
+    "bundleIdentifier": "com.leoarrow.wattson",
+    "canonicalAppPIDs": [
+      32065
+    ],
+    "appExecutableSHA256": "a80778ba9ef6684c70d0b015c76db2da4ac72a9fd7f070def2048b82ba7dc743",
+    "appInfoPlistSHA256": "8fae977c4a210f0d930753f6ce2ad63c6d1fd563d92b5334663ecb3db31731d7",
+    "appBundleTreeSHA256": "857bd56ccdaff0fd3af669d8287661db5a2265a4272c22544712f43569cb1fac",
+    "appBundleFilesOrSymlinks": 13,
+    "helperSHA256": "f793c6f80fb35dccef9b85374ec94db1c80130e418f49a57bfaa6761f94b1957",
+    "daemonSHA256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+    "receipt": {
+      "identifier": "com.leoarrow.wattson.pkg",
+      "version": "5.0.2",
+      "installTime": 1793124855
+    }
+  },
+  "publicRelease": true,
+  "rawSettingsValuesLogged": false,
+  "helperContacted": false,
+  "canonicalLifecycleChanged": false,
+  "publicPackageVerification": {
+    "provenancePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v5.0.3/publication/artifact-public-provenance.json",
+    "provenanceSHA256": "d532dc1e1150a7c25b89a2f4b5f400baaa2ec3c4133175b551d58f594f893c06",
+    "candidateProofSHA256": "29004fa7d9c6d38cbd27a92e251724ba07a079ed673abb36f263c71d9ba28a00",
+    "candidateRunID": 41171291351,
+    "releaseID": 429744696,
+    "anonymousDownload": true,
+    "exactAcceptedPublicBytes": true,
+    "publicationCleanupCompleted": true
+  }
+}

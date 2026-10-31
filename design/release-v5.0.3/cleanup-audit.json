@@ -1,0 +1,33 @@
+{
+  "checkedAtUTC": "2026-10-31T05:51:42.046118+00:00",
+  "version": "5.0.3",
+  "scope": "Task-owned resources only; canonical install, production data, baseline VMs and retained release evidence preserved",
+  "recordedCandidatePublicTapAuthAndVerificationWorkspacesAbsent": true,
+  "testScratchEmpty": true,
+  "ownedMountsAbsent": true,
+  "ownedProcessesAbsent": true,
+  "ownedTemporaryAppRegistrationsAbsent": true,
+  "testPreferencesContainersAndApplicationScriptsAbsent": true,
+  "canonicalRegisteredApp": "/Applications/Wattson.app",
+  "canonicalPublicVersion": "5.0.3",
+  "baselineVMsPreservedAndStopped": true,
+  "ownedNativeVMRemoved": true,
+  "remoteBranches": {
+    "laleoarrow/battery-monitor": [
+      "main"
+    ],
+    "laleoarrow/homebrew-tap": [
+      "main"
+    ]
+  },
+  "remoteMainAtAudit": "7ab4b6f71a72119647d678781299fb4840990e5a",
+  "tapMainAtAudit": "7050d7cc1444fe9f353d1dff8ed76222fd4db629",
+  "retainedEvidence": [
+    "exact candidate four-file distribution",
+    "anonymous public four-file distribution",
+    "local build validation distribution",
+    "native validation archive",
+    "first failed Homebrew run and diagnostic logs"
+  ],
+  "unneededResourcesFound": false
+}

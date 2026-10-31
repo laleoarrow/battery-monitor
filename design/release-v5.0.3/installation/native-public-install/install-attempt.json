@@ -1,0 +1,8 @@
+{
+  "package": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v5.0.3-verify/Wattson-v5.0.3-macos-universal.pkg",
+  "expectedSHA256": "e0b97f9c21f8c0c0488133af421306be7eb9c2b48a4eb61c1ef59d76cda39fd5",
+  "credentialDeliveryCount": 1,
+  "credentialStorage": "memory-only",
+  "sudoTimestampInvalidated": true,
+  "exitCode": 0
+}

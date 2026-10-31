@@ -1,0 +1,24 @@
+{
+  "candidate_checks_passed": true,
+  "canonical_files_and_receipt_unchanged": true,
+  "checked_at_utc": "2026-10-31T05:33:38.844206+00:00",
+  "cleanup_scope": "Shared EXIT lifecycle must finish successfully; no independent whole-host cleanup census is claimed.",
+  "evidence_sha256": {
+    "artifact-after.json": "d8beb9c0934d3efa6a8d54af2d71fd7eb5a42227c89b7ed3e3ec420c92983feb",
+    "artifact-before.json": "e093ac80f7ff9fee110d19410e384977734ec1d046a9df15e60cf738a008adbf",
+    "artifact-download.json": "b983e08b4e1b1a13a670df792a188c3ef6f93e7268b460dd00d754024832cfcf",
+    "artifact-frozen-input-hashes.txt": "0807035e644d2a22c7a014a92c8ef492526727605dd9a6638fd5862ac33e10fe",
+    "artifact-headless.json": "6a7b9d22db6b89b4832c5cb114f98aca147e88917fac384a32362ff17e8d2046",
+    "artifact-jobs.json": "8520d1d13b6789fc3226134b0efa10f5b2c37401d917783d4e362d973652f462",
+    "artifact-list.json": "1b31ee7eeb6c2a8fa136250b664c40c50e253b5e1814b0efb408820f2c3cafee",
+    "artifact-metadata.json": "0762df6684f816bff4f203bab4f7b0737f2dbcbc1b58057de44e6526eaf3ec2e",
+    "artifact-real-verify.log": "17f2d7485e1644e9043654986023c5e546532ec61e2e261769ff40f2ee1e048d",
+    "artifact-run.json": "d38a38dae366575e6aa785562e66922ca3a46dac8fbd0a6350a51f8b3686a8b2",
+    "artifact-signatures.json": "5ccdfeda9aa7b59ceef8a0ad1c6ac02a5ad501e8221a9506ea501413d46b96e6",
+    "artifact-workspace.txt": "a0e0a7abb0a479e02107e45ece7881a35fabaf760c30bfdb740bc9844edd75a9"
+  },
+  "retained_exact_assets": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/github-candidate-v5.0.3-41171291351",
+  "run_id": 41171291351,
+  "source_sha": "aaa50d1ee1e8b04ded88706bb8e65e035034d7b7",
+  "version": "5.0.3"
+}

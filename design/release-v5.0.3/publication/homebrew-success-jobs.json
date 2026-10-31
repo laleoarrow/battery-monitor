@@ -1,0 +1,277 @@
+{
+  "total_count": 4,
+  "jobs": [
+    {
+      "id": 124459605862,
+      "run_id": 41174651687,
+      "workflow_name": "Test public Homebrew install",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174651687",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-l7fZg",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124459605862",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174651687/job/124459605862",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T05:58:12Z",
+      "started_at": "2026-10-31T05:58:14Z",
+      "completed_at": "2026-10-31T05:58:19Z",
+      "name": "Verify the public release and tested Homebrew cask",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T05:58:15Z",
+          "completed_at": "2026-10-31T05:58:15Z"
+        },
+        {
+          "name": "Resolve the release tag from the current main commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T05:58:15Z",
+          "completed_at": "2026-10-31T05:58:16Z"
+        },
+        {
+          "name": "Require the exact tested public cask",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T05:58:16Z",
+          "completed_at": "2026-10-31T05:58:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-31T05:58:18Z",
+          "completed_at": "2026-10-31T05:58:18Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124459605862",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000003467,
+      "runner_name": "GitHub Actions 1000003467",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 124459633010,
+      "run_id": 41174651687,
+      "workflow_name": "Test public Homebrew install",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174651687",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-l9Jcg",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124459633010",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174651687/job/124459633010",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T05:58:19Z",
+      "started_at": "2026-10-31T05:58:21Z",
+      "completed_at": "2026-10-31T05:59:00Z",
+      "name": "Homebrew lifecycle on macos-15-intel",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T05:58:21Z",
+          "completed_at": "2026-10-31T05:58:22Z"
+        },
+        {
+          "name": "Validate the hosted runner and stable release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T05:58:22Z",
+          "completed_at": "2026-10-31T05:58:29Z"
+        },
+        {
+          "name": "Validate the public Homebrew cask",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T05:58:29Z",
+          "completed_at": "2026-10-31T05:58:44Z"
+        },
+        {
+          "name": "Test public cask install and uninstall",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-31T05:58:44Z",
+          "completed_at": "2026-10-31T05:58:58Z"
+        },
+        {
+          "name": "Remove the job-owned Homebrew trust configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-31T05:58:58Z",
+          "completed_at": "2026-10-31T05:58:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-31T05:58:58Z",
+          "completed_at": "2026-10-31T05:58:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124459633010",
+      "labels": [
+        "macos-15-intel"
+      ],
+      "runner_id": 1000003468,
+      "runner_name": "GitHub Actions 1000003468",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 124459633138,
+      "run_id": 41174651687,
+      "workflow_name": "Test public Homebrew install",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174651687",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-l9J8g",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124459633138",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174651687/job/124459633138",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T05:58:19Z",
+      "started_at": "2026-10-31T05:58:22Z",
+      "completed_at": "2026-10-31T05:58:41Z",
+      "name": "Homebrew lifecycle on macos-26",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T05:58:23Z",
+          "completed_at": "2026-10-31T05:58:23Z"
+        },
+        {
+          "name": "Validate the hosted runner and stable release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T05:58:23Z",
+          "completed_at": "2026-10-31T05:58:26Z"
+        },
+        {
+          "name": "Validate the public Homebrew cask",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T05:58:26Z",
+          "completed_at": "2026-10-31T05:58:29Z"
+        },
+        {
+          "name": "Test public cask install and uninstall",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-31T05:58:29Z",
+          "completed_at": "2026-10-31T05:58:39Z"
+        },
+        {
+          "name": "Remove the job-owned Homebrew trust configuration",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-31T05:58:39Z",
+          "completed_at": "2026-10-31T05:58:39Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-31T05:58:39Z",
+          "completed_at": "2026-10-31T05:58:39Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124459633138",
+      "labels": [
+        "macos-26"
+      ],
+      "runner_id": 1000003469,
+      "runner_name": "GitHub Actions 1000003469",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 124459758441,
+      "run_id": 41174651687,
+      "workflow_name": "Test public Homebrew install",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174651687",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-mEzaQ",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124459758441",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174651687/job/124459758441",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T05:59:00Z",
+      "started_at": "2026-10-31T05:59:02Z",
+      "completed_at": "2026-10-31T05:59:08Z",
+      "name": "Deploy site after both public cask lifecycles pass",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T05:59:03Z",
+          "completed_at": "2026-10-31T05:59:03Z"
+        },
+        {
+          "name": "Mark the fully validated stable release as latest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T05:59:03Z",
+          "completed_at": "2026-10-31T05:59:05Z"
+        },
+        {
+          "name": "Dispatch the stable-release Pages deployment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T05:59:05Z",
+          "completed_at": "2026-10-31T05:59:06Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-31T05:59:06Z",
+          "completed_at": "2026-10-31T05:59:06Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124459758441",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000003470,
+      "runner_name": "GitHub Actions 1000003470",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "releaseSource": "aaa50d1ee1e8b04ded88706bb8e65e035034d7b7",
+  "deploymentSource": "7ab4b6f71a72119647d678781299fb4840990e5a",
+  "releaseTag": "v5.0.3",
+  "tagUnchanged": true,
+  "changedPaths": [
+    ".github/workflows/homebrew-install-test.yml",
+    "design/release-v5.0.3/publication/homebrew-trust-recovery.md",
+    "tests/test_release_workflow_contract.py"
+  ],
+  "allOtherTrackedPathsUnchanged": true,
+  "galleryTree": "9ee71203fca06896bb710c90a0220321637cb76e",
+  "galleryTreeUnchanged": true,
+  "targetedWorkflowTests": 44,
+  "targetedWorkflowTestsPassed": true,
+  "installerAssetsRebuiltOrReplaced": false
+}

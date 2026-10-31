@@ -1,0 +1,50 @@
+[
+  {
+    "completed_at": "2026-10-31T05:28:40Z",
+    "conclusion": "success",
+    "id": 124449602265,
+    "name": "Build universal PKG and DMG once",
+    "started_at": "2026-10-31T05:07:13Z",
+    "status": "completed"
+  },
+  {
+    "completed_at": "2026-10-31T05:29:54Z",
+    "conclusion": "success",
+    "id": 124453975122,
+    "name": "Install on macos-15-intel",
+    "started_at": "2026-10-31T05:28:43Z",
+    "status": "completed"
+  },
+  {
+    "completed_at": "2026-10-31T05:29:51Z",
+    "conclusion": "success",
+    "id": 124453975142,
+    "name": "Install on macos-15",
+    "started_at": "2026-10-31T05:28:43Z",
+    "status": "completed"
+  },
+  {
+    "completed_at": "2026-10-31T05:30:21Z",
+    "conclusion": "success",
+    "id": 124453975144,
+    "name": "Install on macos-26-intel",
+    "started_at": "2026-10-31T05:28:44Z",
+    "status": "completed"
+  },
+  {
+    "completed_at": "2026-10-31T05:29:30Z",
+    "conclusion": "success",
+    "id": 124453975147,
+    "name": "Install on macos-14",
+    "started_at": "2026-10-31T05:28:42Z",
+    "status": "completed"
+  },
+  {
+    "completed_at": "2026-10-31T05:30:02Z",
+    "conclusion": "success",
+    "id": 124453975159,
+    "name": "Install on macos-26",
+    "started_at": "2026-10-31T05:28:42Z",
+    "status": "completed"
+  }
+]

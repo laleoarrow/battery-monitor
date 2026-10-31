@@ -1,0 +1,22 @@
+{
+  "messageID": "1a1908d5210af2d7",
+  "sentLabelVerified": true,
+  "subjectVerified": true,
+  "recipientCount": 2,
+  "recipientsMatch": true,
+  "plainTextMatches": true,
+  "htmlMatches": true,
+  "gifEmbedded": true,
+  "version": "5.0.3",
+  "subject": "Wattson 5.0.3｜满电，自有节奏",
+  "duplicateCheckMatchedMessages": 0,
+  "publicLinksVerifiedBeforeSend": true,
+  "publicReleaseURL": "https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.3",
+  "publicGIFURL": "https://laleoarrow.github.io/battery-monitor/design/v5.0.3/previews/full-charge-orbit.gif",
+  "recipientAddressesStored": false,
+  "verifiedAtUTC": "2026-10-31T06:03:01.022696+00:00",
+  "bodySHA256": {
+    "email.txt": "99425fe9d6abfd422ccb968d8e82e74c2429853dbf46fbc2091931a0a20c7b71",
+    "email.html": "71267252a6b950d5722de8a0aba64f3c6388cba9a6da156e8b827892b17d5d46"
+  }
+}

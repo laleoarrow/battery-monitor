@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "checkedAtUTC": "2026-10-31T05:45:17.798084+00:00",
+  "version": "5.0.3",
+  "sourceCommit": "aaa50d1ee1e8b04ded88706bb8e65e035034d7b7",
+  "packageSHA256": "e0b97f9c21f8c0c0488133af421306be7eb9c2b48a4eb61c1ef59d76cda39fd5",
+  "packagePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/dist/public-v5.0.3-verify/Wattson-v5.0.3-macos-universal.pkg",
+  "canonicalAfter": {
+    "version": "5.0.3",
+    "buildVersion": "5.0.3",
+    "bundleIdentifier": "com.leoarrow.wattson",
+    "canonicalAppPIDs": [
+      98244
+    ],
+    "appExecutableSHA256": "fa7033f2ab48426c9b769f3c4f46d45a6e55487ff1a5c487f77973d3242a322d",
+    "appInfoPlistSHA256": "120b2afca2625b54c2112dcb97fc907af2ca8c317002056be6b8b5c119d74a69",
+    "appBundleTreeSHA256": "70aa50590242868a57011e7ef299714c59eb679dadf63da553b44862c477418a",
+    "appBundleFilesOrSymlinks": 13,
+    "helperSHA256": "309b26ea11b0ac7bf2eb8af9ffa99970bb711a04da4831f7e82eeb77a27cb15a",
+    "daemonSHA256": "29cd39cb617610c7e42c5c28549d8334c45fbcaf4b1f188fc35bdd6f13f4a599",
+    "receipt": {
+      "identifier": "com.leoarrow.wattson.pkg",
+      "version": "5.0.3",
+      "installTime": 1793425502
+    }
+  },
+  "existingSettingsCompared": 18,
+  "existingSettingsUnchanged": true,
+  "appAndHelperAndDaemonMatchVerifiedPayload": true,
+  "signatureVerified": true,
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "helperHealth": true,
+  "helperV5Negotiated": true,
+  "publicRelease": true,
+  "popupInteractionVerified": false,
+  "verificationDidNotInstallOrLaunchGUI": true,
+  "rawSettingsValuesLogged": false,
+  "pendingCleanup": true,
+  "beforePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v5.0.3/installation/before-public-install.json",
+  "ownedVerificationResources": {
+    "scratch": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-install-v5.0.3.noindex/verify.4wGPvN",
+    "expandedApp": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/.build/public-install-v5.0.3.noindex/verify.4wGPvN/expanded/Wattson-component.pkg/Payload/Applications/Wattson.app"
+  },
+  "publicPackageVerification": {
+    "provenancePath": "/Users/leoarrow/Project/mypackage/agents/\u7535\u6c60\u529f\u7387/design/release-v5.0.3/publication/artifact-public-provenance.json",
+    "provenanceSHA256": "d532dc1e1150a7c25b89a2f4b5f400baaa2ec3c4133175b551d58f594f893c06",
+    "candidateProofSHA256": "29004fa7d9c6d38cbd27a92e251724ba07a079ed673abb36f263c71d9ba28a00",
+    "candidateRunID": 41171291351,
+    "releaseID": 429744696,
+    "anonymousDownload": true,
+    "exactAcceptedPublicBytes": true,
+    "publicationCleanupCompleted": true
+  }
+}

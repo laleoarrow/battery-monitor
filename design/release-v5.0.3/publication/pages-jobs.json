@@ -1,0 +1,189 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 124459780491,
+      "run_id": 41174710259,
+      "workflow_name": "Deploy Wattson website to GitHub Pages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174710259",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-mGJiw",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124459780491",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174710259/job/124459780491",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T05:59:07Z",
+      "started_at": "2026-10-31T05:59:10Z",
+      "completed_at": "2026-10-31T06:00:42Z",
+      "name": "Build the static Pages artifact",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T05:59:11Z",
+          "completed_at": "2026-10-31T05:59:12Z"
+        },
+        {
+          "name": "Check out the repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T05:59:12Z",
+          "completed_at": "2026-10-31T05:59:24Z"
+        },
+        {
+          "name": "Verify the stable release identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T05:59:24Z",
+          "completed_at": "2026-10-31T05:59:25Z"
+        },
+        {
+          "name": "Set up Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-31T05:59:25Z",
+          "completed_at": "2026-10-31T05:59:33Z"
+        },
+        {
+          "name": "Configure GitHub Pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-31T05:59:33Z",
+          "completed_at": "2026-10-31T05:59:33Z"
+        },
+        {
+          "name": "Install locked website dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-31T05:59:33Z",
+          "completed_at": "2026-10-31T06:00:25Z"
+        },
+        {
+          "name": "Build and test the rendered website",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-31T06:00:25Z",
+          "completed_at": "2026-10-31T06:00:33Z"
+        },
+        {
+          "name": "Lint the website",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-31T06:00:33Z",
+          "completed_at": "2026-10-31T06:00:36Z"
+        },
+        {
+          "name": "Export and validate the project-scoped static site",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-31T06:00:36Z",
+          "completed_at": "2026-10-31T06:00:36Z"
+        },
+        {
+          "name": "Upload the Pages artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-31T06:00:36Z",
+          "completed_at": "2026-10-31T06:00:39Z"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-31T06:00:39Z",
+          "completed_at": "2026-10-31T06:00:39Z"
+        },
+        {
+          "name": "Post Check out the repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-31T06:00:39Z",
+          "completed_at": "2026-10-31T06:00:39Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-31T06:00:39Z",
+          "completed_at": "2026-10-31T06:00:39Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124459780491",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000003471,
+      "runner_name": "GitHub Actions 1000003471",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 124460101926,
+      "run_id": 41174710259,
+      "workflow_name": "Deploy Wattson website to GitHub Pages",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/runs/41174710259",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOS6q1MM8AAAAc-mZxJg",
+      "head_sha": "7ab4b6f71a72119647d678781299fb4840990e5a",
+      "url": "https://api.github.com/repos/laleoarrow/battery-monitor/actions/jobs/124460101926",
+      "html_url": "https://github.com/laleoarrow/battery-monitor/actions/runs/41174710259/job/124460101926",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-31T06:00:42Z",
+      "started_at": "2026-10-31T06:00:45Z",
+      "completed_at": "2026-10-31T06:00:59Z",
+      "name": "Deploy GitHub Pages",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-31T06:00:46Z",
+          "completed_at": "2026-10-31T06:00:47Z"
+        },
+        {
+          "name": "Deploy to GitHub Pages",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-31T06:00:47Z",
+          "completed_at": "2026-10-31T06:00:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-31T06:00:58Z",
+          "completed_at": "2026-10-31T06:00:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/laleoarrow/battery-monitor/check-runs/124460101926",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000003472,
+      "runner_name": "GitHub Actions 1000003472",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}
