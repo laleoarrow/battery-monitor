@@ -1,0 +1,129 @@
+<style>
+#wattson-full-charge { --fc-surface:light-dark(#f5f5f7,#1c1c1e); --fc-ink:light-dark(#333338,#d1d1d6); --fc-muted:light-dark(#66666e,#a1a1a7); --fc-line:light-dark(#dcdce1,#323236); --fc-well:light-dark(#e9e9ee,#29292e); --fc-accent:light-dark(#0875df,#0a84ff); --fc-bright:color-mix(in srgb,var(--fc-accent),white 72%); --fc-deep:color-mix(in srgb,var(--fc-accent),black 24%); font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--fc-ink); }
+#wattson-full-charge * { box-sizing:border-box; }
+#wattson-full-charge[data-palette="green"] { --fc-accent:light-dark(#238241,#30d158); }
+#wattson-full-charge[data-palette="amber"] { --fc-accent:light-dark(#b46b05,#ffad39); }
+#wattson-full-charge[data-palette="violet"] { --fc-accent:light-dark(#8753d2,#b58afa); }
+#wattson-full-charge[data-palette="neutral"] { --fc-accent:light-dark(#60606e,#bfc1ca); }
+#wattson-full-charge .fc-heading { padding:6px 98px 16px 0; font-size:14px; font-weight:500; min-height:50px; }
+#wattson-full-charge .fc-options { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:16px; }
+#wattson-full-charge button,#wattson-full-charge select { font:inherit; color:var(--fc-ink); background:var(--fc-surface); border:1px solid var(--fc-line); border-radius:8px; padding:7px 12px; }
+#wattson-full-charge button[aria-pressed="true"] { background:var(--fc-well); border-color:var(--fc-muted); }
+#wattson-full-charge .fc-appearance { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-left:auto; color:var(--fc-muted); }
+#wattson-full-charge .fc-stage { padding:28px 18px 24px; display:flex; justify-content:center; align-items:center; gap:40px; min-height:275px; }
+#wattson-full-charge .fc-context { width:350px; max-width:100%; flex-shrink:0; }
+#wattson-full-charge .fc-label { text-align:center; font-size:12px; color:var(--fc-muted); margin-bottom:14px; }
+#wattson-full-charge .fc-window { background:var(--fc-surface); border:1px solid var(--fc-line); border-radius:16px; padding:16px; box-shadow:0 8px 24px light-dark(#11111b0c,#0000001f); }
+#wattson-full-charge .fc-row { display:flex; align-items:center; min-height:88px; gap:12px; border-top:1px solid var(--fc-line); border-bottom:1px solid var(--fc-line); }
+#wattson-full-charge .fc-clock { width:44px; height:44px; flex-shrink:0; border-radius:12px; display:grid; place-items:center; position:relative; background:var(--fc-well); border:1px solid color-mix(in srgb,var(--fc-accent) 25%,var(--fc-line)); color:light-dark(#777783,#c0c1ca); }
+#wattson-full-charge .fc-clock::before { content:""; position:absolute; width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,color-mix(in srgb,var(--fc-accent) 10%,transparent),color-mix(in srgb,var(--fc-accent) 32%,transparent)); }
+#wattson-full-charge .fc-clock svg { position:relative; width:27px !important; height:27px !important; stroke-width:1.25; }
+#wattson-full-charge .fc-clock svg :is(path,polyline,line) { stroke:var(--fc-accent); stroke-width:1.8; }
+#wattson-full-charge .fc-copy { flex:1; min-width:0; text-align:right; }
+#wattson-full-charge .fc-caption { display:flex; justify-content:flex-end; align-items:center; gap:4px; font-size:11.5px; color:var(--fc-muted); white-space:nowrap; }
+#wattson-full-charge .fc-value { font-size:20px; line-height:29px; color:var(--fc-ink); font-weight:400; white-space:nowrap; }
+#wattson-full-charge .fc-detail { width:154px; flex-shrink:0; }
+#wattson-full-charge .fc-magnifier { display:grid; place-items:center; height:152px; background:var(--fc-surface); border:1px solid var(--fc-line); border-radius:22px; }
+#wattson-full-charge .fc-magnifier .fc-badge { transform:scale(5); }
+#wattson-full-charge .fc-badge { position:relative; display:inline-block; width:24px; height:24px; flex-shrink:0; isolation:isolate; }
+#wattson-full-charge .fc-halo { position:absolute; inset:1px; border-radius:50%; background:radial-gradient(circle,color-mix(in srgb,var(--fc-accent) 35%,transparent),color-mix(in srgb,var(--fc-accent) 8%,transparent) 45%,transparent 72%); z-index:0; }
+#wattson-full-charge .fc-planet { position:absolute; width:8px; height:8px; left:8px; top:8px; z-index:2; border-radius:50%; background:radial-gradient(circle at 29% 25%,var(--fc-bright),var(--fc-accent) 47%,var(--fc-deep)); }
+#wattson-full-charge .fc-particle { position:absolute; border-radius:50%; left:12px; top:12px; background:var(--fc-accent); pointer-events:none; }
+#wattson-full-charge .fc-particle[data-head] { background:var(--fc-bright); box-shadow:0 0 1.4px color-mix(in srgb,var(--fc-accent) 70%,transparent); }
+#wattson-full-charge .fc-status { font-size:12px; color:var(--fc-muted); text-align:center; margin-top:12px; min-height:36px; }
+@media(max-width:620px) { #wattson-full-charge .fc-stage { flex-direction:column; gap:26px; padding:24px 10px; } #wattson-full-charge .fc-appearance { margin-left:0; } #wattson-full-charge .fc-window { padding:12px; } #wattson-full-charge .fc-row { gap:8px; } }
+@media(pointer:coarse) { #wattson-full-charge button,#wattson-full-charge select { min-height:44px; } }
+</style>
+<div id="wattson-full-charge" data-state="full" data-palette="blue" aria-label="Wattson 满电双星轨设计稿">
+  <div class="fc-heading">满电 · 双星慢巡</div>
+  <div class="fc-options">
+    <button class="cursor-interaction" type="button" data-state="full" aria-pressed="true">满电 · 新增</button>
+    <button class="cursor-interaction" type="button" data-state="calculating" aria-pressed="false">计算中 · 对照</button>
+    <label class="fc-appearance">外观 <select aria-label="预览外观"><option value="auto">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
+  </div>
+  <div class="fc-stage viz-dotted-background">
+    <div class="fc-context">
+      <div class="fc-label">实际大小 · 时间栏目</div>
+      <div class="fc-window"><div class="fc-row">
+        <div class="fc-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div>
+        <div class="fc-copy">
+          <div class="fc-caption"><span class="fc-badge" aria-hidden="true"><span class="fc-halo"></span><span class="fc-planet"></span></span><span>Estimated Time to Full</span></div>
+          <div class="fc-value">Fully Charged</div>
+        </div>
+      </div></div>
+    </div>
+    <div class="fc-detail"><div class="fc-label">星轨细节 · 放大 5 倍</div><div class="fc-magnifier"><span class="fc-badge" role="img" aria-label="中心恒亮，左上和右下两颗星点沿错开的斜轨缓慢连续绕行"><span class="fc-halo"></span><span class="fc-planet"></span></span></div></div>
+  </div>
+  <div class="fc-status" aria-live="polite">恒亮中心 · 双星错速 · 连续绕行</div>
+</div>
+<script>
+(() => {
+  const root=document.getElementById('wattson-full-charge');
+  const ui={state:'full',appearance:'auto',palette:'blue',speed:1,drift:1};
+  const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  const planets=[...root.querySelectorAll('.fc-planet')], halos=[...root.querySelectorAll('.fc-halo')];
+  const particles=[];
+  let time=0,last=null,raf=0,inView=true;
+  root.querySelectorAll('.fc-badge').forEach(badge=>{
+    for(let orbit=0;orbit<2;orbit++) for(let i=0;i<12;i++) {
+      const node=document.createElement('span'); node.className='fc-particle';
+      if(i===0)node.dataset.head=String(orbit);
+      const diameter=i===0?(orbit===0?1.65:1.4):Math.max(.24,1.1-i*.075);
+      node.style.width=node.style.height=diameter+'px'; node.style.margin=(-diameter/2)+'px';
+      badge.appendChild(node);particles.push({node,orbit,i});
+    }
+  });
+  function position(t,orbit,lag){
+    const direction=orbit===0?1:-1,period=orbit===0?8:10.6,omega=2*Math.PI/period;
+    const wave=orbit===0?.29:.21,offset=orbit===0?.4:2.1;
+    const phase=orbit===0?Math.PI+1.05:.23;
+    const angle=phase+direction*(omega*t+.06*ui.drift*omega/wave*(Math.sin(wave*t+offset)-Math.sin(offset))-lag);
+    const tilt=((orbit===0?-34:30)+2*ui.drift*Math.sin(t*.17+orbit*2.2))*Math.PI/180;
+    const radius=(orbit===0?10.1:9.0)*(1+.012*ui.drift*Math.sin(t*.23+orbit*1.7));
+    const x=radius*Math.cos(angle),y=(orbit===0?5.7:5.0)*Math.sin(angle);
+    return {x:x*Math.cos(tilt)-y*Math.sin(tilt),y:x*Math.sin(tilt)+y*Math.cos(tilt),depth:Math.sin(angle)};
+  }
+  function draw(){
+    const t=time*ui.speed,full=ui.state==='full',cycle=t%3.3;
+    const pulse=full||reduced.matches?1:.52+.48*Math.sin(Math.PI*Math.min(cycle/2.8,1))**2;
+    planets.forEach(n=>n.style.opacity=String(pulse));halos.forEach(n=>n.style.opacity=String(pulse));
+    particles.forEach(({node,orbit,i})=>{
+      let p,alpha=1;
+      if(full){p=position(reduced.matches?0:t,orbit,i*.038);}
+      else {
+        const angle=cycle/2.8*2*Math.PI-i*.07,x=9.6*Math.cos(angle),y=5.1*Math.sin(angle),tilt=-Math.PI/5;
+        p={x:x*Math.cos(tilt)-y*Math.sin(tilt),y:x*Math.sin(tilt)+y*Math.cos(tilt),depth:Math.sin(angle)};
+        alpha=orbit===0&&!reduced.matches&&cycle<2.8?Math.max(0,Math.min(1,cycle/.2,(2.8-cycle)/.25)):0;
+      }
+      const near=(p.depth+1)/2;
+      const dust=i>8?(.8+.2*Math.sin(t*.4+i+orbit)):1;
+      node.style.opacity=String(alpha*(i===0?.76+.24*near:.65*Math.pow(.76,i-1)*dust)*((reduced.matches&&i>0)?0:1));
+      node.style.transform=`translate(${p.x}px,${p.y}px) scale(${.88+.16*near})`;
+      node.style.zIndex=p.depth>=0?'3':'1';
+    });
+  }
+  function tick(now){raf=0;if(last!==null)time+=(now-last)/1000;last=now;draw();schedule();}
+  function schedule(){if(!raf&&!document.hidden&&inView&&!reduced.matches)raf=requestAnimationFrame(tick);}
+  function visibility(){cancelAnimationFrame(raf);raf=0;last=null;draw();schedule();}
+  function render(){
+    root.dataset.state=ui.state;root.dataset.palette=ui.palette;root.style.colorScheme=ui.appearance==='auto'?'':ui.appearance;
+    root.querySelector('select').value=ui.appearance;
+    root.querySelectorAll('button[data-state]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===ui.state)));
+    root.querySelector('.fc-value').textContent=ui.state==='full'?'Fully Charged':'Calculating…';
+    root.querySelector('.fc-status').textContent=reduced.matches?'减少动态效果 · 静态星点':ui.state==='full'?'恒亮中心 · 双星错速 · 连续绕行':'单星绕行 · 同步呼吸 · 圈末停 0.5 秒';
+    root.querySelector('.fc-magnifier .fc-badge').setAttribute('aria-label',ui.state==='full'?'中心恒亮，左上和右下两颗星点沿错开的斜轨缓慢连续绕行':'单颗星点与中心呼吸同步，绕行一圈后停半秒');
+    draw();schedule();
+  }
+  function save(){window.openai?.setWidgetState?.({modelContent:{design:'满电双星慢巡',state:ui.state,palette:ui.palette,speed:ui.speed,drift:ui.drift},privateContent:{...ui}}).catch(()=>{});}
+  function restore(saved){const s=saved?.privateContent;if(s){if(['full','calculating'].includes(s.state))ui.state=s.state;if(['auto','light','dark'].includes(s.appearance))ui.appearance=s.appearance;if(['blue','green','amber','violet','neutral'].includes(s.palette))ui.palette=s.palette;if(typeof s.speed==='number')ui.speed=Math.min(1.3,Math.max(.7,s.speed));if(typeof s.drift==='number')ui.drift=Math.min(1.5,Math.max(0,s.drift));}render();}
+  root.querySelectorAll('button[data-state]').forEach(b=>b.addEventListener('click',()=>{ui.state=b.dataset.state;time=0;last=null;render();save();}));
+  root.querySelector('select').addEventListener('change',event=>{ui.appearance=event.target.value;render();save();});
+  document.addEventListener('visibilitychange',visibility);
+  reduced.addEventListener('change',()=>{visibility();render();});
+  const observer=new IntersectionObserver(entries=>{inView=entries.some(e=>e.isIntersecting);visibility();});observer.observe(root);
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);observer.disconnect();});
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
+  restore(window.openai?.widgetState);
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:()=>{render();save();}});tweak.addSelect(ui,'palette',{label:'仪表配色预览',options:[{label:'蓝色',value:'blue'},{label:'绿色',value:'green'},{label:'琥珀',value:'amber'},{label:'紫色',value:'violet'},{label:'银灰',value:'neutral'}]});tweak.addSlider(ui,'speed',{label:'绕行速度',min:.7,max:1.3,step:.1});tweak.addSlider(ui,'drift',{label:'自然错落',min:0,max:1.5,step:.1});}
+})();
+</script>
