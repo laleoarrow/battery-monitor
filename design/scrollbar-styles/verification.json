@@ -1,9 +1,9 @@
 {
   "kind": "Interactive scrollbar design preview; not a running native App screenshot",
-  "checkedAtUTC": "2026-10-31T02:13:45.860Z",
-  "sourceSHA256": "3c487f69268eb29f14dc4929408e55123307db6abe62acb49ff396fb4441e3ee",
+  "checkedAtUTC": "2026-10-31T02:21:17.411Z",
+  "sourceSHA256": "56233821205597ebb4934f1cb8fcf5f61b6e3c3c8ab58ff63486d52cdf57496d",
   "playwright": "1.62.1",
-  "scratch": "/Users/leoarrow/Project/mypackage/agents/电池功率/design/scrollbar-styles/.preview-B471D842-AC1C-4278-AC9A-8B1B2B703837.noindex",
+  "scratch": "/Users/leoarrow/Project/mypackage/agents/电池功率/design/scrollbar-styles/.preview-CB74B8A2-7979-46D3-A50E-2B9835259EC1.noindex",
   "networkRequestsAllowed": false,
   "layouts": [
     {
@@ -11,18 +11,28 @@
       "documentWidth": 736,
       "documentHeight": 1000,
       "colorScheme": "light",
-      "file": "scrollbar-orbit-736-light.png",
+      "file": "scrollbar-flow-736-light.png",
       "simpleFile": "scrollbar-simple-736-light.png",
       "appearance": {
         "simpleWidth": "6px",
-        "orbitWidth": "6px",
-        "simpleBackground": "linear-gradient(color(srgb 0.520784 0.696157 0.896), rgb(20, 106, 204) 48%, color(srgb 0.0564706 0.299294 0.576))",
-        "orbitBackground": "linear-gradient(color(srgb 0.520784 0.696157 0.896), rgb(20, 106, 204) 48%, color(srgb 0.0564706 0.299294 0.576))",
-        "orbitOverflow": "hidden",
-        "orbitRadius": "6px",
-        "orbitBoxShadow": "none",
-        "orbitFilter": "brightness(1.08)"
+        "flowWidth": "6px",
+        "simpleBackground": "none",
+        "simpleRGBA": [
+          0,
+          0,
+          0,
+          92
+        ],
+        "flowBackground": "linear-gradient(color(srgb 0.701569 0.802745 0.923529), rgb(20, 106, 204) 72%, color(srgb 0.262745 0.532549 0.84))",
+        "flowOverflow": "hidden",
+        "flowRadius": "6px",
+        "flowBoxShadow": "none",
+        "flowFilter": "brightness(1.08)",
+        "railWidth": 26,
+        "railLeft": 573,
+        "viewportCenter": 510.5
       },
+      "defaultHidden": true,
       "noHorizontalOverflow": true,
       "switchingPreservesPosition": true
     },
@@ -31,18 +41,28 @@
       "documentWidth": 736,
       "documentHeight": 1000,
       "colorScheme": "dark",
-      "file": "scrollbar-orbit-736-dark.png",
+      "file": "scrollbar-flow-736-dark.png",
       "simpleFile": "scrollbar-simple-736-dark.png",
       "appearance": {
         "simpleWidth": "6px",
-        "orbitWidth": "6px",
-        "simpleBackground": "linear-gradient(color(srgb 0.612549 0.800157 1), rgb(65, 157, 255) 48%, color(srgb 0.183529 0.443294 0.72))",
-        "orbitBackground": "linear-gradient(color(srgb 0.612549 0.800157 1), rgb(65, 157, 255) 48%, color(srgb 0.183529 0.443294 0.72))",
-        "orbitOverflow": "hidden",
-        "orbitRadius": "6px",
-        "orbitBoxShadow": "none",
-        "orbitFilter": "brightness(1.08)"
+        "flowWidth": "6px",
+        "simpleBackground": "none",
+        "simpleRGBA": [
+          255,
+          255,
+          255,
+          97
+        ],
+        "flowBackground": "linear-gradient(color(srgb 0.175294 0.283529 0.404314), rgb(65, 157, 255) 72%, color(srgb 0.403922 0.692549 1))",
+        "flowOverflow": "hidden",
+        "flowRadius": "6px",
+        "flowBoxShadow": "none",
+        "flowFilter": "brightness(1.08)",
+        "railWidth": 26,
+        "railLeft": 573,
+        "viewportCenter": 510.5
       },
+      "defaultHidden": true,
       "noHorizontalOverflow": true,
       "switchingPreservesPosition": true
     },
@@ -55,14 +75,24 @@
       "simpleFile": null,
       "appearance": {
         "simpleWidth": "6px",
-        "orbitWidth": "6px",
-        "simpleBackground": "linear-gradient(color(srgb 0.520784 0.696157 0.896), rgb(20, 106, 204) 48%, color(srgb 0.0564706 0.299294 0.576))",
-        "orbitBackground": "linear-gradient(color(srgb 0.520784 0.696157 0.896), rgb(20, 106, 204) 48%, color(srgb 0.0564706 0.299294 0.576))",
-        "orbitOverflow": "hidden",
-        "orbitRadius": "6px",
-        "orbitBoxShadow": "none",
-        "orbitFilter": "brightness(1.08)"
+        "flowWidth": "6px",
+        "simpleBackground": "none",
+        "simpleRGBA": [
+          0,
+          0,
+          0,
+          92
+        ],
+        "flowBackground": "linear-gradient(color(srgb 0.701569 0.802745 0.923529), rgb(20, 106, 204) 72%, color(srgb 0.262745 0.532549 0.84))",
+        "flowOverflow": "hidden",
+        "flowRadius": "6px",
+        "flowBoxShadow": "none",
+        "flowFilter": "brightness(1.08)",
+        "railWidth": 26,
+        "railLeft": 272,
+        "viewportCenter": 209.5
       },
+      "defaultHidden": true,
       "noHorizontalOverflow": true,
       "switchingPreservesPosition": true
     },
@@ -71,18 +101,28 @@
       "documentWidth": 320,
       "documentHeight": 1000,
       "colorScheme": "dark",
-      "file": "scrollbar-orbit-320-dark.png",
+      "file": "scrollbar-flow-320-dark.png",
       "simpleFile": null,
       "appearance": {
         "simpleWidth": "6px",
-        "orbitWidth": "6px",
-        "simpleBackground": "linear-gradient(color(srgb 0.612549 0.800157 1), rgb(65, 157, 255) 48%, color(srgb 0.183529 0.443294 0.72))",
-        "orbitBackground": "linear-gradient(color(srgb 0.612549 0.800157 1), rgb(65, 157, 255) 48%, color(srgb 0.183529 0.443294 0.72))",
-        "orbitOverflow": "hidden",
-        "orbitRadius": "6px",
-        "orbitBoxShadow": "none",
-        "orbitFilter": "brightness(1.08)"
+        "flowWidth": "6px",
+        "simpleBackground": "none",
+        "simpleRGBA": [
+          255,
+          255,
+          255,
+          97
+        ],
+        "flowBackground": "linear-gradient(color(srgb 0.175294 0.283529 0.404314), rgb(65, 157, 255) 72%, color(srgb 0.403922 0.692549 1))",
+        "flowOverflow": "hidden",
+        "flowRadius": "6px",
+        "flowBoxShadow": "none",
+        "flowFilter": "brightness(1.08)",
+        "railWidth": 26,
+        "railLeft": 272,
+        "viewportCenter": 209.5
       },
+      "defaultHidden": true,
       "noHorizontalOverflow": true,
       "switchingPreservesPosition": true
     }
@@ -107,7 +147,7 @@
     {
       "width": 736,
       "colorScheme": "light",
-      "style": "orbit",
+      "style": "flow",
       "wheelMoved": true,
       "railVisible": true,
       "dragBottomPassed": true
@@ -131,7 +171,7 @@
     {
       "width": 736,
       "colorScheme": "dark",
-      "style": "orbit",
+      "style": "flow",
       "wheelMoved": true,
       "railVisible": true,
       "dragBottomPassed": true
@@ -155,7 +195,7 @@
     {
       "width": 320,
       "colorScheme": "light",
-      "style": "orbit",
+      "style": "flow",
       "wheelMoved": true,
       "railVisible": true,
       "dragBottomPassed": true
@@ -179,7 +219,7 @@
     {
       "width": 320,
       "colorScheme": "dark",
-      "style": "orbit",
+      "style": "flow",
       "wheelMoved": true,
       "railVisible": true,
       "dragBottomPassed": true
@@ -188,14 +228,15 @@
   "errors": [],
   "allPassed": true,
   "browser": "156.0.8078.76",
-  "orbitContainment": {
-    "sampledMilliseconds": 3400,
-    "samples": 1435,
-    "outsideCapsule": 0
-  },
-  "orbitMotion": {
-    "starsChangePosition": true,
-    "sampledMilliseconds": 250
+  "flowMotion": {
+    "sampledMilliseconds": 5215,
+    "samples": 1565,
+    "pointCount": 5,
+    "outsideCapsule": 0,
+    "downwardSteps": 1553,
+    "invisibleResets": 7,
+    "visibleUpwardSteps": 0,
+    "nonuniformSpacingFrames": 313
   },
   "reducedMotion": {
     "media": "reduce",
@@ -207,29 +248,31 @@
     "scratchRemoved": true,
     "scratchReferencingProcessesRemaining": 0,
     "previewScratchDirectoriesRemaining": 0,
-    "productionAppOrUserBrowserTouched": false
-  },
-  "visualReview": {
-    "scope": "Design-preview screenshots, not native AppKit output",
-    "orbitClippedInsideThinRoundedBar": true,
-    "whiteDotsAndCurvedLightAppearInsideBar": true,
-    "simpleThemeGradientVisible": true,
-    "reviewedImages": [
-      "scrollbar-orbit-736-dark.png",
+    "productionAppOrUserBrowserTouched": false,
+    "obsoletePriorDesignPreviewsRemoved": [
       "scrollbar-orbit-736-light.png",
-      "scrollbar-simple-736-dark.png",
-      "scrollbar-simple-736-light.png"
+      "scrollbar-orbit-736-dark.png",
+      "scrollbar-orbit-320-dark.png"
     ]
   },
-  "diagnosticSummary": {
-    "priorRevisionIssue": "Live reduced-motion change updated MediaQueryList.matches without delivering its change callback in a Chromium probe. The stopped-frame path now synchronizes static state; live reduced-motion checks pass.",
-    "scope": "Browser design preview behavior only; no native AppKit assertion."
+  "visualReview": {
+    "scope": "Settings row and scrollbar detail only; no simulated App body or native AppKit screenshot",
+    "rightSidePositionRetained": true,
+    "simpleNeutralGreyNoColorGradient": true,
+    "flowGradientWithIndependentWhitePoints": true,
+    "noOrbitOrCometTail": true,
+    "lightContainedInsideRoundedBar": true,
+    "reviewedImages": [
+      "scrollbar-flow-736-dark.png",
+      "scrollbar-simple-736-light.png",
+      "scrollbar-flow-320-dark.png"
+    ]
   },
   "previewSHA256": {
-    "scrollbar-orbit-320-dark.png": "646b3b89121711fd59d14a4398fa175436da7795fb4b32d5c451333d93293b35",
-    "scrollbar-orbit-736-dark.png": "5348543f967073afc14f84627b5f3acc20f1f91098e66e7addcc0a38ea4ef73f",
-    "scrollbar-orbit-736-light.png": "0a392aff6b5e2de027edbb0e74a767713850e8722be88f7081474d994f4dab1a",
-    "scrollbar-simple-736-dark.png": "186eb6db54ea7368bf6ddb91dd801a965aa0ecda471a7430d684efcbba1135b1",
-    "scrollbar-simple-736-light.png": "4beeb42ad0b07f4f34ba5704dc0e388cd6435c0ae347f478f9190e456ffaa720"
+    "scrollbar-flow-320-dark.png": "d74b93c655d4f3fdcf87a52dd2a4e6edc16ef38f6f3aa48b3265566fb7aeb324",
+    "scrollbar-flow-736-dark.png": "d39420a801baf4a04a116e5bf0667064afc64eef3e76519956a6d9eeef1db37b",
+    "scrollbar-flow-736-light.png": "e0cbe683be84bd2bcea5a053c8ebd56da61fd949d5dc8794334a43d9bb77474e",
+    "scrollbar-simple-736-dark.png": "b0a76deb0fc0d31e78f2d513e28a353200606e8c2cb3268f3ede1220739a41b4",
+    "scrollbar-simple-736-light.png": "f379e8e0acd7a601c28969d3b5961fa1fe58d8df67a5b1df10af1a23467662ad"
   }
 }

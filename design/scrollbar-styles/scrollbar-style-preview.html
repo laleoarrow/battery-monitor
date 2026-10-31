@@ -1,167 +1,73 @@
 <style>
-#wattson-scroll-design { --ws-surface:light-dark(#f7f7f9,#242426); --ws-panel:light-dark(#fff,#2d2d30); --ws-ink:light-dark(#252529,#f4f4f6); --ws-muted:light-dark(#696971,#aaaab1); --ws-line:light-dark(#ddddE2,#414146); --ws-well:light-dark(#e8e8ed,#303035); --ws-accent:light-dark(#146acc,#419dff); --ws-bright:color-mix(in srgb,var(--ws-accent),white 68%); --ws-height:536px; font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ws-ink); }
+#wattson-scroll-design { --ws-surface:light-dark(#f7f7f9,#242426); --ws-panel:light-dark(#fff,#2d2d30); --ws-ink:light-dark(#252529,#f4f4f6); --ws-muted:light-dark(#696971,#aaaab1); --ws-line:light-dark(#dddde2,#414146); --ws-accent:light-dark(#146acc,#419dff); --ws-bright:color-mix(in srgb,var(--ws-accent),white 68%); --ws-height:300px; font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ws-ink); }
 #wattson-scroll-design[data-palette="green"] { --ws-accent:light-dark(#21834b,#43d480); }
 #wattson-scroll-design[data-palette="neutral"] { --ws-accent:light-dark(#767483,#c8c4d5); }
 #wattson-scroll-design * { box-sizing:border-box; }
-#wattson-scroll-design .ws-stage { display:grid; grid-template-columns:minmax(210px,250px) minmax(280px,360px); gap:26px; justify-content:center; align-items:start; padding:28px 18px 30px; }
-#wattson-scroll-design .ws-settings { background:var(--ws-surface); border:1px solid var(--ws-line); border-radius:18px; padding:20px 16px 18px; box-shadow:0 7px 28px #0000000a; margin-top:30px; }
-#wattson-scroll-design .ws-settings-title { display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:15px; font-weight:600; }
-#wattson-scroll-design .ws-settings-title i { width:17px; height:17px; }
+#wattson-scroll-design .ws-stage { display:grid; grid-template-columns:minmax(210px,250px) 180px; gap:36px; justify-content:center; align-items:start; padding:28px 18px 30px; }
+#wattson-scroll-design .ws-settings { background:var(--ws-surface); border:1px solid var(--ws-line); border-radius:18px; padding:20px 16px 18px; margin-top:25px; }
+#wattson-scroll-design .ws-settings-title { margin-bottom:20px; font-size:15px; font-weight:500; }
 #wattson-scroll-design .ws-subtitle { font-size:12px; color:var(--ws-muted); margin-bottom:8px; }
 #wattson-scroll-design .ws-setting-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; border-top:1px solid var(--ws-line); }
 #wattson-scroll-design .ws-setting-row select { appearance:auto; min-width:82px; font:inherit; color:var(--ws-ink); background:var(--ws-panel); border:1px solid var(--ws-line); border-radius:6px; padding:4px 5px; }
 #wattson-scroll-design .ws-setting-row label { font-weight:500; }
 #wattson-scroll-design .ws-setting-note { color:var(--ws-muted); font-size:12px; min-height:53px; padding-top:5px; }
 #wattson-scroll-design .ws-caption { color:var(--ws-muted); font-size:11px; margin:9px 2px 0; }
-#wattson-scroll-design .ws-preview-label { margin:0 0 8px 5px; color:var(--ws-muted); font-size:12px; }
-#wattson-scroll-design .ws-app { position:relative; background:var(--ws-surface); border:1px solid var(--ws-line); border-radius:26px; overflow:hidden; box-shadow:0 18px 36px #00000013; isolation:isolate; }
+#wattson-scroll-design .ws-preview-label { margin:0 0 8px; color:var(--ws-muted); font-size:12px; }
+#wattson-scroll-design .ws-app { position:relative; background:var(--ws-surface); border-right:1px solid var(--ws-line); overflow:hidden; isolation:isolate; }
 #wattson-scroll-design .ws-scroll { height:var(--ws-height); overflow-y:auto; overflow-x:hidden; scrollbar-width:none; overscroll-behavior:contain; scroll-behavior:auto; }
 #wattson-scroll-design .ws-scroll::-webkit-scrollbar { display:none; }
-#wattson-scroll-design .ws-document { padding:20px 18px 16px 26px; }
-#wattson-scroll-design .ws-header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:16px; }
-#wattson-scroll-design .ws-watts { font-size:34px; font-weight:600; line-height:1.15; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
-#wattson-scroll-design .ws-unit { font-size:17px; color:var(--ws-muted); letter-spacing:0; font-weight:500; }
-#wattson-scroll-design .ws-charge { text-align:right; color:var(--ws-muted); font-size:12px; }
-#wattson-scroll-design .ws-charge strong { display:block; color:var(--ws-accent); font-size:17px; font-weight:600; margin-bottom:2px; }
-#wattson-scroll-design .ws-section { border-top:1px solid var(--ws-line); padding:20px 0; }
-#wattson-scroll-design .ws-flow { position:relative; height:162px; display:flex; justify-content:space-between; align-items:center; }
-#wattson-scroll-design .ws-flow-wire { position:absolute; left:28px; right:28px; top:53px; height:45px; border-top:5px solid var(--ws-accent); border-radius:50%; transform:rotate(-15deg); opacity:.58; }
-#wattson-scroll-design .ws-flow-wire::after { content:""; position:absolute; left:20%; top:-4px; width:4px; height:4px; border-radius:50%; background:#fff; box-shadow:0 0 5px #ffffffb0; }
-#wattson-scroll-design .ws-node { position:relative; display:flex; flex-direction:column; align-items:center; gap:3px; z-index:1; color:var(--ws-muted); font-size:12px; }
-#wattson-scroll-design .ws-node-box { width:42px; height:42px; border:1px solid color-mix(in srgb,var(--ws-accent),var(--ws-line) 65%); border-radius:13px; display:grid; place-items:center; background:var(--ws-well); color:var(--ws-accent); font-size:12px; font-weight:600; }
-#wattson-scroll-design .ws-node strong { color:var(--ws-ink); font-size:14px; font-weight:500; }
-#wattson-scroll-design .ws-right-nodes { display:flex; flex-direction:column; gap:14px; }
-#wattson-scroll-design .ws-right-nodes .ws-node-box { width:36px; height:36px; border-radius:11px; }
-#wattson-scroll-design .ws-instruments { display:grid; grid-template-columns:110px 1fr; gap:20px; align-items:center; padding:24px 0; }
-#wattson-scroll-design .ws-ring { width:108px; height:108px; border:7px solid var(--ws-accent); border-radius:50%; position:relative; display:flex; align-items:center; justify-content:center; flex-direction:column; }
-#wattson-scroll-design .ws-ring::after { content:""; position:absolute; inset:8px; border:4px solid color-mix(in srgb,var(--ws-accent),transparent 35%); border-left-color:transparent; border-top-color:transparent; border-radius:50%; transform:rotate(28deg); }
-#wattson-scroll-design .ws-ring strong { font-size:27px; font-weight:600; }
-#wattson-scroll-design .ws-ring small { color:var(--ws-muted); font-size:13px; }
-#wattson-scroll-design .ws-stats { display:grid; grid-template-columns:1fr 1fr; gap:15px 9px; font-size:11px; color:var(--ws-muted); }
-#wattson-scroll-design .ws-stats strong { display:block; color:var(--ws-ink); font-size:15px; font-weight:500; margin-top:3px; white-space:nowrap; }
-#wattson-scroll-design .ws-lanes { display:grid; gap:9px; }
-#wattson-scroll-design .ws-lane { background:var(--ws-well); display:flex; justify-content:space-between; align-items:center; border-radius:10px; padding:8px 10px; font-size:12px; color:var(--ws-muted); }
-#wattson-scroll-design .ws-lane:first-child { background:linear-gradient(90deg,color-mix(in srgb,var(--ws-accent),transparent 50%),var(--ws-well)); }
-#wattson-scroll-design .ws-lane strong { color:var(--ws-ink); font-size:14px; font-weight:500; }
-#wattson-scroll-design .ws-section-label { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--ws-muted); font-size:12px; }
-#wattson-scroll-design .ws-history { width:100%; height:92px; margin-top:12px; display:block; color:var(--ws-accent); }
-#wattson-scroll-design .ws-process { display:grid; grid-template-columns:90px 1fr 36px; gap:9px; align-items:center; margin-top:15px; font-size:12px; }
-#wattson-scroll-design .ws-process-track { height:5px; border-radius:3px; background:var(--ws-well); }
-#wattson-scroll-design .ws-process-track span { height:5px; display:block; border-radius:3px; background:color-mix(in srgb,var(--ws-accent),transparent 32%); }
-#wattson-scroll-design .ws-process-value { color:var(--ws-muted); text-align:right; font-variant-numeric:tabular-nums; }
-#wattson-scroll-design .ws-time { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:23px 0; }
-#wattson-scroll-design .ws-clock { display:grid; place-items:center; width:48px; height:48px; border-radius:14px; background:var(--ws-well); color:var(--ws-accent); }
-#wattson-scroll-design .ws-clock i { width:25px; height:25px; }
-#wattson-scroll-design .ws-time-copy { text-align:right; color:var(--ws-muted); font-size:12px; }
-#wattson-scroll-design .ws-time-copy strong { color:var(--ws-ink); display:block; font-size:18px; font-weight:500; margin-top:5px; }
-#wattson-scroll-design .ws-planet { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:5px; background:radial-gradient(circle at 30% 25%,var(--ws-bright),var(--ws-accent)); box-shadow:0 0 5px color-mix(in srgb,var(--ws-accent),transparent 65%); }
-#wattson-scroll-design .ws-footer { padding-top:17px; border-top:1px solid var(--ws-line); }
-#wattson-scroll-design .ws-footer label { display:flex; align-items:center; gap:7px; font-size:12px; }
-#wattson-scroll-design .ws-footer input { accent-color:var(--ws-accent); }
-#wattson-scroll-design .ws-power-modes { margin-top:17px; display:flex; gap:5px; align-items:center; }
-#wattson-scroll-design .ws-power-modes button { flex:1; font:500 12px -apple-system,BlinkMacSystemFont,sans-serif; padding:9px 5px; color:var(--ws-ink); border:1px solid transparent; background:transparent; border-radius:20px; white-space:nowrap; }
-#wattson-scroll-design .ws-power-modes button[aria-pressed="true"] { border-color:var(--ws-line); background:var(--ws-well); }
-#wattson-scroll-design .ws-rail { position:absolute; left:1px; top:16px; bottom:16px; width:26px; padding:0; margin:0; border:0; background:transparent; z-index:5; touch-action:none; cursor:grab; }
+#wattson-scroll-design .ws-document { height:1000px; padding:18px 34px 18px 16px; display:flex; flex-direction:column; justify-content:space-between; color:var(--ws-muted); font-size:11px; }
+#wattson-scroll-design .ws-marker { display:flex; align-items:center; gap:9px; }
+#wattson-scroll-design .ws-marker::after { content:""; height:1px; flex:1; background:var(--ws-line); }
+#wattson-scroll-design .ws-rail { position:absolute; right:1px; top:16px; bottom:16px; width:26px; padding:0; margin:0; border:0; background:transparent; z-index:5; touch-action:none; cursor:grab; }
 #wattson-scroll-design .ws-rail:active { cursor:grabbing; }
 #wattson-scroll-design .ws-rail:focus-visible { outline:2px solid var(--ws-accent); outline-offset:-3px; border-radius:10px; }
-#wattson-scroll-design .ws-track { position:absolute; top:0; bottom:0; width:2px; left:12px; background:color-mix(in srgb,var(--ws-muted),transparent 91%); border-radius:2px; }
-#wattson-scroll-design .ws-thumb { position:absolute; left:0; width:26px; height:220px; top:0; pointer-events:none; }
-#wattson-scroll-design .ws-simple { position:absolute; left:10px; top:0; bottom:0; width:6px; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),white 48%),var(--ws-accent) 48%,color-mix(in srgb,var(--ws-accent),black 28%)); border-radius:6px; }
-#wattson-scroll-design .ws-rail:hover .ws-simple { filter:brightness(1.08); }
-#wattson-scroll-design .ws-orbit { position:absolute; left:10px; top:0; bottom:0; width:6px; overflow:hidden; border-radius:6px; isolation:isolate; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),white 48%),var(--ws-accent) 48%,color-mix(in srgb,var(--ws-accent),black 28%)); }
-#wattson-scroll-design .ws-core { position:absolute; inset:0; background:linear-gradient(90deg,#ffffff00,#ffffff28 48%,#ffffff00); box-shadow:inset 1px 0 1px #ffffff15; }
-#wattson-scroll-design .ws-orbit-line { position:absolute; inset:5px 1.4px; border:.6px solid #ffffff25; border-radius:50%; transform:skewX(-.18deg); }
-#wattson-scroll-design .ws-orbit-front { border-left-color:transparent; border-top-color:#ffffff65; border-bottom-color:transparent; border-right-color:#ffffff8a; opacity:.66; }
-#wattson-scroll-design .ws-star { position:absolute; left:50%; top:50%; width:2px; height:2px; margin:-1px; border-radius:50%; background:#fff; box-shadow:0 0 3px #ffffffb0,0 0 6px var(--ws-bright); }
-#wattson-scroll-design .ws-star:not([data-head]) { width:1.4px; height:1.4px; margin:-.7px; }
-#wattson-scroll-design .ws-rail:hover .ws-orbit { filter:brightness(1.08); }
-#wattson-scroll-design[data-style="simple"] .ws-orbit { display:none; }
-#wattson-scroll-design[data-style="orbit"] .ws-simple { display:none; }
+#wattson-scroll-design .ws-track { position:absolute; top:0; bottom:0; width:2px; left:12px; background:color-mix(in srgb,var(--ws-muted),transparent 93%); border-radius:2px; }
+#wattson-scroll-design .ws-thumb { position:absolute; left:0; width:26px; height:80px; top:0; pointer-events:none; }
+#wattson-scroll-design .ws-simple { position:absolute; left:10px; top:0; bottom:0; width:6px; background:light-dark(#0000005c,#ffffff61); border-radius:6px; }
+#wattson-scroll-design .ws-flow { position:absolute; left:10px; top:0; bottom:0; width:6px; overflow:hidden; border-radius:6px; isolation:isolate; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),var(--ws-surface) 70%),var(--ws-accent) 72%,color-mix(in srgb,var(--ws-accent),white 20%)); }
+#wattson-scroll-design .ws-core { position:absolute; inset:0; background:linear-gradient(90deg,#ffffff00,#ffffff22 48%,#ffffff00); }
+#wattson-scroll-design .ws-star { position:absolute; left:50%; top:50%; width:2px; height:2px; margin:-1px; border-radius:50%; background:#fff; box-shadow:0 0 2px #ffffffa0; }
+#wattson-scroll-design .ws-rail:hover .ws-flow { filter:brightness(1.08); }
+#wattson-scroll-design[data-style="simple"] .ws-flow { display:none; }
+#wattson-scroll-design[data-style="flow"] .ws-simple { display:none; }
 #wattson-scroll-design[data-style="hidden"] .ws-rail { display:none; }
 #wattson-scroll-design[data-overflow="false"] .ws-rail { display:none; }
-#wattson-scroll-design[data-reduce-motion="true"] .ws-star:not([data-head]) { opacity:0 !important; }
-@media (max-width:640px) {
-  #wattson-scroll-design .ws-stage { grid-template-columns:minmax(0,360px); padding:18px 10px 24px; gap:20px; }
+@media (max-width:540px) {
+  #wattson-scroll-design .ws-stage { grid-template-columns:minmax(0,280px); padding:18px 10px 24px; gap:22px; }
   #wattson-scroll-design .ws-settings { margin:0; padding:15px 16px 13px; }
   #wattson-scroll-design .ws-settings-title { margin-bottom:9px; }
   #wattson-scroll-design .ws-setting-note { min-height:0; }
-  #wattson-scroll-design .ws-document { padding-right:16px; padding-left:25px; }
-  #wattson-scroll-design .ws-instruments { grid-template-columns:98px 1fr; gap:12px; }
-  #wattson-scroll-design .ws-ring { width:96px; height:96px; border-width:6px; }
-  #wattson-scroll-design .ws-stats { column-gap:8px; }
-  #wattson-scroll-design .ws-stats strong { font-size:14px; }
+  #wattson-scroll-design .ws-preview-wrap { width:180px; justify-self:end; }
 }
 </style>
-<div id="wattson-scroll-design" data-style="orbit" data-palette="blue" data-reduce-motion="false" aria-label="Wattson 滚动条设计">
+<div id="wattson-scroll-design" data-style="hidden" data-palette="blue" data-reduce-motion="false" aria-label="Wattson 滚动条局部设计">
   <div class="ws-stage viz-dotted-background">
     <div>
       <section class="ws-settings" aria-label="通用设置中的滚动条选项">
-        <div class="ws-settings-title"><i data-lucide="settings-2" aria-hidden="true"></i>通用设置</div>
+        <div class="ws-settings-title">通用设置</div>
         <div class="ws-subtitle">外观</div>
         <div class="ws-setting-row">
           <label for="scrollbar-choice">滚动条</label>
           <select id="scrollbar-choice" aria-describedby="scrollbar-description" class="cursor-interaction">
-            <option value="hidden">隐藏</option>
+            <option value="hidden" selected>隐藏</option>
             <option value="simple">简洁</option>
-            <option value="orbit" selected>星环</option>
+            <option value="flow">流光</option>
           </select>
         </div>
-        <div id="scrollbar-description" class="ws-setting-note" aria-live="polite">渐变条内，星点沿弧线流动。</div>
+        <div id="scrollbar-description" class="ws-setting-note" aria-live="polite">默认隐藏，仍可上下滚动。</div>
       </section>
-      <div class="ws-caption">设计预览 · 默认选项为「简洁」</div>
+      <div class="ws-caption">默认：隐藏</div>
     </div>
     <div class="ws-preview-wrap">
-      <div class="ws-preview-label">小屏主体 · 示例数据</div>
-      <section class="ws-app" aria-label="可上下滚动的 Wattson 主体预览">
-        <div id="wattson-preview-scroll" class="ws-scroll" aria-label="Wattson 预览内容">
-          <div class="ws-document">
-            <header class="ws-header">
-              <div class="ws-watts"><span>21.1</span> <span class="ws-unit">W</span></div>
-              <div class="ws-charge"><strong>100%</strong><span>Plugged In · Full</span></div>
-            </header>
-            <section class="ws-section ws-flow" aria-label="电源流向示意">
-              <div class="ws-flow-wire" aria-hidden="true"></div>
-              <div class="ws-node"><div class="ws-node-box">AC</div><span>Adapter</span><strong>21.1 W</strong></div>
-              <div class="ws-right-nodes">
-                <div class="ws-node"><div class="ws-node-box">CPU</div><span>System</span><strong>21.1 W</strong></div>
-                <div class="ws-node"><div class="ws-node-box">100</div><span>Battery · Full</span></div>
-              </div>
-            </section>
-            <section class="ws-section ws-instruments" aria-label="电池状态示意">
-              <div class="ws-ring"><strong>100</strong><small>%</small></div>
-              <div class="ws-stats"><div>System Load<strong>21.1 W</strong></div><div>Full<strong>0.0 W</strong></div><div>Battery Temp<strong>31.4°C</strong></div><div>Battery Health<strong>84%</strong></div></div>
-            </section>
-            <section class="ws-section ws-lanes" aria-label="功率分配示意">
-              <div class="ws-lane"><strong>21.1 W</strong><span>System Load</span></div>
-              <div class="ws-lane"><strong>0.0 W</strong><span>Full</span></div>
-            </section>
-            <section class="ws-section">
-              <div class="ws-section-label"><span>Power History · 2 min</span><span>Peak 49.2 W</span></div>
-              <svg class="ws-history" viewBox="0 0 320 92" preserveAspectRatio="none" role="img" aria-label="两分钟功率历史的示意曲线">
-                <defs><linearGradient id="ws-history-shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
-                <path d="M0 65 Q12 61 18 65 T40 64 T62 66 Q70 31 77 62 T96 62 T116 65 Q125 54 132 64 T150 63 Q159 -6 166 64 T195 64 T220 66 T242 63 Q257 20 265 59 T289 60 T320 63 L320 92 L0 92Z" fill="url(#ws-history-shade)"/>
-                <path d="M0 65 Q12 61 18 65 T40 64 T62 66 Q70 31 77 62 T96 62 T116 65 Q125 54 132 64 T150 63 Q159 -6 166 64 T195 64 T220 66 T242 63 Q257 20 265 59 T289 60 T320 63" fill="none" stroke="currentColor" stroke-width="1.7"/>
-              </svg>
-            </section>
-            <section class="ws-section">
-              <div class="ws-section-label"><span>Process Activity</span><span>Top 3</span></div>
-              <div class="ws-process"><span>Safari</span><div class="ws-process-track"><span style="width:71%"></span></div><span class="ws-process-value">7.2%</span></div>
-              <div class="ws-process"><span>WindowServer</span><div class="ws-process-track"><span style="width:44%"></span></div><span class="ws-process-value">4.4%</span></div>
-              <div class="ws-process"><span>Wattson</span><div class="ws-process-track"><span style="width:12%"></span></div><span class="ws-process-value">1.2%</span></div>
-            </section>
-            <section class="ws-section ws-time">
-              <div class="ws-clock"><i data-lucide="clock-3" aria-hidden="true"></i></div>
-              <div class="ws-time-copy"><span><span class="ws-planet" aria-hidden="true"></span>Estimated Time to Full</span><strong>Fully Charged</strong></div>
-            </section>
-            <footer class="ws-footer">
-              <label><input type="checkbox" checked>Hide System Battery Icon</label>
-              <div class="ws-power-modes" aria-label="预览中的电源模式"><button type="button" aria-pressed="true" class="cursor-interaction">Auto</button><button type="button" aria-pressed="false" class="cursor-interaction">Low Power</button><button type="button" aria-pressed="false" class="cursor-interaction">High Power</button></div>
-            </footer>
-          </div>
+      <div class="ws-preview-label">滚动条局部 · 右侧</div>
+      <section class="ws-app" aria-label="仅演示右侧滚动条，不包含 App 主体设计">
+        <div id="wattson-preview-scroll" class="ws-scroll" aria-label="可滚动的局部示意内容">
+          <div class="ws-document"><span class="ws-marker">顶部</span><span class="ws-marker">中部</span><span class="ws-marker">底部</span></div>
         </div>
-        <button type="button" id="wattson-preview-rail" class="ws-rail" role="scrollbar" aria-label="拖动以滚动主体" aria-controls="wattson-preview-scroll" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <button type="button" id="wattson-preview-rail" class="ws-rail" role="scrollbar" aria-label="拖动以滚动内容" aria-controls="wattson-preview-scroll" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
           <span class="ws-track" aria-hidden="true"></span>
-          <span class="ws-thumb" aria-hidden="true"><span class="ws-simple"></span><span class="ws-orbit"><span class="ws-core"></span><span class="ws-orbit-line"></span><span class="ws-orbit-line ws-orbit-front"></span><span class="ws-star" data-head></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span></span></span>
+          <span class="ws-thumb" aria-hidden="true"><span class="ws-simple"></span><span class="ws-flow"><span class="ws-core"></span><span class="ws-star" data-head></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span></span></span>
         </button>
       </section>
     </div>
@@ -169,97 +75,93 @@
 </div>
 <script>
 (() => {
-  const root = document.getElementById('wattson-scroll-design');
-  const viewport = root.querySelector('#wattson-preview-scroll');
-  const rail = root.querySelector('#wattson-preview-rail');
-  const thumb = root.querySelector('.ws-thumb');
-  const choice = root.querySelector('#scrollbar-choice');
-  const stars = [...root.querySelectorAll('.ws-star')];
-  const descriptions = {hidden:'隐藏滑动条，仍可用触控板或滚轮上下浏览。',simple:'主题色渐变滑块，直接拖动即可定位。',orbit:'渐变条内，星点沿弧线流动。'};
-  const ui = {style:'orbit',theme:'auto',palette:'blue',height:536,reduceMotion:false};
-  const media = matchMedia('(prefers-reduced-motion: reduce)');
-  let geometry = {height:1,travel:0,max:0,top:0};
-  let inView = true, animation = null, origin = performance.now(), drag = null;
-  function reduced() { return ui.reduceMotion || media.matches; }
+  const root=document.getElementById('wattson-scroll-design');
+  const viewport=root.querySelector('#wattson-preview-scroll');
+  const rail=root.querySelector('#wattson-preview-rail');
+  const thumb=root.querySelector('.ws-thumb');
+  const choice=root.querySelector('#scrollbar-choice');
+  const stars=[...root.querySelectorAll('.ws-star')];
+  const offsets=[0,.16,.22,.58,.87];
+  const lanes=[-.7,.5,-.1,.8,-.4];
+  const sizes=[2.2,1.5,2,1.3,1.7];
+  const descriptions={hidden:'默认隐藏，仍可上下滚动。',simple:'原来的灰色滚动条。',flow:'主题渐变，光点错落向下，到底淡出。'};
+  const ui={style:'hidden',theme:'auto',palette:'blue',height:300,reduceMotion:false};
+  const media=matchMedia('(prefers-reduced-motion: reduce)');
+  let geometry={height:1,travel:0,max:0,top:0};
+  let inView=true,animation=null,origin=performance.now(),drag=null;
+  function reduced() { return ui.reduceMotion||media.matches; }
   function positionStars(seconds) {
-    const phase = reduced() ? .30 : Math.min((seconds % 3.3) / 2.8, 1);
-    const angle = phase * Math.PI * 2 - Math.PI / 2;
-    const half = Math.max(geometry.height / 2 - 6, 4);
-    stars.forEach((node,index) => {
-      const a = angle - index * .075;
-      const x = 1.3 * Math.cos(a) - .4 * Math.sin(a), y = half * Math.sin(a);
-      node.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
-      const depth = .48 + .52 * (Math.cos(a) + 1) / 2;
-      node.style.opacity = String((index ? .66 * Math.pow(.70,index-1) : 1) * depth);
+    stars.forEach((node,index)=>{
+      const phase=reduced() ? .08+offsets[index]*.88 : (seconds/3.4+offsets[index])%1;
+      node.style.width=sizes[index]+'px'; node.style.height=sizes[index]+'px'; node.style.margin=(-sizes[index]/2)+'px';
+      node.style.transform='translate('+lanes[index]+'px,'+(geometry.height*(phase-.5)).toFixed(2)+'px)';
+      node.style.opacity=String(Math.max(0,Math.min(1,(phase-.04)/.08,(.96-phase)/.09)));
     });
   }
-  function motionAllowed() { return ui.style==='orbit' && geometry.max>0 && !reduced() && inView && !document.hidden; }
+  function motionAllowed() { return ui.style==='flow'&&geometry.max>0&&!reduced()&&inView&&!document.hidden; }
   function frame(now) { animation=null; if(!motionAllowed()){updateMotion();return;} positionStars((now-origin)/1000); animation=requestAnimationFrame(frame); }
   function updateMotion() {
-    root.dataset.reduceMotion = String(reduced());
+    root.dataset.reduceMotion=String(reduced());
     if(!motionAllowed()) { if(animation!==null)cancelAnimationFrame(animation); animation=null; positionStars(0); }
     else if(animation===null) { origin=performance.now(); animation=requestAnimationFrame(frame); }
   }
   function sync() {
-    const max = Math.max(0,viewport.scrollHeight-viewport.clientHeight);
-    const track = Math.max(1,viewport.clientHeight-32);
-    const height = Math.min(track,Math.max(44,track * viewport.clientHeight / viewport.scrollHeight));
-    const travel = Math.max(0,track-height);
-    const top = max ? viewport.scrollTop / max * travel : 0;
-    geometry = {max,height,travel,top};
+    const max=Math.max(0,viewport.scrollHeight-viewport.clientHeight);
+    const track=Math.max(1,viewport.clientHeight-32);
+    const height=Math.min(track,Math.max(44,track*viewport.clientHeight/viewport.scrollHeight));
+    const travel=Math.max(0,track-height);
+    const top=max ? viewport.scrollTop/max*travel : 0;
+    geometry={max,height,travel,top};
     thumb.style.height=height+'px'; thumb.style.top=top+'px';
     root.dataset.overflow=String(max>1);
-    rail.setAttribute('aria-valuenow',String(max ? Math.round(viewport.scrollTop / max * 100):0));
+    rail.setAttribute('aria-valuenow',String(max ? Math.round(viewport.scrollTop/max*100):0));
     rail.disabled=ui.style==='hidden'||max<=1;
     updateMotion();
   }
   function render() {
     root.dataset.style=ui.style; root.dataset.palette=ui.palette;
     root.style.colorScheme=ui.theme==='auto' ? 'inherit' : ui.theme;
-    root.style.setProperty('--ws-height',ui.height+'px');
-    choice.value=ui.style;
-    root.querySelector('#scrollbar-description').textContent=descriptions[ui.style];
-    sync();
+    root.style.setProperty('--ws-height',ui.height+'px'); choice.value=ui.style;
+    root.querySelector('#scrollbar-description').textContent=descriptions[ui.style]; sync();
   }
   function persist() {
-    if(window.openai?.setWidgetState) window.openai.setWidgetState({modelContent:{scrollbarStyle:ui.style,theme:ui.theme,palette:ui.palette,previewOnly:true},privateContent:{style:ui.style,theme:ui.theme,palette:ui.palette,height:ui.height,reduceMotion:ui.reduceMotion}}).catch(()=>{});
+    if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{scrollbarStyle:ui.style,defaultStyle:'hidden',side:'right',previewOnly:true},privateContent:{revision:3,...ui}}).catch(()=>{});
   }
   function restore(saved) {
     const state=saved?.privateContent;
-    if(state && Object.hasOwn(descriptions,state.style))ui.style=state.style;
-    if(['auto','light','dark'].includes(state?.theme))ui.theme=state.theme;
-    if(['blue','green','neutral'].includes(state?.palette))ui.palette=state.palette;
-    if(Number.isFinite(state?.height))ui.height=Math.max(360,Math.min(1100,state.height));
-    if(typeof state?.reduceMotion==='boolean')ui.reduceMotion=state.reduceMotion;
+    if(state?.revision===3) {
+      if(Object.hasOwn(descriptions,state.style))ui.style=state.style;
+      if(['auto','light','dark'].includes(state.theme))ui.theme=state.theme;
+      if(['blue','green','neutral'].includes(state.palette))ui.palette=state.palette;
+      if(Number.isFinite(state.height))ui.height=Math.max(220,Math.min(1100,state.height));
+      if(typeof state.reduceMotion==='boolean')ui.reduceMotion=state.reduceMotion;
+    }
     render();
   }
-  choice.addEventListener('change',() => { ui.style=choice.value; render(); persist(); });
+  choice.addEventListener('change',()=>{ui.style=choice.value;render();persist();});
   viewport.addEventListener('scroll',sync,{passive:true});
-  rail.addEventListener('pointerdown',event => {
+  rail.addEventListener('pointerdown',event=>{
     if(event.button!==0||geometry.max<=0)return;
     event.preventDefault(); rail.focus({preventScroll:true});
     const y=event.clientY-rail.getBoundingClientRect().top;
-    const inside=y>=geometry.top && y<=geometry.top+geometry.height;
-    drag={id:event.pointerId,offset:inside?y-geometry.top:geometry.height/2};
-    rail.setPointerCapture(event.pointerId);
+    const inside=y>=geometry.top&&y<=geometry.top+geometry.height;
+    drag={id:event.pointerId,offset:inside?y-geometry.top:geometry.height/2}; rail.setPointerCapture(event.pointerId);
     if(!inside)move(event);
   });
   function move(event) {
     if(!drag||drag.id!==event.pointerId)return;
     const top=event.clientY-rail.getBoundingClientRect().top-drag.offset;
-    viewport.scrollTop=geometry.travel ? Math.max(0,Math.min(1,top/geometry.travel))*geometry.max:0;
-    sync();
+    viewport.scrollTop=geometry.travel ? Math.max(0,Math.min(1,top/geometry.travel))*geometry.max : 0; sync();
   }
   rail.addEventListener('pointermove',move);
   function end(event) { if(drag?.id===event.pointerId)drag=null; }
   rail.addEventListener('pointerup',end); rail.addEventListener('pointercancel',end); rail.addEventListener('lostpointercapture',end);
-  rail.addEventListener('keydown',event => {
+  rail.addEventListener('keydown',event=>{
     const delta={ArrowDown:40,ArrowUp:-40,PageDown:viewport.clientHeight*.85,PageUp:-viewport.clientHeight*.85};
-    if(Object.hasOwn(delta,event.key)) { event.preventDefault(); viewport.scrollTop+=delta[event.key]; }
-    else if(event.key==='Home'||event.key==='End') { event.preventDefault(); viewport.scrollTop=event.key==='Home'?0:geometry.max; }
+    if(Object.hasOwn(delta,event.key)){event.preventDefault();viewport.scrollTop+=delta[event.key];}
+    else if(event.key==='Home'||event.key==='End'){event.preventDefault();viewport.scrollTop=event.key==='Home'?0:geometry.max;}
   });
-  rail.addEventListener('wheel',event => { event.preventDefault(); viewport.scrollTop+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?viewport.clientHeight:1); },{passive:false});
-  root.querySelectorAll('.ws-power-modes button').forEach(button=>button.addEventListener('click',()=>root.querySelectorAll('.ws-power-modes button').forEach(other=>other.setAttribute('aria-pressed',String(other===button)))));
+  rail.addEventListener('wheel',event=>{event.preventDefault();viewport.scrollTop+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?viewport.clientHeight:1);},{passive:false});
   const observer=new ResizeObserver(sync); observer.observe(viewport); observer.observe(root.querySelector('.ws-document'));
   const visibility=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;updateMotion();}); visibility.observe(root);
   media.addEventListener('change',updateMotion); document.addEventListener('visibilitychange',updateMotion);
@@ -269,8 +171,8 @@
   if(globalThis.Tweak) {
     const tweak=new Tweak({container:root,onChange:()=>{render();persist();}});
     tweak.addSelect(ui,'theme',{label:'外观',options:[{label:'跟随系统',value:'auto'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});
-    tweak.addSelect(ui,'palette',{label:'主题色演示',options:[{label:'接电蓝',value:'blue'},{label:'充电绿',value:'green'},{label:'用电中性',value:'neutral'}]});
-    tweak.addSlider(ui,'height',{label:'主体可用高度',min:360,max:1100,step:10,unit:'px'});
+    tweak.addSelect(ui,'palette',{label:'流光主题色',options:[{label:'接电蓝',value:'blue'},{label:'充电绿',value:'green'},{label:'用电中性',value:'neutral'}]});
+    tweak.addSlider(ui,'height',{label:'局部演示高度',min:220,max:1100,step:10,unit:'px'});
     tweak.addToggle(ui,'reduceMotion',{label:'减少动态效果'});
   }
 })();

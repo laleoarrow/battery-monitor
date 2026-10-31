@@ -57,13 +57,15 @@ try {
       await page.goto('about:blank');
       await page.setContent('<!doctype html><html><head><meta charset="utf-8"><style>html{color-scheme:light dark}body{margin:0}</style></head><body>' + fragment + '</body></html>', {waitUntil: 'load'});
       await settle();
-      await choose('orbit');
+      assert.equal(await page.locator('#wattson-scroll-design').getAttribute('data-style'), 'hidden', 'The default must be hidden');
+      assert.equal(await page.locator('#scrollbar-choice').inputValue(), 'hidden');
+      assert.equal(await page.locator('#wattson-preview-rail').isVisible(), false);
       const metrics = await page.evaluate(() => ({
         width: innerWidth, documentWidth: document.documentElement.scrollWidth,
         documentHeight: document.documentElement.scrollHeight,
       }));
       assert.ok(metrics.documentWidth <= width + 1, `Horizontal overflow: ${JSON.stringify(metrics)}`);
-      for (const style of ['hidden', 'simple', 'orbit']) {
+      for (const style of ['hidden', 'simple', 'flow']) {
         await scrollTo(0);
         await choose(style);
         const original = await scrollState();
@@ -94,29 +96,42 @@ try {
       const beforeSwitch = await scrollState();
       await choose('simple');
       await choose('hidden');
-      await choose('orbit');
+      await choose('flow');
       assert.ok(Math.abs((await scrollState()).top - beforeSwitch.top) <= 1, 'Changing style must preserve the reading position');
       const appearance = await page.evaluate(() => {
         const simple = getComputedStyle(document.querySelector('.ws-simple'));
-        const orbit = getComputedStyle(document.querySelector('.ws-orbit'));
+        const flow = getComputedStyle(document.querySelector('.ws-flow'));
+        const rail = document.querySelector('#wattson-preview-rail').getBoundingClientRect();
+        const viewport = document.querySelector('#wattson-preview-scroll').getBoundingClientRect();
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = 1;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = simple.backgroundColor;
+        ctx.fillRect(0, 0, 1, 1);
         return {
-          simpleWidth: simple.width, orbitWidth: orbit.width,
-          simpleBackground: simple.backgroundImage, orbitBackground: orbit.backgroundImage,
-          orbitOverflow: orbit.overflow, orbitRadius: orbit.borderRadius,
-          orbitBoxShadow: orbit.boxShadow, orbitFilter: orbit.filter,
+          simpleWidth: simple.width, flowWidth: flow.width,
+          simpleBackground: simple.backgroundImage, simpleRGBA: [...ctx.getImageData(0, 0, 1, 1).data],
+          flowBackground: flow.backgroundImage,
+          flowOverflow: flow.overflow, flowRadius: flow.borderRadius,
+          flowBoxShadow: flow.boxShadow, flowFilter: flow.filter,
+          railWidth: rail.width, railLeft: rail.left, viewportCenter: viewport.left + viewport.width / 2,
         };
       });
-      assert.equal(appearance.simpleWidth, appearance.orbitWidth, 'Orbit stays inside the same thin scrollbar width');
-      assert.ok(appearance.simpleBackground.startsWith('linear-gradient('), 'Simple style must have the theme gradient');
-      assert.ok(appearance.orbitBackground.startsWith('linear-gradient('), 'Orbit style must have the theme gradient');
-      assert.equal(appearance.orbitOverflow, 'hidden', 'Orbit glow must be clipped inside its capsule');
-      assert.ok(parseFloat(appearance.orbitRadius) > 0, 'Orbit capsule must have rounded ends');
-      assert.equal(appearance.orbitBoxShadow, 'none', 'No outside orbit shadow');
-      assert.ok(!/drop-shadow|blur/.test(appearance.orbitFilter), 'No exterior orbit glow filter');
+      assert.equal(appearance.simpleWidth, '6px');
+      assert.equal(appearance.flowWidth, '6px', 'Flow stays inside the thin scrollbar');
+      assert.equal(appearance.railWidth, 26, 'Keep the larger drag hit area');
+      assert.ok(appearance.railLeft > appearance.viewportCenter, 'Scrollbar must stay on the right');
+      assert.equal(appearance.simpleBackground, 'none', 'Simple remains a plain grey scrollbar');
+      assert.ok(Math.max(...appearance.simpleRGBA.slice(0, 3)) - Math.min(...appearance.simpleRGBA.slice(0, 3)) <= 12, 'Simple must remain neutral grey');
+      assert.ok(appearance.flowBackground.startsWith('linear-gradient('), 'Flow must have the theme gradient');
+      assert.equal(appearance.flowOverflow, 'hidden', 'Flow light must be clipped inside its capsule');
+      assert.ok(parseFloat(appearance.flowRadius) > 0, 'Flow capsule must have rounded ends');
+      assert.equal(appearance.flowBoxShadow, 'none', 'No outside flow shadow');
+      assert.ok(!/drop-shadow|blur/.test(appearance.flowFilter), 'No exterior flow glow filter');
       await scrollTo(0);
       let file = null;
       if (width === 736 || colorScheme === 'dark') {
-        file = `scrollbar-orbit-${width}-${colorScheme}.png`;
+        file = `scrollbar-flow-${width}-${colorScheme}.png`;
         await page.locator('#wattson-scroll-design').screenshot({path: path.join(output, file)});
       }
       let simpleFile = null;
@@ -124,9 +139,9 @@ try {
         await choose('simple');
         simpleFile = `scrollbar-simple-${width}-${colorScheme}.png`;
         await page.locator('#wattson-scroll-design').screenshot({path: path.join(output, simpleFile)});
-        await choose('orbit');
+        await choose('flow');
       }
-      evidence.layouts.push({...metrics, colorScheme, file, simpleFile, appearance, noHorizontalOverflow: true, switchingPreservesPosition: true});
+      evidence.layouts.push({...metrics, colorScheme, file, simpleFile, appearance, defaultHidden: true, noHorizontalOverflow: true, switchingPreservesPosition: true});
     }
   }
   const snapshot = () => page.locator('.ws-star').evaluateAll(nodes => nodes.map(node => ({
@@ -134,28 +149,49 @@ try {
     opacity: getComputedStyle(node).opacity,
     x: node.getBoundingClientRect().x, y: node.getBoundingClientRect().y,
   })));
-  await choose('orbit');
-  evidence.orbitContainment = await page.evaluate(async () => {
-    let samples = 0, outside = 0;
-    const until = performance.now() + 3400;
+  await choose('flow');
+  evidence.flowMotion = await page.evaluate(async () => {
+    let samples = 0, outside = 0, downwardSteps = 0, invisibleResets = 0, visibleUpwardSteps = 0, nonuniformSpacingFrames = 0;
+    let previous = null;
+    const started = performance.now(), until = started + 5200;
     while (performance.now() < until) {
       await new Promise(resolve => requestAnimationFrame(resolve));
-      const capsule = document.querySelector('.ws-orbit').getBoundingClientRect();
-      for (const star of document.querySelectorAll('.ws-star')) {
+      const capsule = document.querySelector('.ws-flow').getBoundingClientRect();
+      const current = [...document.querySelectorAll('.ws-star')].map(star => {
         const rect = star.getBoundingClientRect();
+        return {x: rect.x, y: rect.y, right: rect.right, bottom: rect.bottom, opacity: Number(getComputedStyle(star).opacity)};
+      });
+      if (current.length !== 5) throw new Error('Flow requires exactly five independent points');
+      for (const [index, rect] of current.entries()) {
         samples++;
-        if (rect.left < capsule.left - 0.1 || rect.right > capsule.right + 0.1 ||
-            rect.top < capsule.top - 0.1 || rect.bottom > capsule.bottom + 0.1) outside++;
+        if (rect.opacity > 0.01 && (rect.x < capsule.left - 0.1 || rect.right > capsule.right + 0.1 ||
+            rect.y < capsule.top - 0.1 || rect.bottom > capsule.bottom + 0.1)) outside++;
+        if (previous) {
+          const delta = rect.y - previous[index].y;
+          if (delta > 0.01) downwardSteps++;
+          if (delta < -0.01) {
+            if (rect.opacity <= 0.01 || previous[index].opacity <= 0.01) invisibleResets++;
+            else visibleUpwardSteps++;
+          }
+        }
       }
+      const visibleYs = current.filter(p => p.opacity > 0.1).map(p => p.y).sort((a, b) => a - b);
+      const gaps = visibleYs.slice(1).map((value, index) => value - visibleYs[index]);
+      if (gaps.length >= 2 && Math.max(...gaps) - Math.min(...gaps) > 1) nonuniformSpacingFrames++;
+      previous = current;
     }
-    return {sampledMilliseconds: 3400, samples, outsideCapsule: outside};
+    return {sampledMilliseconds: performance.now() - started, samples, pointCount: 5, outsideCapsule: outside,
+      downwardSteps, invisibleResets, visibleUpwardSteps, nonuniformSpacingFrames};
   });
-  assert.equal(evidence.orbitContainment.outsideCapsule, 0, 'White dots must stay within the scrollbar over a full orbit');
+  assert.equal(evidence.flowMotion.outsideCapsule, 0, 'Visible points must remain inside the scrollbar');
+  assert.ok(evidence.flowMotion.downwardSteps > 0, 'Light points must flow downward');
+  assert.ok(evidence.flowMotion.invisibleResets > 0, 'Observe a hidden reset from bottom to top');
+  assert.equal(evidence.flowMotion.visibleUpwardSteps, 0, 'No visible return journey upward');
+  assert.ok(evidence.flowMotion.nonuniformSpacingFrames > 0, 'Point spacing must be nonuniform');
   const movingA = await snapshot();
   await page.waitForTimeout(250);
   const movingB = await snapshot();
-  assert.ok(movingA.some((node, i) => Math.abs(node.x - movingB[i].x) > 0.1 || Math.abs(node.y - movingB[i].y) > 0.1), 'Orbit must actually move when motion is allowed');
-  evidence.orbitMotion = {starsChangePosition: true, sampledMilliseconds: 250};
+  assert.ok(movingA.some((node, i) => Math.abs(node.y - movingB[i].y) > 0.1), 'Flow must actually move when motion is allowed');
   await page.emulateMedia({reducedMotion: 'reduce'});
   try {
     await page.waitForFunction(() => matchMedia('(prefers-reduced-motion: reduce)').matches &&
