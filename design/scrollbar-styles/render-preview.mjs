@@ -96,13 +96,37 @@ try {
       await choose('hidden');
       await choose('orbit');
       assert.ok(Math.abs((await scrollState()).top - beforeSwitch.top) <= 1, 'Changing style must preserve the reading position');
+      const appearance = await page.evaluate(() => {
+        const simple = getComputedStyle(document.querySelector('.ws-simple'));
+        const orbit = getComputedStyle(document.querySelector('.ws-orbit'));
+        return {
+          simpleWidth: simple.width, orbitWidth: orbit.width,
+          simpleBackground: simple.backgroundImage, orbitBackground: orbit.backgroundImage,
+          orbitOverflow: orbit.overflow, orbitRadius: orbit.borderRadius,
+          orbitBoxShadow: orbit.boxShadow, orbitFilter: orbit.filter,
+        };
+      });
+      assert.equal(appearance.simpleWidth, appearance.orbitWidth, 'Orbit stays inside the same thin scrollbar width');
+      assert.ok(appearance.simpleBackground.startsWith('linear-gradient('), 'Simple style must have the theme gradient');
+      assert.ok(appearance.orbitBackground.startsWith('linear-gradient('), 'Orbit style must have the theme gradient');
+      assert.equal(appearance.orbitOverflow, 'hidden', 'Orbit glow must be clipped inside its capsule');
+      assert.ok(parseFloat(appearance.orbitRadius) > 0, 'Orbit capsule must have rounded ends');
+      assert.equal(appearance.orbitBoxShadow, 'none', 'No outside orbit shadow');
+      assert.ok(!/drop-shadow|blur/.test(appearance.orbitFilter), 'No exterior orbit glow filter');
       await scrollTo(0);
       let file = null;
       if (width === 736 || colorScheme === 'dark') {
         file = `scrollbar-orbit-${width}-${colorScheme}.png`;
         await page.locator('#wattson-scroll-design').screenshot({path: path.join(output, file)});
       }
-      evidence.layouts.push({...metrics, colorScheme, file, noHorizontalOverflow: true, switchingPreservesPosition: true});
+      let simpleFile = null;
+      if (width === 736) {
+        await choose('simple');
+        simpleFile = `scrollbar-simple-${width}-${colorScheme}.png`;
+        await page.locator('#wattson-scroll-design').screenshot({path: path.join(output, simpleFile)});
+        await choose('orbit');
+      }
+      evidence.layouts.push({...metrics, colorScheme, file, simpleFile, appearance, noHorizontalOverflow: true, switchingPreservesPosition: true});
     }
   }
   const snapshot = () => page.locator('.ws-star').evaluateAll(nodes => nodes.map(node => ({
@@ -111,6 +135,22 @@ try {
     x: node.getBoundingClientRect().x, y: node.getBoundingClientRect().y,
   })));
   await choose('orbit');
+  evidence.orbitContainment = await page.evaluate(async () => {
+    let samples = 0, outside = 0;
+    const until = performance.now() + 3400;
+    while (performance.now() < until) {
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      const capsule = document.querySelector('.ws-orbit').getBoundingClientRect();
+      for (const star of document.querySelectorAll('.ws-star')) {
+        const rect = star.getBoundingClientRect();
+        samples++;
+        if (rect.left < capsule.left - 0.1 || rect.right > capsule.right + 0.1 ||
+            rect.top < capsule.top - 0.1 || rect.bottom > capsule.bottom + 0.1) outside++;
+      }
+    }
+    return {sampledMilliseconds: 3400, samples, outsideCapsule: outside};
+  });
+  assert.equal(evidence.orbitContainment.outsideCapsule, 0, 'White dots must stay within the scrollbar over a full orbit');
   const movingA = await snapshot();
   await page.waitForTimeout(250);
   const movingB = await snapshot();

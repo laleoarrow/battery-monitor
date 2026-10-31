@@ -66,15 +66,15 @@
 #wattson-scroll-design .ws-rail:focus-visible { outline:2px solid var(--ws-accent); outline-offset:-3px; border-radius:10px; }
 #wattson-scroll-design .ws-track { position:absolute; top:0; bottom:0; width:2px; left:12px; background:color-mix(in srgb,var(--ws-muted),transparent 91%); border-radius:2px; }
 #wattson-scroll-design .ws-thumb { position:absolute; left:0; width:26px; height:220px; top:0; pointer-events:none; }
-#wattson-scroll-design .ws-simple { position:absolute; left:10px; top:0; bottom:0; width:5px; background:light-dark(#8b8b9480,#b4b4be70); border-radius:5px; }
-#wattson-scroll-design .ws-rail:hover .ws-simple { background:var(--ws-muted); }
-#wattson-scroll-design .ws-orbit { position:absolute; inset:0; }
-#wattson-scroll-design .ws-core { position:absolute; left:12px; top:5%; height:90%; width:3px; border-radius:6px; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),transparent 65%),var(--ws-accent) 45%,color-mix(in srgb,var(--ws-accent),transparent 38%)); box-shadow:0 0 5px color-mix(in srgb,var(--ws-accent),transparent 76%); }
-#wattson-scroll-design .ws-orbit-line { position:absolute; inset:5px 9px; border:1px solid color-mix(in srgb,var(--ws-accent),transparent 65%); border-radius:50%; transform:rotate(-3deg); }
-#wattson-scroll-design .ws-orbit-front { border-left-color:transparent; border-top-color:color-mix(in srgb,var(--ws-bright),transparent 36%); border-bottom-color:transparent; border-right-color:var(--ws-accent); filter:drop-shadow(0 0 2px var(--ws-accent)); opacity:.66; }
-#wattson-scroll-design .ws-star { position:absolute; left:50%; top:50%; width:3px; height:3px; margin:-1.5px; border-radius:50%; background:#fff; box-shadow:0 0 2px var(--ws-accent),0 0 6px var(--ws-bright); }
-#wattson-scroll-design .ws-star:not([data-head]) { width:2px; height:2px; margin:-1px; }
-#wattson-scroll-design .ws-rail:hover .ws-core { box-shadow:0 0 7px color-mix(in srgb,var(--ws-accent),transparent 40%); }
+#wattson-scroll-design .ws-simple { position:absolute; left:10px; top:0; bottom:0; width:6px; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),white 48%),var(--ws-accent) 48%,color-mix(in srgb,var(--ws-accent),black 28%)); border-radius:6px; }
+#wattson-scroll-design .ws-rail:hover .ws-simple { filter:brightness(1.08); }
+#wattson-scroll-design .ws-orbit { position:absolute; left:10px; top:0; bottom:0; width:6px; overflow:hidden; border-radius:6px; isolation:isolate; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),white 48%),var(--ws-accent) 48%,color-mix(in srgb,var(--ws-accent),black 28%)); }
+#wattson-scroll-design .ws-core { position:absolute; inset:0; background:linear-gradient(90deg,#ffffff00,#ffffff28 48%,#ffffff00); box-shadow:inset 1px 0 1px #ffffff15; }
+#wattson-scroll-design .ws-orbit-line { position:absolute; inset:5px 1.4px; border:.6px solid #ffffff25; border-radius:50%; transform:skewX(-.18deg); }
+#wattson-scroll-design .ws-orbit-front { border-left-color:transparent; border-top-color:#ffffff65; border-bottom-color:transparent; border-right-color:#ffffff8a; opacity:.66; }
+#wattson-scroll-design .ws-star { position:absolute; left:50%; top:50%; width:2px; height:2px; margin:-1px; border-radius:50%; background:#fff; box-shadow:0 0 3px #ffffffb0,0 0 6px var(--ws-bright); }
+#wattson-scroll-design .ws-star:not([data-head]) { width:1.4px; height:1.4px; margin:-.7px; }
+#wattson-scroll-design .ws-rail:hover .ws-orbit { filter:brightness(1.08); }
 #wattson-scroll-design[data-style="simple"] .ws-orbit { display:none; }
 #wattson-scroll-design[data-style="orbit"] .ws-simple { display:none; }
 #wattson-scroll-design[data-style="hidden"] .ws-rail { display:none; }
@@ -106,7 +106,7 @@
             <option value="orbit" selected>星环</option>
           </select>
         </div>
-        <div id="scrollbar-description" class="ws-setting-note" aria-live="polite">弧光勾勒位置，星点沿环流动。</div>
+        <div id="scrollbar-description" class="ws-setting-note" aria-live="polite">渐变条内，星点沿弧线流动。</div>
       </section>
       <div class="ws-caption">设计预览 · 默认选项为「简洁」</div>
     </div>
@@ -175,7 +175,7 @@
   const thumb = root.querySelector('.ws-thumb');
   const choice = root.querySelector('#scrollbar-choice');
   const stars = [...root.querySelectorAll('.ws-star')];
-  const descriptions = {hidden:'隐藏滑动条，仍可用触控板或滚轮上下浏览。',simple:'低调的细滑块，直接拖动即可定位。',orbit:'弧光勾勒位置，星点沿环流动。'};
+  const descriptions = {hidden:'隐藏滑动条，仍可用触控板或滚轮上下浏览。',simple:'主题色渐变滑块，直接拖动即可定位。',orbit:'渐变条内，星点沿弧线流动。'};
   const ui = {style:'orbit',theme:'auto',palette:'blue',height:536,reduceMotion:false};
   const media = matchMedia('(prefers-reduced-motion: reduce)');
   let geometry = {height:1,travel:0,max:0,top:0};
@@ -184,11 +184,11 @@
   function positionStars(seconds) {
     const phase = reduced() ? .30 : Math.min((seconds % 3.3) / 2.8, 1);
     const angle = phase * Math.PI * 2 - Math.PI / 2;
-    const half = Math.max(geometry.height / 2 - 6, 4), tilt = -Math.PI / 60;
+    const half = Math.max(geometry.height / 2 - 6, 4);
     stars.forEach((node,index) => {
       const a = angle - index * .075;
-      const x = 3.5 * Math.cos(a), y = half * Math.sin(a);
-      node.style.transform = 'translate(' + (x * Math.cos(tilt) - y * Math.sin(tilt)).toFixed(2) + 'px,' + (x * Math.sin(tilt) + y * Math.cos(tilt)).toFixed(2) + 'px)';
+      const x = 1.3 * Math.cos(a) - .4 * Math.sin(a), y = half * Math.sin(a);
+      node.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px)';
       const depth = .48 + .52 * (Math.cos(a) + 1) / 2;
       node.style.opacity = String((index ? .66 * Math.pow(.70,index-1) : 1) * depth);
     });

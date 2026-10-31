@@ -14,10 +14,16 @@ from which only one will be implemented. The preview initially selects Orbit
 to show the proposed new treatment.
 
 - Hidden: no visible scrollbar; trackpad, wheel and keyboard scrolling remain.
-- Simple: retain the quiet native-style proportionate thumb, positioned left.
-- Orbit: the same stable, proportionate thumb carries a narrow inclined ring,
-  theme-colored light, one white leading point and a short dust tail. The point
-  travels down the near curve and returns along the dimmer far curve.
+- Simple: a quiet proportionate thumb with a light-to-deep theme-color gradient,
+  positioned left.
+- Orbit: the same 6px gradient capsule contains the entire curved light path,
+  white leading point and short dust tail. The point travels down the near
+  curve and returns along the dimmer far curve, wholly inside the thumb.
+
+User correction, 2026-10-31: the first proposal's outward ellipse was rejected.
+The revised ring is an internal material detail, clipped by the rounded capsule.
+No ring, dust or glow protrudes beyond the bar. Simple also uses a theme-color
+gradient. The 26px transparent hit region is unchanged and is not visible art.
 
 The thumb's position and length encode the actual viewport. Decorative motion
 never moves content or changes that geometry. Dragging is linear vertically,
@@ -34,8 +40,9 @@ existing time-source animation; there is no separate blinking cycle.
   interactions with content. Do not use global RTL to relocate a scrollbar.
 - Use the existing instrument palette: charging green, plugged/mixed blue,
   battery neutral, with Light/Dark contrast adjustments. No fixed blue palette.
-- Keep a visible stationary position indicator in Orbit. White points have a
-  contrasting edge on light surfaces. Hover/drag may strengthen the highlight,
+- Keep the stationary gradient capsule as the position indicator in Orbit.
+  White points sit over that colored fill, with highlights clipped inside it.
+  Hover/drag may strengthen the highlight,
   without widening the content layout or continuously changing its position.
 - Reduce Motion preserves a static ring and thumb. Close, hide, detach and
   no-overflow states stop motion. Honor higher-contrast and reduced-transparency
@@ -69,8 +76,11 @@ four layouts without horizontal overflow and twelve style/appearance/width
 interaction cases. All modes scroll; both visible thumbs drag to the bottom;
 switching preserves the reading position. The star moves in normal mode and
 remains stationary after a live Reduce Motion change. There were no JavaScript
-errors. Three cropped design screenshots and `verification.json` retain the
-results; the latter also records a fixed preview-only media-event edge case.
+errors. Five cropped design screenshots and `verification.json` retain the
+revised results, including the gradient Simple style in Light and Dark.
+The complete 3.4-second orbit observation sampled 1,435 star/tail bounds, with
+none outside the visible capsule; the rounded container also clips their glow.
+The original preview-only media-event correction remains in revision history.
 
 The browser owner exited successfully, then its scratch, referencing processes
 and temporary preview directories were confirmed absent. No installed App,
