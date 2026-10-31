@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wattson 5.0.3 · 满电立体双星轨设计预览</title>
+<style>
+:root { --surface:#1c1e23; --ink:#eff1f5; --muted:#a9aeb8; --line:#353941; --well:#292c33; --accent:#0a84ff; --clock:#c7c7cc; }
+html[data-theme="light"] { --surface:#f9fafc; --ink:#252a33; --muted:#68717e; --line:#dce1e8; --well:#eceff4; --accent:#0064cf; --clock:#707783; }
+* { box-sizing:border-box; }
+html,body { margin:0; width:600px; height:360px; overflow:hidden; }
+body { background:var(--surface); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+.brand { position:absolute; left:28px; top:23px; font-size:12px; line-height:18px; font-weight:500; letter-spacing:1.6px; }
+.version { position:absolute; right:28px; top:23px; color:var(--muted); font-size:12px; line-height:18px; }
+h1 { position:absolute; left:28px; top:60px; margin:0; font-size:28px; line-height:38px; letter-spacing:.4px; font-weight:500; }
+.sub { position:absolute; left:29px; top:110px; color:var(--muted); font-size:14px; line-height:21px; }
+.context { position:absolute; left:28px; top:159px; width:334px; height:116px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.clock { position:absolute; left:12px; top:35px; width:44px; height:44px; background:var(--well); border:1px solid color-mix(in srgb,var(--accent) 24%,var(--line)); border-radius:12px; display:grid; place-items:center; }
+.clock svg { width:28px; height:28px; color:var(--clock); }
+.clock svg polyline { stroke:var(--accent); }
+.clock svg stop { stop-color:var(--accent); }
+.clock svg circle[fill]:not([data-decorative]) { fill:var(--accent); }
+.caption { position:absolute; right:0; top:30px; display:flex; align-items:center; gap:4px; color:var(--muted); font-size:11.5px; line-height:20px; white-space:nowrap; }
+.value { position:absolute; right:0; top:54px; font-size:20px; line-height:30px; font-weight:400; }
+canvas { display:block; }
+.small { width:20px; height:20px; }
+.detail { position:absolute; left:408px; top:145px; width:164px; height:148px; background:var(--well); border:1px solid var(--line); border-radius:18px; display:grid; place-items:center; }
+.large { width:120px; height:120px; }
+.detail-label { position:absolute; left:408px; top:299px; width:164px; color:var(--muted); text-align:center; font-size:11px; line-height:18px; }
+.features { position:absolute; left:28px; top:303px; color:var(--muted); font-size:12px; line-height:20px; letter-spacing:.3px; }
+.note { position:absolute; left:28px; top:334px; color:var(--muted); font-size:10px; line-height:16px; }
+</style>
+</head>
+<body>
+<div class="brand">WATTSON</div><div class="version">5.0.3</div>
+<h1>满电，自有从容</h1><div class="sub">立体双星轨 · 随主题配色</div>
+<div class="context">
+  <div class="clock" aria-hidden="true">{{CLOCK_SVG}}</div>
+  <div class="caption"><canvas class="small" width="40" height="40" aria-label="满电立体双星轨"></canvas><span>Estimated Time to Full</span></div>
+  <div class="value">Fully Charged</div>
+</div>
+<div class="detail"><canvas class="large" width="240" height="240" aria-label="立体双星轨细节放大"></canvas></div>
+<div class="detail-label">细节放大</div>
+<div class="features">前后遮挡 · 错速慢转 · 连续尾迹</div>
+<div class="note">动效设计预览 · 蓝色为满电示例，配色随主题适配</div>
+<script>
+(() => {
+  // Same fixed-plane projection, phases and speed modulation as the native
+  // renderer. The inner design-loop period is fitted by 0.63% for a seamless
+  // 32-second promotional GIF; this is a design preview, not runtime capture.
+  const periods=[8,32/3], tailDuration=.52;
+  const scenes=[...document.querySelectorAll('canvas')];
+  let colors;
+  const blend=(color,fraction,target)=>color.map((c,i)=>Math.round(c*(1-fraction)+target[i]*fraction));
+  const rgb=(color,alpha=1)=>`rgba(${color.join(',')},${alpha})`;
+  function project(orbit,angle){
+    const radius=orbit===0?8.4:7.4,inclination=(orbit===0?78:76)*Math.PI/180,roll=(orbit===0?35:-32)*Math.PI/180;
+    const x=radius*Math.cos(angle),y=radius*Math.sin(angle)*Math.cos(inclination),z=radius*Math.sin(angle)*Math.sin(inclination),scale=70/(70-z);
+    // Canvas y is the screen-space inverse of native AppKit y.
+    return {x:(x*Math.cos(roll)-y*Math.sin(roll))*scale,y:(x*Math.sin(roll)+y*Math.cos(roll))*scale,z,scale};
+  }
+  function sample(orbit,time){
+    const cycle=2*Math.PI*time/periods[orbit],phase=orbit===0?Math.PI-.35:1.45,offset=orbit===0?.4:2.1;
+    return project(orbit,phase+(orbit===0?1:-1)*(cycle+.06*(Math.sin(cycle+offset)-Math.sin(offset))));
+  }
+  function trail(orbit,time,front){
+    const headDepth=sample(orbit,time).z,tailDepth=sample(orbit,time-tailDuration).z;
+    const headIsFront=headDepth>=0,tailIsFront=tailDepth>=0;
+    let start=0,end=tailDuration;
+    if(headIsFront!==tailIsFront){
+      let low=0,high=tailDuration;
+      for(let n=0;n<24;n++){const mid=(low+high)/2;if((sample(orbit,time-mid).z>=0)===headIsFront)low=mid;else high=mid;}
+      if(headIsFront===front)end=(low+high)/2;else start=(low+high)/2;
+    }else if(headIsFront!==front){start=Math.abs(headDepth)<Math.abs(tailDepth)?0:tailDuration;end=start;}
+    const left=[],right=[];
+    for(let n=0;n<=24;n++){
+      const age=start+(end-start)*n/24,p=sample(orbit,time-age),a=sample(orbit,time-age-.001),b=sample(orbit,time-age+.001);
+      const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy),w=.275*Math.pow(Math.max(0,1-age/tailDuration),1.4)*p.scale;
+      left.push({x:p.x-dy/len*w,y:p.y+dx/len*w});right.push({x:p.x+dy/len*w,y:p.y-dx/len*w});
+    }
+    return [...left,...right.reverse()];
+  }
+  function drawSide(ctx,orbit,time,front){
+    ctx.beginPath();
+    for(let n=0;n<=64;n++){const p=project(orbit,(front?0:Math.PI)+n/64*Math.PI);if(n===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);}
+    ctx.strokeStyle=rgb(front?colors.bright:colors.base,.2);ctx.lineWidth=.12;ctx.lineCap='round';ctx.stroke();
+    const polygon=trail(orbit,time,front),head=sample(orbit,time),tail=sample(orbit,time-tailDuration);
+    const fade=ctx.createLinearGradient(tail.x,tail.y,head.x,head.y);
+    fade.addColorStop(0,rgb(colors.bright,0));fade.addColorStop(.4,rgb(colors.bright,.25));fade.addColorStop(1,rgb(colors.bright,.72));
+    ctx.beginPath();polygon.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fade;ctx.fill();
+    if((head.z>=0)!==front)return;
+    const radius=(orbit===0?.58:.5)*head.scale;
+    const glow=ctx.createRadialGradient(head.x,head.y,0,head.x,head.y,radius*2.5);
+    glow.addColorStop(0,rgb(colors.bright,.28));glow.addColorStop(.4,rgb(colors.bright,.1));glow.addColorStop(1,rgb(colors.bright,0));
+    ctx.fillStyle=glow;ctx.beginPath();ctx.arc(head.x,head.y,radius*2.5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=rgb(colors.bright);ctx.beginPath();ctx.arc(head.x,head.y,radius,0,Math.PI*2);ctx.fill();
+  }
+  function render(time=0,theme='dark'){
+    document.documentElement.dataset.theme=theme;
+    const base=theme==='light'?[0,100,207]:[10,132,255];colors={base,bright:blend(base,.65,[255,255,255]),deep:blend(base,.18,[0,0,0])};
+    for(const canvas of scenes){
+      const ctx=canvas.getContext('2d'),scale=canvas.width/20;
+      ctx.setTransform(scale,0,0,scale,canvas.width/2,canvas.height/2);ctx.clearRect(-10,-10,20,20);
+      const halo=ctx.createRadialGradient(0,0,1.5,0,0,9);halo.addColorStop(0,rgb(base,.3));halo.addColorStop(.35,rgb(base,.13));halo.addColorStop(1,rgb(base,0));
+      ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,9,0,Math.PI*2);ctx.fill();
+      drawSide(ctx,0,time,false);drawSide(ctx,1,time,false);
+      const sphere=ctx.createRadialGradient(-1.45,-1.65,.1,-.2,-.15,4.4);
+      sphere.addColorStop(0,rgb(colors.bright));sphere.addColorStop(.48,rgb(base));sphere.addColorStop(1,rgb(colors.deep));
+      ctx.fillStyle=sphere;ctx.beginPath();ctx.arc(0,0,4,0,Math.PI*2);ctx.fill();
+      drawSide(ctx,1,time,true);drawSide(ctx,0,time,true);
+    }
+  }
+  window.renderWattsonOrbit=render;
+  window.wattsonOrbitGeometry={periods,sample,trail,project};
+  render();
+})();
+</script>
+</body>
+</html>

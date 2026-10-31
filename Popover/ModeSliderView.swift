@@ -806,10 +806,12 @@ final class ModeSliderView: NSView {
     private func updateShadowPath() {
         keyboardFocusMarker.frame = CGRect(x: (knobHost.bounds.width - 14) / 2,
                                            y: 3, width: 14, height: 2)
+        let radius = knobHost.bounds.height / 2
+        PopoverStyle.setWithoutAnimation {
+            self.knobHost.layer?.cornerRadius = radius
+        }
         guard !usesNativeGlass else { return }
         let lifted = dragging && movedWhileDragging && !reducesMotion
-        let radius = knobHost.bounds.height / 2
-        knobHost.layer?.cornerRadius = radius
         knobHost.layer?.shadowOpacity = Self.reducesTransparency
             ? 0.34
             : (lifted ? 0.38 : 0.28)

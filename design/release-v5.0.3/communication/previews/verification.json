@@ -1,0 +1,95 @@
+{
+  "kind": "Mail design preview — isolated Chromium browser rendering, not a mail-client screenshot",
+  "playwright": "1.62.1",
+  "browser": "156.0.8078.76",
+  "emailSHA256": "71267252a6b950d5722de8a0aba64f3c6388cba9a6da156e8b827892b17d5d46",
+  "publicLinksVerified": false,
+  "previewImages": [
+    {
+      "url": "https://laleoarrow.github.io/battery-monitor/design/v5.0.3/previews/full-charge-orbit.gif",
+      "localArtwork": "full-charge-orbit.gif",
+      "sha256": "f5b09d4fda5750217987179febf588906b58ac64f25c61df9641ea09e52e7c92"
+    }
+  ],
+  "artworkMethod": "Public image URLs fulfilled from the corresponding local approved-design GIF; no network requests sent.",
+  "cases": [
+    {
+      "name": "desktop-light",
+      "file": "mail-design-preview-desktop-light.png",
+      "viewportWidth": 1000,
+      "documentWidth": 1000,
+      "documentHeight": 1573,
+      "heading": "满电，\n自有节奏。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.3 满电动效设计预览：双星轨前后交错、错速慢转，并留下连续细尾迹；静态首帧同样展示满电状态。",
+          "width": 534,
+          "height": 320,
+          "naturalWidth": 600
+        }
+      ],
+      "linkCount": 6,
+      "background": "rgb(243, 245, 248)",
+      "titleColor": "rgb(23, 36, 50)"
+    },
+    {
+      "name": "desktop-dark",
+      "file": "mail-design-preview-desktop-dark.png",
+      "viewportWidth": 1000,
+      "documentWidth": 1000,
+      "documentHeight": 1573,
+      "heading": "满电，\n自有节奏。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.3 满电动效设计预览：双星轨前后交错、错速慢转，并留下连续细尾迹；静态首帧同样展示满电状态。",
+          "width": 534,
+          "height": 320,
+          "naturalWidth": 600
+        }
+      ],
+      "linkCount": 6,
+      "background": "rgb(21, 25, 31)",
+      "titleColor": "rgb(240, 243, 248)"
+    },
+    {
+      "name": "narrow-light",
+      "file": "mail-design-preview-narrow-light.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "documentHeight": 1571,
+      "heading": "满电，\n自有节奏。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.3 满电动效设计预览：双星轨前后交错、错速慢转，并留下连续细尾迹；静态首帧同样展示满电状态。",
+          "width": 292,
+          "height": 175,
+          "naturalWidth": 600
+        }
+      ],
+      "linkCount": 6,
+      "background": "rgb(243, 245, 248)",
+      "titleColor": "rgb(23, 36, 50)"
+    },
+    {
+      "name": "narrow-dark",
+      "file": "mail-design-preview-narrow-dark.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "documentHeight": 1571,
+      "heading": "满电，\n自有节奏。",
+      "images": [
+        {
+          "alt": "Wattson 5.0.3 满电动效设计预览：双星轨前后交错、错速慢转，并留下连续细尾迹；静态首帧同样展示满电状态。",
+          "width": 292,
+          "height": 175,
+          "naturalWidth": 600
+        }
+      ],
+      "linkCount": 6,
+      "background": "rgb(21, 25, 31)",
+      "titleColor": "rgb(240, 243, 248)"
+    }
+  ],
+  "limitations": "Not an Apple Mail, Gmail or Outlook render. Email-client sanitization, image blocking and automatic color inversion may differ. Public release and artwork URLs require separate anonymous verification after publication.",
+  "browserContextClosed": true
+}

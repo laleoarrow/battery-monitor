@@ -1,0 +1,17 @@
+{
+  "archive": "dist/release-v5.0.3-native-evidence.tar.gz",
+  "sha256": "7b61f9834bfa92f36045c27e63de136400600c7ad41a473af7f54d9b2044a7f7",
+  "entries": 660,
+  "bytes": 39795968,
+  "archivedPNGsRemoved": 271,
+  "retainedPNGs": [
+    "validation/native/battery-time-indicator/states-dark.png",
+    "validation/native/battery-time-indicator/states-light.png",
+    "validation/native/captures/classic-dark-full-3-bottom.png",
+    "validation/native/captures/classic-light-full-3-bottom.png",
+    "validation/native/captures/glass-dark-full-3-bottom.png",
+    "validation/native/captures/glass-light-full-3-bottom.png",
+    "validation/native/scrollbar/flow-dark-full.png",
+    "validation/native/scrollbar/flow-light-full.png"
+  ]
+}

@@ -342,23 +342,33 @@ final class WattsonTests: XCTestCase {
     }
 
     func testModeSliderRestingSelectionMeetsTrackEdges() {
-        for (mode, index) in [(EnergyMode.auto, 0), (.low, 1), (.high, 2)] {
-            let (slider, window) = makeAnimatedSlider(selected: mode)
-            defer { window.orderOut(nil) }
+        for forceLegacyMaterials in [false, true] {
+            for (mode, index) in [(EnergyMode.auto, 0), (.low, 1), (.high, 2)] {
+                let (slider, window) = makeAnimatedSlider(
+                    selected: mode, forceLegacyMaterials: forceLegacyMaterials
+                )
+                defer { window.orderOut(nil) }
 
-            let selection = slider.glassViewFrameForTest
-            XCTAssertEqual(selection.minY, slider.bounds.minY, accuracy: 0.01)
-            XCTAssertEqual(selection.maxY, slider.bounds.maxY, accuracy: 0.01)
-            XCTAssertEqual(selection.midX, slider.detentCentreForTest(index), accuracy: 0.01)
-            XCTAssertEqual(selection.width, slider.segmentWidthForTest, accuracy: 0.01)
-            XCTAssertEqual(slider.knobCornerRadiusForTest,
-                           slider.bounds.height / 2, accuracy: 0.01)
-            XCTAssertEqual(slider.selectorCornerRadiusForTest,
-                           slider.bounds.height / 2, accuracy: 0.01)
-            if index == 0 {
-                XCTAssertEqual(selection.minX, slider.bounds.minX, accuracy: 0.01)
-            } else if index == 2 {
-                XCTAssertEqual(selection.maxX, slider.bounds.maxX, accuracy: 0.01)
+                // Exercise non-preferred heights explicitly rather than relying
+                // on the screen's pixel rounding to expose stale capsule geometry.
+                for height in [slider.bounds.height, 31, 38] {
+                    slider.setFrameSize(NSSize(width: slider.frame.width, height: height))
+                    slider.layoutSubtreeIfNeeded()
+                    let selection = slider.glassViewFrameForTest
+                    XCTAssertEqual(selection.minY, slider.bounds.minY, accuracy: 0.01)
+                    XCTAssertEqual(selection.maxY, slider.bounds.maxY, accuracy: 0.01)
+                    XCTAssertEqual(selection.midX, slider.detentCentreForTest(index), accuracy: 0.01)
+                    XCTAssertEqual(selection.width, slider.segmentWidthForTest, accuracy: 0.01)
+                    XCTAssertEqual(slider.knobCornerRadiusForTest,
+                                   slider.bounds.height / 2, accuracy: 0.01)
+                    XCTAssertEqual(slider.selectorCornerRadiusForTest,
+                                   slider.bounds.height / 2, accuracy: 0.01)
+                    if index == 0 {
+                        XCTAssertEqual(selection.minX, slider.bounds.minX, accuracy: 0.01)
+                    } else if index == 2 {
+                        XCTAssertEqual(selection.maxX, slider.bounds.maxX, accuracy: 0.01)
+                    }
+                }
             }
         }
     }

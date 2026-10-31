@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "version": "5.0.3",
+  "kind": "Animated approved-design preview; not a running-App screenshot",
+  "width": 600,
+  "height": 360,
+  "frames": 640,
+  "fps": 20,
+  "durationSeconds": 32,
+  "loop": "infinite",
+  "sourceHTMLSHA256": "e8e3b904f7ae551a5fff3805dfb13a60d2e29829be7edcb2b088a39999af048c",
+  "nativeGeometrySourceSHA256": "f4e2a281cdd40f4d6faea39880dcb3bd55313f473a47434a6a5537e13d230b79",
+  "paletteSource": "PopoverStyle blue: light #0064CF, dark #0A84FF; all star/trail/sphere colors derive from that tint.",
+  "nativePeriodsSeconds": [
+    8,
+    10.6
+  ],
+  "designPeriodsSeconds": [
+    8,
+    10.666666666666666
+  ],
+  "innerPeriodAdjustmentPercent": 0.6289308176100628,
+  "loopFit": "Four outer and three inner revolutions close at32s; inner cycle is approximately0.63% slower than native solely for this seamless design GIF. No fades, pauses or phase resets occur in the loop.",
+  "geometry": "Native fixed radii8.4/7.4, inclinations78/76deg, rolls+35/-32deg, camera70, opaque planet radius4, historical0.52s tapering ribbons split by depth, opposite directions and closed±6% speed modulation.",
+  "browserContextClosed": true,
+  "checks": [
+    {
+      "name": "600x360 layout without overflow",
+      "passed": true
+    },
+    {
+      "name": "t0 and t32 pixel-identical loop closure",
+      "passed": true,
+      "sha256": "93b5b090e2b77fd6645eda46d82e9a432d45695221dcf1e528a12c3063466119"
+    },
+    {
+      "name": "Encoded640-frame32sGIF with infinite loop extension",
+      "passed": true
+    }
+  ],
+  "assets": [
+    {
+      "file": "full-charge-orbit.gif",
+      "bytes": 323535,
+      "sha256": "f5b09d4fda5750217987179febf588906b58ac64f25c61df9641ea09e52e7c92"
+    },
+    {
+      "file": "full-charge-orbit-poster.png",
+      "bytes": 38130,
+      "sha256": "93b5b090e2b77fd6645eda46d82e9a432d45695221dcf1e528a12c3063466119"
+    },
+    {
+      "file": "full-charge-orbit-light.png",
+      "bytes": 37720,
+      "sha256": "a0c49edbe1feabc0a591296be1df15c2c19a967bf09378d6688caddac39d43fa"
+    },
+    {
+      "file": "full-charge-orbit-dark.png",
+      "bytes": 38130,
+      "sha256": "93b5b090e2b77fd6645eda46d82e9a432d45695221dcf1e528a12c3063466119"
+    }
+  ],
+  "browser": "156.0.8078.76",
+  "geometryChecks": [
+    {
+      "orbit": 0,
+      "frontSphereCrossing": true,
+      "backSphereCrossing": true,
+      "maxProjectedRadius": 8.46114037461397,
+      "loopPositionError": 1.9321708604464664e-14
+    },
+    {
+      "orbit": 1,
+      "frontSphereCrossing": true,
+      "backSphereCrossing": true,
+      "maxProjectedRadius": 7.441697365427666,
+      "loopPositionError": 4.965068306494546e-16
+    }
+  ],
+  "encoded": {
+    "width": 600,
+    "height": 360,
+    "duration": "32.000000",
+    "nb_frames": "640"
+  },
+  "pageErrors": []
+}

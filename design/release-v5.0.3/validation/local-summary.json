@@ -1,0 +1,29 @@
+{
+  "version": "5.0.3",
+  "localSwift": {
+    "tests": 748,
+    "failures": 0,
+    "registeredPreferences": 188,
+    "remainingPreferences": 0
+  },
+  "localPython": {
+    "tests": 653,
+    "expectedGUISkips": 4,
+    "failures": 0
+  },
+  "nativeInteraction": {
+    "checks": 524,
+    "failures": 0
+  },
+  "animationStress": {
+    "iterations": 20000,
+    "passed": true
+  },
+  "productionMatrix": 6926,
+  "liveBatteryIndicator": 22,
+  "scrollbarCapture": 2005,
+  "guestCleanupPassed": true,
+  "ownedVMRemoved": true,
+  "localPackageVerified": true,
+  "distributionMode": "community-ad-hoc"
+}

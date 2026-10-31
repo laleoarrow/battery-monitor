@@ -1,0 +1,33 @@
+Cody，你好：
+
+Wattson 5.0.3 已发布。以立体双星轨呈现满电状态，并带来可切换的滚动条样式。
+
+🔥 满电，自有节奏
+两颗星点错速慢转，保留前后遮挡与连续尾迹；球体、星点和尾迹随主题配色变化。双星轨对应已充满状态，时间估算仍优先采用 macOS 系统值。
+
+满电动图与设计画廊：
+https://laleoarrow.github.io/battery-monitor/design/v5.0.3/
+
+🔥 浏览，自有选择
+Flow、Simple、Hidden 三种滚动条样式，适配不同浏览习惯。Flow 沿用主题与供电状态配色。
+
+🔥 细节，同步到位
+修复模式滑块在尺寸变化时圆角不同步的问题，原生与兼容样式均已回归验证。开启“减少动态效果”时保留静态状态标识，关闭弹窗后停止相关动效。
+
+版本说明：
+https://github.com/laleoarrow/battery-monitor/releases/tag/v5.0.3
+
+完整安装 PKG：
+https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.3/Wattson-v5.0.3-macos-universal.pkg
+
+仅安装 App 的 DMG：
+https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.3/Wattson-v5.0.3-macos-universal.dmg
+
+macOS 12 及以上，支持 Apple Silicon 与 Intel。
+已有 PKG / Homebrew 安装，请继续通过 PKG / Homebrew 升级，以同步 App 与辅助组件。DMG 仅安装 App，提供无需辅助组件的只读监测。
+
+Community 分发：App/helper 为 ad-hoc 签名，PKG/DMG 未签名、未公证；macOS 安全检查仍适用。
+校验文件：https://github.com/laleoarrow/battery-monitor/releases/download/v5.0.3/SHA256SUMS.txt
+
+欢迎体验，也期待你的反馈。
+Wattson

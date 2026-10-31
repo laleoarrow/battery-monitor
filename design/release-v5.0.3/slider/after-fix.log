@@ -1,0 +1,41 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/7] Emitting module Wattson
+[4/7] Compiling Wattson ModeSliderView.swift
+[4/9] Write Objects.LinkFileList
+[5/9] Linking Wattson
+[6/9] Applying Wattson
+[8/10] Emitting module WattsonTests
+[8/10] Write Objects.LinkFileList
+[9/10] Linking WattsonPackageTests
+Build complete! (4.06s)
+Test Suite 'Selected tests' started at 2026-10-31 12:38:23.646.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 12:38:23.647.
+Test Suite 'WattsonTests' started at 2026-10-31 12:38:23.648.
+Test Case '-[WattsonTests.WattsonTests testModeSliderClickDuringSpringStaysInsideItsVisiblePath]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderClickDuringSpringStaysInsideItsVisiblePath]' passed (1.036 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderDirectDragKeepsRestingFootprint]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderDirectDragKeepsRestingFootprint]' passed (0.136 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRegrabMaterializesPresentationWithoutJump]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRegrabMaterializesPresentationWithoutJump]' passed (0.149 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRejectionReversesFromPresentationPosition]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRejectionReversesFromPresentationPosition]' passed (0.570 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' passed (0.541 seconds).
+Test Case '-[WattsonTests.WattsonTests testModeSliderTwoDetentMotionRecordsTheMiddleLabelPeak]' started.
+Test Case '-[WattsonTests.WattsonTests testModeSliderTwoDetentMotionRecordsTheMiddleLabelPeak]' passed (0.109 seconds).
+Test Suite 'WattsonTests' passed at 2026-10-31 12:38:26.188.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 2.540 (2.541) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-31 12:38:26.188.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 2.540 (2.541) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 12:38:26.188.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 2.540 (2.542) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

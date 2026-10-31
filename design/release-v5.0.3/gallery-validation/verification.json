@@ -1,0 +1,84 @@
+{
+  "version": "5.0.3",
+  "method": "Isolated browser design render; no running-App screenshots or network requests",
+  "svgRenders": [
+    {
+      "source": "previews/time-source-light.svg",
+      "sourceSHA256": "48d4fbc0220f3244a480048c2dd1867d19f80ad84490f543f35d150d559b0034",
+      "pngSHA256": "f45697b4570a16a2e29c1763520bd07823f607176ab910c075b14848ebb83562",
+      "width": 1200,
+      "height": 1040
+    },
+    {
+      "source": "previews/time-source-dark.svg",
+      "sourceSHA256": "12e08e276fd4ca025ed1441e7ec17e85ca280a7b0d76bf1662ed60b5e85584ec",
+      "pngSHA256": "f85a1104b6e7bdd76dd59b12bad171d559c38685da535d257779660b1667a148",
+      "width": 1200,
+      "height": 1040
+    }
+  ],
+  "scrollbarRenders": [
+    {
+      "theme": "light",
+      "defaultStyle": "flow",
+      "pngSHA256": "031d6035c05025968233161dfaa59d8a4e47c8024951f64d27ca4f2ac6cad81b"
+    },
+    {
+      "theme": "dark",
+      "defaultStyle": "flow",
+      "pngSHA256": "324d53c99bb532936cea3515ecaba8bb41a236c3b893da85d295f4d80c1d13d0"
+    }
+  ],
+  "layouts": [
+    {
+      "width": 1200,
+      "theme": "light",
+      "file": "gallery-1200-light.png",
+      "viewportWidth": 1200,
+      "documentWidth": 1200,
+      "imageCount": 12,
+      "posterSelected": true,
+      "heading": "满电之后，细节仍在流动。",
+      "gifSelectedWithMotion": true
+    },
+    {
+      "width": 1200,
+      "theme": "dark",
+      "file": "gallery-1200-dark.png",
+      "viewportWidth": 1200,
+      "documentWidth": 1200,
+      "imageCount": 12,
+      "posterSelected": true,
+      "heading": "满电之后，细节仍在流动。",
+      "gifSelectedWithMotion": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "file": "gallery-390-light.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "imageCount": 12,
+      "posterSelected": true,
+      "heading": "满电之后，细节仍在流动。",
+      "gifSelectedWithMotion": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "file": "gallery-390-dark.png",
+      "viewportWidth": 390,
+      "documentWidth": 390,
+      "imageCount": 12,
+      "posterSelected": true,
+      "heading": "满电之后，细节仍在流动。",
+      "gifSelectedWithMotion": true
+    }
+  ],
+  "errors": [],
+  "browserClosed": true,
+  "indexSHA256": "e6d6398bd8c393c80b110b4f3a7ac1da320e9b5dfe0c25250cbe847a401bff5b",
+  "gifSHA256": "f5b09d4fda5750217987179febf588906b58ac64f25c61df9641ea09e52e7c92",
+  "browser": "156.0.8078.76",
+  "allPassed": true
+}

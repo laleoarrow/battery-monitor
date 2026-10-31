@@ -1,0 +1,21 @@
+{
+  "sourceSHA256": {
+    "Popover/ModeSliderView.swift": "19aaa2680689f1ed243ec53953f6327669368ee20193e3c9e68a9af36ea01da8",
+    "SwiftTests/WattsonTests.swift": "0b9a94950189c2ec32b12252c52f0455d288f707fc78762ec1c5a83ceb5bdd30"
+  },
+  "before": {
+    "command": "bash scripts/test_swift.sh --filter WattsonTests.WattsonTests/testModeSliderRestingSelectionMeetsTrackEdges",
+    "tests": 1,
+    "failedAssertions": 9,
+    "registeredPreferenceDomains": 0,
+    "remainingPreferenceDomains": 0
+  },
+  "after": {
+    "command": "bash scripts/test_swift.sh --filter WattsonTests.WattsonTests/testModeSlider",
+    "tests": 6,
+    "failedAssertions": 0,
+    "registeredPreferenceDomains": 0,
+    "remainingPreferenceDomains": 0
+  },
+  "system": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.2\nBuildVersion:\t\t25F84"
+}

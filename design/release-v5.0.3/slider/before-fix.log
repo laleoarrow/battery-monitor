@@ -1,0 +1,36 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/7] Write sources
+[1/7] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module WattsonTests
+[4/5] Compiling WattsonTests WattsonTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking WattsonPackageTests
+Build complete! (3.01s)
+Test Suite 'Selected tests' started at 2026-10-31 12:37:49.625.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 12:37:49.626.
+Test Suite 'WattsonTests' started at 2026-10-31 12:37:49.626.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' started.
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("19.0") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("19.0") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:362: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("19.0") +/- ("0.01")
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' failed (0.878 seconds).
+Test Suite 'WattsonTests' failed at 2026-10-31 12:37:50.505.
+	 Executed 1 test, with 9 failures (0 unexpected) in 0.878 (0.879) seconds
+Test Suite 'WattsonPackageTests.xctest' failed at 2026-10-31 12:37:50.505.
+	 Executed 1 test, with 9 failures (0 unexpected) in 0.878 (0.879) seconds
+Test Suite 'Selected tests' failed at 2026-10-31 12:37:50.505.
+	 Executed 1 test, with 9 failures (0 unexpected) in 0.878 (0.880) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

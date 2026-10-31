@@ -1,0 +1,37 @@
+{
+  "version": "5.0.3",
+  "method": "Isolated browser design render; no running-App screenshots or network requests",
+  "svgRenders": [
+    {
+      "source": "previews/time-source-light.svg",
+      "sourceSHA256": "48d4fbc0220f3244a480048c2dd1867d19f80ad84490f543f35d150d559b0034",
+      "pngSHA256": "f45697b4570a16a2e29c1763520bd07823f607176ab910c075b14848ebb83562",
+      "width": 1200,
+      "height": 1040
+    },
+    {
+      "source": "previews/time-source-dark.svg",
+      "sourceSHA256": "12e08e276fd4ca025ed1441e7ec17e85ca280a7b0d76bf1662ed60b5e85584ec",
+      "pngSHA256": "f85a1104b6e7bdd76dd59b12bad171d559c38685da535d257779660b1667a148",
+      "width": 1200,
+      "height": 1040
+    }
+  ],
+  "scrollbarRenders": [
+    {
+      "theme": "light",
+      "defaultStyle": "flow",
+      "pngSHA256": "031d6035c05025968233161dfaa59d8a4e47c8024951f64d27ca4f2ac6cad81b"
+    },
+    {
+      "theme": "dark",
+      "defaultStyle": "flow",
+      "pngSHA256": "324d53c99bb532936cea3515ecaba8bb41a236c3b893da85d295f4d80c1d13d0"
+    }
+  ],
+  "layouts": [],
+  "errors": [],
+  "browserClosed": true,
+  "browser": "156.0.8078.76",
+  "allPassed": true
+}

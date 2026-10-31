@@ -1,0 +1,30 @@
+{
+  "packages": [
+    {
+      "path": "Wattson-v5.0.3-Modules-SVG.zip",
+      "sha256": "cbcb850c1168dbc9d21205b9822127c585aec730caa5e8796d9b1af10fc5cfb6",
+      "bytes": 3988,
+      "runtimeMasterCount": 6
+    },
+    {
+      "path": "Wattson-v5.0.3-Sidebar-SVG.zip",
+      "sha256": "421039efbaba4134908d74a08818cad6fcec8785cad17c6e4ef9a87c1612fb9a",
+      "bytes": 2067,
+      "runtimeMasterCount": 3
+    },
+    {
+      "path": "Wattson-v5.0.3-General-SVG.zip",
+      "sha256": "cd5da6be01b530c09ec7751c2ba69b6df8019bf0b7f301d8c62855b5f8d18859",
+      "bytes": 3404,
+      "runtimeMasterCount": 5
+    },
+    {
+      "path": "Wattson-v5.0.3-Power-SVG.zip",
+      "sha256": "dcb2fea3938488725056b1415f05f66a088a2cc7ce038e1f322a9f088cf24e85",
+      "bytes": 4298,
+      "runtimeMasterCount": 6
+    }
+  ],
+  "previews": 13,
+  "svgMasters": 20
+}

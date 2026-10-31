@@ -1,0 +1,60 @@
+Release mode: community-ad-hoc
+Notarization requested: no
+Building Wattson 5.0.3 (5.0.3) for arm64 and x86_64...
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (34.23s)
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (31.96s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/Wattson.app: replacing existing signature
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Verified universal release build for Wattson 5.0.3
+pkgbuild: Reading components from /Users/leoarrow/Project/mypackage/agents/电池功率/Packaging/pkg/component.plist
+pkgbuild: Adding component at Applications/Wattson.app
+pkgbuild: Adding top-level preinstall script
+pkgbuild: Adding top-level postinstall script
+pkgbuild: Wrote package to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/pkg.twDGcW/Wattson-component.pkg
+productbuild: Wrote product to /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/pkg.twDGcW/Wattson-v5.0.3-macos-universal.pkg
+Created unsigned community PKG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/artifacts/Wattson-v5.0.3-macos-universal.pkg
+Notarization status: no (Developer ID Installer identity is not configured)
+hdiutil: verify: checksum of "/Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/dmg.4SL9wJ/Wattson-v5.0.3-macos-universal.dmg" is VALID
+Mounted DMG verified: helper-free app and Applications link
+Created unsigned DMG: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/local.noindex/release.hdA0l0/artifacts/Wattson-v5.0.3-macos-universal.dmg
+Notarization/checksums: pending release orchestration
+Mounted DMG verified: helper-free app and Applications link
+Verified Wattson 5.0.3: full PKG and DMG contain byte-identical apps
+Wattson-v5.0.3-macos-universal.pkg: OK
+Wattson-v5.0.3-macos-universal.dmg: OK
+Wattson-v5.0.3-release-info.txt: OK
+Created release artifacts in /Users/leoarrow/Project/mypackage/agents/电池功率/dist
+Notarized: no
+Checksums: /Users/leoarrow/Project/mypackage/agents/电池功率/dist/SHA256SUMS.txt

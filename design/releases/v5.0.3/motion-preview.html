@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Wattson 5.0.3 电池时间状态灯：已批准的文字旁 HTML/SVG 动效设计预览。">
+<title>Wattson 5.0.3 · 电池时间动效设计预览</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --page: light-dark(#f5f6f8, #14171d);
+  --panel: light-dark(#ffffff, #1c2028);
+  --ink: light-dark(#20232b, #edf0f7);
+  --muted: light-dark(#5e6673, #aeb7c7);
+  --line: light-dark(#dfe3e9, #333b49);
+  --link: light-dark(#0868cb, #70b7ff);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+main { max-width: 1020px; margin: auto; padding: 40px 24px 56px; }
+a { color: var(--link); text-underline-offset: 3px; }
+.back { font-size: 14px; }
+header { max-width: 760px; margin: 28px 0; }
+.eyebrow { color: var(--link); font-size: 14px; font-weight: 650; }
+h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.25; letter-spacing: -.8px; margin: 8px 0 14px; }
+p { color: var(--muted); margin: 10px 0; }
+.disclosure { font-size: 14px; }
+#wattson-motion-preview {
+  --wp-surface: light-dark(#f6f6f8, #242428);
+  --wp-ink: light-dark(#222228, #f2f2f7);
+  --wp-muted: light-dark(#65656d, #aaaab4);
+  --wp-line: light-dark(#d5d5dc, #414149);
+  --wp-well: light-dark(#e5e5eb, #303036);
+  --wp-neutral: light-dark(#565662, #c7c7cc);
+  --wp-theme-accent: var(--wp-neutral);
+  --wp-accent: var(--wp-theme-accent);
+  --wp-bright: color-mix(in srgb, var(--wp-accent), white 65%);
+  --wp-deep: color-mix(in srgb, var(--wp-accent), black 18%);
+  --wp-red: light-dark(#c72528, #ff453a);
+  --wp-glow: 1;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  color: var(--wp-ink);
+  font-size: 13px;
+  line-height: 1.5;
+}
+#wattson-motion-preview[data-palette="green"] { --wp-theme-accent: light-dark(#18783a, #30d158); }
+#wattson-motion-preview[data-palette="blue"] { --wp-theme-accent: light-dark(#0064cf, #0a84ff); }
+.wp-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.wp-top strong { font-weight: 600; }
+.wp-themes, .wp-states { display: flex; flex-wrap: wrap; gap: 7px; }
+.wp-states { margin-bottom: 16px; }
+.wp-states button { flex: 1; min-width: 100px; }
+button, select { font: inherit; color: var(--wp-muted); background: var(--wp-surface); border: 1px solid var(--wp-line); border-radius: 8px; padding: 8px 12px; }
+button { cursor: pointer; }
+button[aria-pressed="true"] { color: var(--wp-ink); border-color: var(--wp-muted); background: var(--wp-well); }
+button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+.wp-palette { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--wp-muted); font-size: 12px; }
+.wp-palette select { color: var(--wp-ink); }
+.wp-stage { min-height: 310px; padding: 28px 16px; display: flex; align-items: center; justify-content: center; gap: 48px; }
+.wp-context { width: 360px; max-width: 100%; flex-shrink: 0; }
+.wp-label { color: var(--wp-muted); font-size: 12px; margin-bottom: 14px; text-align: center; }
+.wp-window { background: var(--wp-surface); border: 1px solid var(--wp-line); border-radius: 17px; padding: 12px 16px; box-shadow: 0 10px 28px light-dark(#24242a14, #00000030); }
+.wp-runtime { height: 88px; display: flex; align-items: center; gap: 12px; padding: 0 12px; }
+.wp-clock { width: 44px; height: 44px; flex-shrink: 0; border-radius: 11px; background: var(--wp-well); border: 1px solid color-mix(in srgb, var(--wp-theme-accent) 34%, var(--wp-line)); display: grid; place-items: center; color: var(--wp-neutral); }
+.wp-clock svg { display: block; width: 24px; height: 24px; }
+.wp-copy { flex: 1; min-width: 0; text-align: right; }
+.wp-caption { display: flex; align-items: center; justify-content: flex-end; white-space: nowrap; gap: 4px; color: var(--wp-muted); font-size: 11.5px; height: 20px; }
+.wp-value { font-size: 24px; line-height: 31px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+[data-state="calculating"] .wp-value, [data-state="unavailable"] .wp-value { font-size: 16px; font-weight: 400; color: var(--wp-muted); }
+.wp-badge { width: 20px; height: 20px; flex-shrink: 0; position: relative; display: inline-block; isolation: isolate; }
+.wp-halo { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--wp-accent) 30%, transparent), color-mix(in srgb, var(--wp-accent) 13%, transparent) 35%, transparent 72%); opacity: var(--wp-glow); }
+.wp-planet { position: absolute; width: 8px; height: 8px; left: 6px; top: 6px; border-radius: 50%; background: radial-gradient(circle at 30% 25%, var(--wp-bright), var(--wp-accent) 48%, var(--wp-deep)); }
+.wp-particle { position: absolute; border-radius: 50%; background: var(--wp-bright); opacity: 0; left: 10px; top: 10px; }
+.wp-detail { width: 140px; flex-shrink: 0; text-align: center; }
+.wp-clock-detail { display: grid; place-items: center; height: 90px; margin-bottom: 12px; }
+.wp-clock-detail .wp-clock { transform: scale(1.8); }
+.wp-enlarged { height: 100px; display: grid; place-items: center; }
+.wp-enlarged .wp-badge { transform: scale(4); }
+.wp-statusline { color: var(--wp-muted); font-size: 13px; text-align: center; min-height: 38px; padding: 8px 12px; border-top: 1px solid var(--line); }
+[data-state="fallback"] .wp-planet { animation: wp-breathe 3.6s ease-in-out infinite; }
+[data-state="calculating"] .wp-planet { opacity: .52; }
+#wattson-motion-preview[data-state="unavailable"] { --wp-accent: var(--wp-red); }
+[data-state="unavailable"] .wp-planet { animation: wp-breathe 2.4s ease-in-out infinite; }
+[data-state="fallback"] .wp-halo { animation: wp-glow 3.6s ease-in-out infinite; }
+[data-state="calculating"] .wp-halo { opacity: calc(var(--wp-glow) * .52); }
+[data-state="unavailable"] .wp-halo { animation: wp-glow 2.4s ease-in-out infinite; }
+@keyframes wp-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .48; } }
+@keyframes wp-glow { 0%, 100% { opacity: var(--wp-glow); } 50% { opacity: calc(var(--wp-glow) * .48); } }
+.notes { margin-top: 22px; font-size: 14px; }
+.notes p { margin: 8px 0; }
+.motion-note { display: none; }
+@media (max-width: 700px) {
+  main { padding: 28px 16px 40px; }
+  #wattson-motion-preview { padding: 18px 14px; }
+  .wp-stage { flex-direction: column; gap: 28px; padding: 28px 0 18px; }
+  .wp-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
+  .wp-runtime { padding: 0; gap: 8px; }
+  .wp-window { padding: 12px; }
+  .wp-clock-detail, .wp-enlarged { height: 96px; margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-planet, .wp-halo { animation: none !important; }
+  .motion-note { display: block; }
+}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="index.html">← 返回 5.0.3 设计画廊</a>
+<header>
+  <div class="eyebrow">Wattson · Version 5.0.3</div>
+  <h1>电池时间 · 星球状态灯</h1>
+  <p>状态灯紧邻时间标题。选择数据状态与仪表配色，查看恒亮、呼吸和计算中的星轨节奏。</p>
+  <p class="disclosure"><strong>已批准HTML/SVG设计预览 · 非App运行截图</strong></p>
+</header>
+<section id="wattson-motion-preview" data-state="calculating" data-palette="neutral" aria-label="文字旁星球状态灯设计预览">
+  <div class="wp-top">
+    <strong>文字旁 · 已批准方案</strong>
+    <div class="wp-themes" role="group" aria-label="预览主题">
+      <button type="button" data-theme="light" aria-pressed="true">浅色 Light</button>
+      <button type="button" data-theme="dark" aria-pressed="false">深色 Dark</button>
+    </div>
+  </div>
+  <div class="wp-states" role="group" aria-label="预览状态">
+    <button type="button" data-state="system" aria-pressed="false">系统数据</button>
+    <button type="button" data-state="fallback" aria-pressed="false">备用估算</button>
+    <button type="button" data-state="calculating" aria-pressed="true">计算中</button>
+    <button type="button" data-state="unavailable" aria-pressed="false">无法计算</button>
+  </div>
+  <label class="wp-palette">仪表配色示例
+    <select aria-label="仪表配色示例"><option value="neutral">银灰 · 电池供电</option><option value="green">充电绿</option><option value="blue">接电蓝</option></select>
+    <span>星球、微光与星点尾迹同步取色</span>
+  </label>
+  <div class="wp-stage">
+    <div class="wp-context">
+      <div class="wp-label">实际大小 · 时间栏目</div>
+      <div class="wp-window"><div class="wp-runtime">
+        <div class="wp-clock" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="clock-face" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20"><stop offset="0" stop-color="var(--wp-theme-accent)" stop-opacity="0.08"/><stop offset="1" stop-color="var(--wp-theme-accent)" stop-opacity="0.30"/></linearGradient></defs>
+            <circle cx="12" cy="12" r="9.75" fill="url(#clock-face)"/>
+            <circle cx="12" cy="12" r="10.35" stroke="currentColor" stroke-width="1.25"/>
+            <polyline points="12,5.6 12,12 16.8,12" stroke="var(--wp-theme-accent)" stroke-width="1.7"/>
+            <circle cx="12" cy="12" r="1.3" fill="var(--wp-theme-accent)"/>
+          </svg>
+        </div>
+        <div class="wp-copy">
+          <div class="wp-caption"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span><span>Estimated Battery Runtime</span></div>
+          <div class="wp-value">Calculating…</div>
+        </div>
+      </div></div>
+    </div>
+    <div class="wp-detail" aria-label="放大细节">
+      <div><div class="wp-label">渐变时钟 ×1.8</div><div class="wp-clock-detail"><div class="wp-clock" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <defs><linearGradient id="clock-face-detail" gradientUnits="userSpaceOnUse" x1="4" y1="4" x2="20" y2="20"><stop offset="0" stop-color="var(--wp-theme-accent)" stop-opacity="0.08"/><stop offset="1" stop-color="var(--wp-theme-accent)" stop-opacity="0.30"/></linearGradient></defs>
+          <circle cx="12" cy="12" r="9.75" fill="url(#clock-face-detail)"/>
+          <circle cx="12" cy="12" r="10.35" stroke="currentColor" stroke-width="1.25"/>
+          <polyline points="12,5.6 12,12 16.8,12" stroke="var(--wp-theme-accent)" stroke-width="1.7"/>
+          <circle cx="12" cy="12" r="1.3" fill="var(--wp-theme-accent)"/>
+        </svg>
+      </div></div></div>
+      <div><div class="wp-label">同步呼吸与星轨 ×4</div><div class="wp-enlarged"><span class="wp-badge" aria-hidden="true"><span class="wp-halo"></span><span class="wp-planet"></span></span></div></div>
+    </div>
+  </div>
+  <div class="wp-statusline" role="status" aria-live="polite">计算中 · 一圈一次呼吸，圈末一起收暗，停 0.5 秒后继续</div>
+</section>
+<div class="notes">
+  <p>计算中立即进入 2.8 秒的一圈，与同一次由暗到亮再收暗的呼吸同步；随后共同暗停 0.5 秒。亮星点带着 7 颗渐细尾尘，沿倾斜轨道运行。</p>
+  <p>系统数据恒亮；备用估算以 3.6 秒缓慢呼吸；无法计算以 2.4 秒柔和红色呼吸。时钟保持静止，44 点圆角底座中使用 24 点矢量图标。</p>
+  <p>时间和配色均为设计示例，不读取实际电池数据。配色切换仅用于预览，不代表新增 App 设置。</p>
+  <p class="motion-note">当前系统已启用“减弱动态效果”，状态灯以静态方式显示。</p>
+</div>
+<noscript><p>此页需要 JavaScript 才能切换预览状态和播放星轨动效。</p></noscript>
+</main>
+<script>
+(() => {
+  const root = document.getElementById('wattson-motion-preview');
+  const states = {
+    system: ['4h 25m', '系统数据 · 主题色恒亮'],
+    fallback: ['≈4h 25m', '备用估算 · 缓慢、连续的呼吸光'],
+    calculating: ['Calculating…', '计算中 · 一圈一次呼吸，圈末一起收暗，停 0.5 秒后继续'],
+    unavailable: ['Unavailable', '无法计算 · 柔和红色脉动，时钟保持仪表配色']
+  };
+  const ui = { state: 'calculating', theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light', palette: 'neutral', glow: 1 };
+  let origin = performance.now();
+  let animationFrame;
+  const particles = [];
+  const planets = Array.from(root.querySelectorAll('.wp-planet'));
+  const halos = Array.from(root.querySelectorAll('.wp-halo'));
+  root.querySelectorAll('.wp-badge').forEach(badge => {
+    // One comet and seven tapered dust particles, as in the approved source.
+    for (let i = 0; i < 8; i++) {
+      const node = document.createElement('span');
+      node.className = 'wp-particle';
+      const size = i === 0 ? 1.9 : Math.max(.45, 1.5 - i * .15);
+      node.style.width = size + 'px';
+      node.style.height = size + 'px';
+      node.style.margin = (-size / 2) + 'px';
+      if (i > 0) node.style.background = 'var(--wp-accent)';
+      badge.appendChild(node);
+      particles.push({ node, i });
+    }
+  });
+  function render() {
+    root.dataset.state = ui.state;
+    root.dataset.palette = ui.palette;
+    document.documentElement.style.colorScheme = ui.theme;
+    planets.forEach(node => node.style.removeProperty('opacity'));
+    halos.forEach(node => node.style.removeProperty('opacity'));
+    root.querySelectorAll('button[data-state]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.state === ui.state)));
+    root.querySelectorAll('button[data-theme]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.theme === ui.theme)));
+    root.querySelector('.wp-value').textContent = states[ui.state][0];
+    root.querySelector('.wp-statusline').textContent = states[ui.state][1];
+  }
+  root.querySelectorAll('button[data-state]').forEach(button => button.addEventListener('click', () => {
+    ui.state = button.dataset.state;
+    origin = performance.now();
+    render();
+  }));
+  root.querySelectorAll('button[data-theme]').forEach(button => button.addEventListener('click', () => {
+    ui.theme = button.dataset.theme;
+    render();
+  }));
+  root.querySelector('.wp-palette select').addEventListener('change', event => {
+    ui.palette = event.target.value;
+    render();
+  });
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  // Preserve the approved source's shared timeline and orbit/pulse equations.
+  function frame(now) {
+    const t = ((now - origin) / 1000) % 3.3;
+    const visible = ui.state === 'calculating' && !reduced.matches && !document.hidden && t < 2.8;
+    const fade = visible ? Math.min(1, t / .2, (2.8 - t) / .25) : 0;
+    if (ui.state === 'calculating') {
+      const pulse = reduced.matches ? 1 : .52 + .48 * Math.sin(Math.PI * Math.min(t / 2.8, 1)) ** 2;
+      planets.forEach(node => node.style.opacity = String(pulse));
+      halos.forEach(node => node.style.opacity = String(ui.glow * pulse));
+    }
+    particles.forEach(({ node, i }) => {
+      node.style.opacity = String(fade * (i === 0 ? 1 : .7 * Math.pow(.72, i - 1)));
+      if (visible) {
+        const a = t / 2.8 * Math.PI * 2 - i * .13;
+        const x = 8.5 * Math.cos(a), y = 4.6 * Math.sin(a), tilt = -Math.PI / 5;
+        node.style.transform = `translate(${x * Math.cos(tilt) - y * Math.sin(tilt)}px,${x * Math.sin(tilt) + y * Math.cos(tilt)}px)`;
+        node.style.zIndex = Math.sin(a) > 0 ? '2' : '-1';
+      }
+    });
+    animationFrame = requestAnimationFrame(frame);
+  }
+  render();
+  animationFrame = requestAnimationFrame(frame);
+  window.addEventListener('pagehide', () => cancelAnimationFrame(animationFrame));
+  window.addEventListener('pageshow', event => {
+    if (event.persisted) animationFrame = requestAnimationFrame(frame);
+  });
+})();
+</script>
+</body>
+</html>

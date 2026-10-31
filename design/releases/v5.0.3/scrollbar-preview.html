@@ -1,0 +1,180 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Wattson 5.0.3 Scrollbar Design Preview</title><style>body{margin:0}</style></head><body><style>
+#wattson-scroll-design { --ws-surface:light-dark(#f7f7f9,#242426); --ws-panel:light-dark(#fff,#2d2d30); --ws-ink:light-dark(#252529,#f4f4f6); --ws-muted:light-dark(#696971,#aaaab1); --ws-line:light-dark(#dddde2,#414146); --ws-accent:light-dark(#146acc,#419dff); --ws-bright:color-mix(in srgb,var(--ws-accent),white 68%); --ws-height:300px; font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ws-ink); }
+#wattson-scroll-design[data-palette="green"] { --ws-accent:light-dark(#21834b,#43d480); }
+#wattson-scroll-design[data-palette="neutral"] { --ws-accent:light-dark(#767483,#c8c4d5); }
+#wattson-scroll-design * { box-sizing:border-box; }
+#wattson-scroll-design .ws-stage { display:grid; grid-template-columns:minmax(210px,250px) 180px; gap:36px; justify-content:center; align-items:start; padding:28px 18px 30px; }
+#wattson-scroll-design .ws-settings { background:var(--ws-surface); border:1px solid var(--ws-line); border-radius:18px; padding:20px 16px 18px; margin-top:25px; }
+#wattson-scroll-design .ws-settings-title { margin-bottom:20px; font-size:15px; font-weight:500; }
+#wattson-scroll-design .ws-subtitle { font-size:12px; color:var(--ws-muted); margin-bottom:8px; }
+#wattson-scroll-design .ws-setting-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 0; border-top:1px solid var(--ws-line); }
+#wattson-scroll-design .ws-setting-row select { appearance:auto; min-width:82px; font:inherit; color:var(--ws-ink); background:var(--ws-panel); border:1px solid var(--ws-line); border-radius:6px; padding:4px 5px; }
+#wattson-scroll-design .ws-setting-row label { font-weight:500; }
+#wattson-scroll-design .ws-setting-note { color:var(--ws-muted); font-size:12px; min-height:53px; padding-top:5px; }
+#wattson-scroll-design .ws-caption { color:var(--ws-muted); font-size:11px; margin:9px 2px 0; }
+#wattson-scroll-design .ws-preview-label { margin:0 0 8px; color:var(--ws-muted); font-size:12px; }
+#wattson-scroll-design .ws-app { position:relative; background:var(--ws-surface); border-right:1px solid var(--ws-line); overflow:hidden; isolation:isolate; }
+#wattson-scroll-design .ws-scroll { height:var(--ws-height); overflow-y:auto; overflow-x:hidden; scrollbar-width:none; overscroll-behavior:contain; scroll-behavior:auto; }
+#wattson-scroll-design .ws-scroll::-webkit-scrollbar { display:none; }
+#wattson-scroll-design .ws-document { height:1000px; padding:18px 34px 18px 16px; display:flex; flex-direction:column; justify-content:space-between; color:var(--ws-muted); font-size:11px; }
+#wattson-scroll-design .ws-marker { display:flex; align-items:center; gap:9px; }
+#wattson-scroll-design .ws-marker::after { content:""; height:1px; flex:1; background:var(--ws-line); }
+#wattson-scroll-design .ws-rail { position:absolute; right:1px; top:16px; bottom:16px; width:26px; padding:0; margin:0; border:0; background:transparent; z-index:5; touch-action:none; cursor:grab; }
+#wattson-scroll-design .ws-rail:active { cursor:grabbing; }
+#wattson-scroll-design .ws-rail:focus-visible { outline:2px solid var(--ws-accent); outline-offset:-3px; border-radius:10px; }
+#wattson-scroll-design .ws-track { position:absolute; top:0; bottom:0; width:2px; left:12px; background:color-mix(in srgb,var(--ws-muted),transparent 93%); border-radius:2px; }
+#wattson-scroll-design .ws-thumb { position:absolute; left:0; width:26px; height:80px; top:0; pointer-events:none; }
+#wattson-scroll-design .ws-simple { position:absolute; left:10px; top:0; bottom:0; width:6px; background:light-dark(#0000005c,#ffffff61); border-radius:6px; }
+#wattson-scroll-design .ws-flow { position:absolute; left:10px; top:0; bottom:0; width:6px; overflow:hidden; border-radius:6px; isolation:isolate; background:linear-gradient(180deg,color-mix(in srgb,var(--ws-accent),var(--ws-surface) 70%),var(--ws-accent) 72%,color-mix(in srgb,var(--ws-accent),white 20%)); }
+#wattson-scroll-design .ws-core { position:absolute; inset:0; background:linear-gradient(90deg,#ffffff00,#ffffff22 48%,#ffffff00); }
+#wattson-scroll-design .ws-star { position:absolute; left:50%; top:50%; width:2px; height:2px; margin:-1px; border-radius:50%; background:#fff; box-shadow:0 0 2px #ffffffa0; }
+#wattson-scroll-design .ws-rail:hover .ws-flow { filter:brightness(1.08); }
+#wattson-scroll-design[data-style="simple"] .ws-flow { display:none; }
+#wattson-scroll-design[data-style="flow"] .ws-simple { display:none; }
+#wattson-scroll-design[data-style="flow"] .ws-rail { display:none; }
+#wattson-scroll-design[data-overflow="false"] .ws-rail { display:none; }
+@media (max-width:540px) {
+  #wattson-scroll-design .ws-stage { grid-template-columns:minmax(0,280px); padding:18px 10px 24px; gap:22px; }
+  #wattson-scroll-design .ws-settings { margin:0; padding:15px 16px 13px; }
+  #wattson-scroll-design .ws-settings-title { margin-bottom:9px; }
+  #wattson-scroll-design .ws-setting-note { min-height:0; }
+  #wattson-scroll-design .ws-preview-wrap { width:180px; justify-self:end; }
+}
+</style>
+<div id="wattson-scroll-design" data-style="flow" data-palette="blue" data-reduce-motion="false" aria-label="Wattson 滚动条局部设计">
+  <div class="ws-stage viz-dotted-background">
+    <div>
+      <section class="ws-settings" aria-label="通用设置中的滚动条选项">
+        <div class="ws-settings-title">通用设置</div>
+        <div class="ws-subtitle">外观</div>
+        <div class="ws-setting-row">
+          <label for="scrollbar-choice">滚动条</label>
+          <select id="scrollbar-choice" aria-describedby="scrollbar-description" class="cursor-interaction">
+            <option value="hidden">隐藏</option>
+            <option value="simple">简洁</option>
+            <option value="flow" selected>流光</option>
+          </select>
+        </div>
+        <div id="scrollbar-description" class="ws-setting-note" aria-live="polite">隐藏外观，仍可上下滚动。</div>
+      </section>
+      <div class="ws-caption">默认：流光</div>
+    </div>
+    <div class="ws-preview-wrap">
+      <div class="ws-preview-label">滚动条局部 · 右侧</div>
+      <section class="ws-app" aria-label="仅演示右侧滚动条，不包含 App 主体设计">
+        <div id="wattson-preview-scroll" class="ws-scroll" aria-label="可滚动的局部示意内容">
+          <div class="ws-document"><span class="ws-marker">顶部</span><span class="ws-marker">中部</span><span class="ws-marker">底部</span></div>
+        </div>
+        <button type="button" id="wattson-preview-rail" class="ws-rail" role="scrollbar" aria-label="拖动以滚动内容" aria-controls="wattson-preview-scroll" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="ws-track" aria-hidden="true"></span>
+          <span class="ws-thumb" aria-hidden="true"><span class="ws-simple"></span><span class="ws-flow"><span class="ws-core"></span><span class="ws-star" data-head></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span><span class="ws-star"></span></span></span>
+        </button>
+      </section>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const root=document.getElementById('wattson-scroll-design');
+  const viewport=root.querySelector('#wattson-preview-scroll');
+  const rail=root.querySelector('#wattson-preview-rail');
+  const thumb=root.querySelector('.ws-thumb');
+  const choice=root.querySelector('#scrollbar-choice');
+  const stars=[...root.querySelectorAll('.ws-star')];
+  const offsets=[0,.16,.22,.58,.87];
+  const lanes=[-.7,.5,-.1,.8,-.4];
+  const sizes=[2.2,1.5,2,1.3,1.7];
+  const descriptions={hidden:'隐藏外观，仍可上下滚动。',simple:'原来的灰色滚动条。',flow:'主题渐变，光点错落向下，到底淡出。'};
+  const ui={style:'flow',theme:'auto',palette:'blue',height:300,reduceMotion:false};
+  const media=matchMedia('(prefers-reduced-motion: reduce)');
+  let geometry={height:1,travel:0,max:0,top:0};
+  let inView=true,animation=null,origin=performance.now(),drag=null;
+  function reduced() { return ui.reduceMotion||media.matches; }
+  function positionStars(seconds) {
+    stars.forEach((node,index)=>{
+      const phase=reduced() ? .08+offsets[index]*.88 : (seconds/3.4+offsets[index])%1;
+      node.style.width=sizes[index]+'px'; node.style.height=sizes[index]+'px'; node.style.margin=(-sizes[index]/2)+'px';
+      node.style.transform='translate('+lanes[index]+'px,'+(geometry.height*(phase-.5)).toFixed(2)+'px)';
+      node.style.opacity=String(Math.max(0,Math.min(1,(phase-.04)/.08,(.96-phase)/.09)));
+    });
+  }
+  function motionAllowed() { return ui.style==='flow'&&geometry.max>0&&!reduced()&&inView&&!document.hidden; }
+  function frame(now) { animation=null; if(!motionAllowed()){updateMotion();return;} positionStars((now-origin)/1000); animation=requestAnimationFrame(frame); }
+  function updateMotion() {
+    root.dataset.reduceMotion=String(reduced());
+    if(!motionAllowed()) { if(animation!==null)cancelAnimationFrame(animation); animation=null; positionStars(0); }
+    else if(animation===null) { origin=performance.now(); animation=requestAnimationFrame(frame); }
+  }
+  function sync() {
+    const max=Math.max(0,viewport.scrollHeight-viewport.clientHeight);
+    const track=Math.max(1,viewport.clientHeight-32);
+    const height=Math.min(track,Math.max(44,track*viewport.clientHeight/viewport.scrollHeight));
+    const travel=Math.max(0,track-height);
+    const top=max ? viewport.scrollTop/max*travel : 0;
+    geometry={max,height,travel,top};
+    thumb.style.height=height+'px'; thumb.style.top=top+'px';
+    root.dataset.overflow=String(max>1);
+    rail.setAttribute('aria-valuenow',String(max ? Math.round(viewport.scrollTop/max*100):0));
+    rail.disabled=ui.style==='hidden'||max<=1;
+    updateMotion();
+  }
+  function render() {
+    root.dataset.style=ui.style; root.dataset.palette=ui.palette;
+    root.style.colorScheme=ui.theme==='auto' ? 'inherit' : ui.theme;
+    root.style.setProperty('--ws-height',ui.height+'px'); choice.value=ui.style;
+    root.querySelector('#scrollbar-description').textContent=descriptions[ui.style]; sync();
+  }
+  function persist() {
+    if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{scrollbarStyle:ui.style,defaultStyle:'flow',side:'right',previewOnly:true},privateContent:{revision:3,...ui}}).catch(()=>{});
+  }
+  function restore(saved) {
+    const state=saved?.privateContent;
+    if(state?.revision===3) {
+      if(Object.hasOwn(descriptions,state.style))ui.style=state.style;
+      if(['auto','light','dark'].includes(state.theme))ui.theme=state.theme;
+      if(['blue','green','neutral'].includes(state.palette))ui.palette=state.palette;
+      if(Number.isFinite(state.height))ui.height=Math.max(220,Math.min(1100,state.height));
+      if(typeof state.reduceMotion==='boolean')ui.reduceMotion=state.reduceMotion;
+    }
+    render();
+  }
+  choice.addEventListener('change',()=>{ui.style=choice.value;render();persist();});
+  viewport.addEventListener('scroll',sync,{passive:true});
+  rail.addEventListener('pointerdown',event=>{
+    if(event.button!==0||geometry.max<=0)return;
+    event.preventDefault(); rail.focus({preventScroll:true});
+    const y=event.clientY-rail.getBoundingClientRect().top;
+    const inside=y>=geometry.top&&y<=geometry.top+geometry.height;
+    drag={id:event.pointerId,offset:inside?y-geometry.top:geometry.height/2}; rail.setPointerCapture(event.pointerId);
+    if(!inside)move(event);
+  });
+  function move(event) {
+    if(!drag||drag.id!==event.pointerId)return;
+    const top=event.clientY-rail.getBoundingClientRect().top-drag.offset;
+    viewport.scrollTop=geometry.travel ? Math.max(0,Math.min(1,top/geometry.travel))*geometry.max : 0; sync();
+  }
+  rail.addEventListener('pointermove',move);
+  function end(event) { if(drag?.id===event.pointerId)drag=null; }
+  rail.addEventListener('pointerup',end); rail.addEventListener('pointercancel',end); rail.addEventListener('lostpointercapture',end);
+  rail.addEventListener('keydown',event=>{
+    const delta={ArrowDown:40,ArrowUp:-40,PageDown:viewport.clientHeight*.85,PageUp:-viewport.clientHeight*.85};
+    if(Object.hasOwn(delta,event.key)){event.preventDefault();viewport.scrollTop+=delta[event.key];}
+    else if(event.key==='Home'||event.key==='End'){event.preventDefault();viewport.scrollTop=event.key==='Home'?0:geometry.max;}
+  });
+  rail.addEventListener('wheel',event=>{event.preventDefault();viewport.scrollTop+=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?viewport.clientHeight:1);},{passive:false});
+  const observer=new ResizeObserver(sync); observer.observe(viewport); observer.observe(root.querySelector('.ws-document'));
+  const visibility=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;updateMotion();}); visibility.observe(root);
+  media.addEventListener('change',updateMotion); document.addEventListener('visibilitychange',updateMotion);
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.widgetState)restore(event.detail.globals.widgetState);});
+  window.addEventListener('pagehide',()=>{if(animation!==null)cancelAnimationFrame(animation);observer.disconnect();visibility.disconnect();},{once:true});
+  restore(window.openai?.widgetState);
+  if(globalThis.Tweak) {
+    const tweak=new Tweak({container:root,onChange:()=>{render();persist();}});
+    tweak.addSelect(ui,'theme',{label:'外观',options:[{label:'跟随系统',value:'auto'},{label:'浅色',value:'light'},{label:'深色',value:'dark'}]});
+    tweak.addSelect(ui,'palette',{label:'流光主题色',options:[{label:'接电蓝',value:'blue'},{label:'充电绿',value:'green'},{label:'用电中性',value:'neutral'}]});
+    tweak.addSlider(ui,'height',{label:'局部演示高度',min:220,max:1100,step:10,unit:'px'});
+    tweak.addToggle(ui,'reduceMotion',{label:'减少动态效果'});
+  }
+})();
+</script>
+</body></html>
