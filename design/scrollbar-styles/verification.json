@@ -1,0 +1,175 @@
+{
+  "kind": "Interactive scrollbar design preview; not a running native App screenshot",
+  "checkedAtUTC": "2026-10-31T02:05:58.967Z",
+  "sourceSHA256": "3bfe57be6a89c380f459bed97fae646895cbb43e500172ec5f61f2a359938cc7",
+  "playwright": "1.62.1",
+  "scratch": "/Users/leoarrow/Project/mypackage/agents/电池功率/design/scrollbar-styles/.preview-FBE20E46-2BB5-4557-8074-6B1A2D416565.noindex",
+  "networkRequestsAllowed": false,
+  "layouts": [
+    {
+      "width": 736,
+      "documentWidth": 736,
+      "documentHeight": 1000,
+      "colorScheme": "light",
+      "file": "scrollbar-orbit-736-light.png",
+      "noHorizontalOverflow": true,
+      "switchingPreservesPosition": true
+    },
+    {
+      "width": 736,
+      "documentWidth": 736,
+      "documentHeight": 1000,
+      "colorScheme": "dark",
+      "file": "scrollbar-orbit-736-dark.png",
+      "noHorizontalOverflow": true,
+      "switchingPreservesPosition": true
+    },
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "documentHeight": 1000,
+      "colorScheme": "light",
+      "file": null,
+      "noHorizontalOverflow": true,
+      "switchingPreservesPosition": true
+    },
+    {
+      "width": 320,
+      "documentWidth": 320,
+      "documentHeight": 1000,
+      "colorScheme": "dark",
+      "file": "scrollbar-orbit-320-dark.png",
+      "noHorizontalOverflow": true,
+      "switchingPreservesPosition": true
+    }
+  ],
+  "interactions": [
+    {
+      "width": 736,
+      "colorScheme": "light",
+      "style": "hidden",
+      "wheelMoved": true,
+      "railVisible": false,
+      "dragBottomPassed": null
+    },
+    {
+      "width": 736,
+      "colorScheme": "light",
+      "style": "simple",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 736,
+      "colorScheme": "light",
+      "style": "orbit",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 736,
+      "colorScheme": "dark",
+      "style": "hidden",
+      "wheelMoved": true,
+      "railVisible": false,
+      "dragBottomPassed": null
+    },
+    {
+      "width": 736,
+      "colorScheme": "dark",
+      "style": "simple",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 736,
+      "colorScheme": "dark",
+      "style": "orbit",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "style": "hidden",
+      "wheelMoved": true,
+      "railVisible": false,
+      "dragBottomPassed": null
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "style": "simple",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 320,
+      "colorScheme": "light",
+      "style": "orbit",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "style": "hidden",
+      "wheelMoved": true,
+      "railVisible": false,
+      "dragBottomPassed": null
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "style": "simple",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    },
+    {
+      "width": 320,
+      "colorScheme": "dark",
+      "style": "orbit",
+      "wheelMoved": true,
+      "railVisible": true,
+      "dragBottomPassed": true
+    }
+  ],
+  "errors": [],
+  "allPassed": true,
+  "browser": "156.0.8078.76",
+  "orbitMotion": {
+    "starsChangePosition": true,
+    "sampledMilliseconds": 250
+  },
+  "reducedMotion": {
+    "media": "reduce",
+    "starsStatic": true,
+    "sampledMilliseconds": 250
+  },
+  "browserContextClosed": true,
+  "cleanupVerifiedAfterOwnerExit": {
+    "scratchRemoved": true,
+    "scratchReferencingProcessesRemaining": 0,
+    "previewScratchDirectoriesRemaining": 0,
+    "productionAppOrUserBrowserTouched": false
+  },
+  "diagnosticSummary": {
+    "initialFailure": "Live reduced-motion change updated MediaQueryList.matches but did not deliver its change callback in this Chromium run; the animation frame stopped before applying the static state. Layout, drag and ordinary motion checks had passed.",
+    "independentSingleLoadProbe": "Reproduced in a new page with one load; not resolved by merely waiting for the change callback. Initial reduce mode loaded correctly.",
+    "minimalSourceCorrection": "The stopped-frame branch now synchronizes the static motion state before returning.",
+    "postCorrectionProbe": "Original and newly queried MediaQueryList both matched reduce, callback absent, but the root correctly entered reduced-motion state.",
+    "scope": "Browser design preview behavior only; no native AppKit assertion."
+  },
+  "previewSHA256": {
+    "scrollbar-orbit-320-dark.png": "55eb7004b6a7f4c674877c1ce0bc59400ce095e52681bd1377e56aa0f8cf0c6b",
+    "scrollbar-orbit-736-dark.png": "8450e32cc778b2ad5537909ae0a8f8816cfdae1e4995ce6efa8a571b263cc8e8",
+    "scrollbar-orbit-736-light.png": "2a7057e21ed90a0530326f27f92584df88ebc626e2194b538a509823f3fa41ec"
+  }
+}
