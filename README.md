@@ -6,10 +6,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/laleoarrow/battery-monitor/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/laleoarrow/battery-monitor?display_name=tag&amp;sort=semver"></a>
-  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/ci.yml"><img alt="Headless CI" src="https://github.com/laleoarrow/battery-monitor/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <img alt="macOS 12 or later" src="https://img.shields.io/badge/macOS-12%2B-111111?logo=apple&amp;logoColor=white">
-  <img alt="Apple silicon and Intel" src="https://img.shields.io/badge/universal-arm64%20%2B%20x86__64-2f81f7">
+  <a href="https://github.com/laleoarrow/battery-monitor/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/laleoarrow/battery-monitor?display_name=tag&amp;sort=semver&amp;style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;labelColor=242938&amp;color=3B82F6"></a>
+  <a href="https://github.com/laleoarrow/battery-monitor/actions/workflows/ci.yml"><img alt="Headless CI" src="https://img.shields.io/github/actions/workflow/status/laleoarrow/battery-monitor/ci.yml?branch=main&amp;event=push&amp;style=for-the-badge&amp;logo=githubactions&amp;logoColor=white&amp;label=Headless%20CI&amp;labelColor=242938"></a>
+  <img alt="macOS 12 or later" src="https://img.shields.io/badge/macOS-12%2B-111111?style=for-the-badge&amp;logo=apple&amp;logoColor=white&amp;labelColor=242938">
+  <img alt="Apple silicon and Intel" src="https://img.shields.io/badge/Universal-arm64%20%2B%20x86__64-3B82F6?style=for-the-badge&amp;labelColor=242938">
 </p>
 
 <p align="center">
