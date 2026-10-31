@@ -2,6 +2,7 @@ import pathlib
 import os
 import re
 import shutil
+import subprocess
 import textwrap
 import unittest
 
@@ -713,6 +714,110 @@ class ReleaseWorkflowContractTests(unittest.TestCase):
         self.assertIn("assert_helper_absent", HOMEBREW_INSTALL)
         self.assertIn("assert_login_agent_absent", HOMEBREW_INSTALL)
         self.assertIn("CLEANUP_REQUIRED=1", HOMEBREW_INSTALL)
+
+
+class HomebrewTrustLifecycleTests(unittest.TestCase):
+    def step(self, name):
+        step = HOMEBREW_INSTALL.split(f"- name: {name}\n", 1)[1].split("      - name:", 1)[0]
+        return textwrap.dedent(step.split("run: |", 1)[1].split("\n  deploy-pages:", 1)[0])
+
+    def test_cask_trust_follows_exact_source_checks(self):
+        script = self.step("Validate the public Homebrew cask")
+        trust = script.index("brew trust --cask laleoarrow/tap/wattson")
+        for check in ('[[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]]',
+                      'version \\"$WATTSON_VERSION\\"', 'sha256 \\"$EXPECTED_PKG_SHA\\"'):
+            self.assertLess(script.index(check), trust)
+        self.assertLess(trust, script.index("brew info --cask"))
+        self.assertNotIn("brew trust laleoarrow/tap", HOMEBREW_INSTALL)
+        self.assertNotIn("HOMEBREW_NO_REQUIRE_TAP_TRUST", HOMEBREW_INSTALL)
+        cleanup = HOMEBREW_INSTALL.split("- name: Remove the job-owned Homebrew trust configuration", 1)[1]
+        self.assertIn("if: always()", cleanup.split("run: |", 1)[0])
+
+    def test_modern_legacy_and_failed_trust_own_only_temporary_configuration(self):
+        for mode, expected in (("modern", 0), ("legacy", 0), ("bad-sha", 1), ("fail", 17),
+                               ("info-fail", 18), ("interrupt", 143), ("timeout", None)):
+            with self.subTest(mode=mode), TemporaryDirectory(prefix="brew-trust-") as temporary:
+                workspace = pathlib.Path(temporary)
+                binaries, tap, prior = (workspace / name for name in ("bin", "tap", "prior-config"))
+                for directory in (binaries, tap / ".git", tap / "Casks", prior):
+                    directory.mkdir(parents=True)
+                (prior / "sentinel").write_text("preserve prior trust")
+                (tap / "Casks/wattson.rb").write_text('  version "5.0.3"\n  sha256 "' + "b" * 64 + '"\n')
+                (binaries / "git").write_text('#!/bin/bash\n[[ "$TEST_MODE" != bad-sha ]] || { echo wrong; exit 0; }\n'
+                                              'printf "%s\\n" "$EXPECTED_TAP_SHA"\n')
+                (binaries / "brew").write_text(textwrap.dedent(r'''
+                    #!/bin/bash
+                    set -eu
+                    case "$*" in
+                      "tap laleoarrow/tap") ;;
+                      "--repository laleoarrow/tap") echo "$TEST_TAP" ;;
+                      "help trust") [[ "$TEST_MODE" != legacy ]] ;;
+                      "trust --cask laleoarrow/tap/wattson")
+                        [[ "$XDG_CONFIG_HOME" != "$TEST_PRIOR" ]]
+                        /bin/mkdir -p "$XDG_CONFIG_HOME/homebrew"
+                        echo trusted > "$XDG_CONFIG_HOME/homebrew/trust.json"
+                        case "$TEST_MODE" in
+                          fail) exit 17 ;;
+                          interrupt) kill -TERM "$PPID" ;;
+                          timeout) /bin/sleep 30 ;;
+                        esac ;;
+                      "info --cask --json=v2 laleoarrow/tap/wattson")
+                        [[ "$TEST_MODE" == legacy || -f "$XDG_CONFIG_HOME/homebrew/trust.json" ]] || exit 80
+                        [[ "$TEST_MODE" != info-fail ]] || exit 18
+                        /bin/cat "$TEST_CASK_JSON" ;;
+                      *) exit 90 ;;
+                    esac
+                ''').lstrip())
+                for binary in binaries.iterdir():
+                    binary.chmod(0o755)
+                fixture = workspace / "cask.json"
+                fixture.write_text('{"casks":[{"token":"wattson","version":"5.0.3","sha256":"' +
+                                   "b" * 64 + '","url":"https://github.com/laleoarrow/battery-monitor/releases/download/'
+                                   'v5.0.3/Wattson-v5.0.3-macos-universal.pkg"}]}')
+                github_env = workspace / "github-env"
+                github_env.touch()
+                env = dict(os.environ, TEST_MODE=mode, TEST_TAP=str(tap), TEST_PRIOR=str(prior),
+                           TEST_CASK_JSON=str(fixture), XDG_CONFIG_HOME=str(prior),
+                           RUNNER_TEMP=str(workspace), GITHUB_ENV=str(github_env),
+                           EXPECTED_TAP_SHA="a" * 40, EXPECTED_PKG_SHA="b" * 64,
+                           RELEASE_TAG="v5.0.3", WATTSON_VERSION="5.0.3",
+                           PATH=str(binaries) + os.pathsep + os.environ["PATH"])
+                args = ["/bin/bash", "-c", self.step("Validate the public Homebrew cask")]
+                if expected is None:
+                    with self.assertRaises(subprocess.TimeoutExpired):
+                        run(args, env=env, capture_output=True, text=True, timeout=0.5)
+                else:
+                    result = run(args, env=env, capture_output=True, text=True, timeout=5)
+                    self.assertEqual(result.returncode, expected, result.stderr)
+                exported = dict(line.split("=", 1) for line in github_env.read_text().splitlines())
+                directories = list(workspace.glob("wattson-homebrew-config.*"))
+                self.assertEqual(len(directories), 1 if mode == "modern" else 0)
+                if mode == "modern":
+                    self.assertTrue((directories[0] / "homebrew/trust.json").is_file())
+                cleanup = run(["/bin/bash", "-c", self.step("Remove the job-owned Homebrew trust configuration")],
+                              env=dict(env, **exported), capture_output=True, text=True, timeout=5)
+                self.assertEqual(cleanup.returncode, 0, cleanup.stderr)
+                self.assertEqual(list(workspace.glob("wattson-homebrew-config.*")), [])
+                self.assertEqual((prior / "sentinel").read_text(), "preserve prior trust")
+                self.assertEqual(list(prior.iterdir()), [prior / "sentinel"])
+
+    def test_trust_cleanup_rejects_unowned_and_symlink_paths(self):
+        with TemporaryDirectory(prefix="brew-trust-cleanup-") as temporary:
+            workspace = pathlib.Path(temporary)
+            unrelated = workspace / "unrelated"
+            unrelated.mkdir()
+            sentinel = unrelated / "keep"
+            sentinel.touch()
+            link = workspace / "wattson-homebrew-config.link"
+            link.symlink_to(unrelated, target_is_directory=True)
+            for target in (unrelated, link):
+                with self.subTest(target=target):
+                    result = run(["/bin/bash", "-c", self.step("Remove the job-owned Homebrew trust configuration")],
+                                 env=dict(os.environ, RUNNER_TEMP=str(workspace),
+                                          WATTSON_HOMEBREW_CONFIG=str(target)),
+                                 capture_output=True, text=True, timeout=5)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertTrue(sentinel.exists())
 
 
 class WorkflowCleanupLifecycleTests(unittest.TestCase):

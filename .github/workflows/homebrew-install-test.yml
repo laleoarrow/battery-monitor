@@ -278,6 +278,21 @@ jobs:
         run: |
           set -euo pipefail
 
+          TRUST_CONFIG=""
+          cleanup_failed_trust_setup() {
+            local status="$?"
+            trap - EXIT
+            trap '' HUP INT TERM
+            if [[ "$status" != "0" && -n "$TRUST_CONFIG" ]]; then
+              /bin/rm -rf -- "$TRUST_CONFIG" || status=1
+            fi
+            exit "$status"
+          }
+          trap cleanup_failed_trust_setup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
           readonly CASK_JSON="$RUNNER_TEMP/wattson-public-cask.json"
           readonly EXPECTED_URL="https://github.com/laleoarrow/battery-monitor/releases/download/${RELEASE_TAG}/Wattson-v${WATTSON_VERSION}-macos-universal.pkg"
           [[ "$EXPECTED_TAP_SHA" =~ ^[0-9a-f]{40}$ ]]
@@ -291,11 +306,18 @@ jobs:
           [[ ! -L "$TAP_REPOSITORY/Casks/wattson.rb" ]]
           CURRENT_TAP_SHA="$(git -C "$TAP_REPOSITORY" rev-parse HEAD)"
           readonly CURRENT_TAP_SHA
-          [[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]]
+          [[ "$CURRENT_TAP_SHA" == "$EXPECTED_TAP_SHA" ]] || exit 1
           /usr/bin/grep -Fxq "  version \"$WATTSON_VERSION\"" \
             "$TAP_REPOSITORY/Casks/wattson.rb"
           /usr/bin/grep -Fxq "  sha256 \"$EXPECTED_PKG_SHA\"" \
             "$TAP_REPOSITORY/Casks/wattson.rb"
+          if brew help trust >/dev/null 2>&1; then
+            TRUST_CONFIG="$(/usr/bin/mktemp -d "$RUNNER_TEMP/wattson-homebrew-config.XXXXXX")"
+            echo "WATTSON_HOMEBREW_CONFIG=$TRUST_CONFIG" >> "$GITHUB_ENV"
+            export XDG_CONFIG_HOME="$TRUST_CONFIG"
+            echo "XDG_CONFIG_HOME=$XDG_CONFIG_HOME" >> "$GITHUB_ENV"
+            brew trust --cask laleoarrow/tap/wattson
+          fi
           brew info --cask --json=v2 laleoarrow/tap/wattson > "$CASK_JSON"
           [[ "$(/usr/bin/jq -r '.casks | length' "$CASK_JSON")" == "1" ]]
           [[ "$(/usr/bin/jq -r '.casks[0].token' "$CASK_JSON")" == "wattson" ]]
@@ -513,6 +535,19 @@ jobs:
 
           CLEANUP_REQUIRED=0
           echo "Public Homebrew cask install, helper health, and uninstall cleanup passed."
+
+      - name: Remove the job-owned Homebrew trust configuration
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${WATTSON_HOMEBREW_CONFIG:-}" ]]; then
+            [[ "$WATTSON_HOMEBREW_CONFIG" == "$RUNNER_TEMP"/wattson-homebrew-config.* ]] || exit 1
+            [[ "$(/usr/bin/dirname "$WATTSON_HOMEBREW_CONFIG")" == "$RUNNER_TEMP" ]] || exit 1
+            [[ ! -L "$WATTSON_HOMEBREW_CONFIG" ]] || exit 1
+            /bin/rm -rf -- "$WATTSON_HOMEBREW_CONFIG"
+            [[ ! -e "$WATTSON_HOMEBREW_CONFIG" ]] || exit 1
+          fi
 
   deploy-pages:
     name: Deploy site after both public cask lifecycles pass
