@@ -3,8 +3,8 @@
   "kind": "3D geometry projected to an opaque composited sphere; design only",
   "cases": [
     {
-      "width": 736,
       "scheme": "dark",
+      "width": 736,
       "scrollWidth": 736,
       "canvasPixels": [
         48,
@@ -12,8 +12,8 @@
       ]
     },
     {
-      "width": 736,
       "scheme": "light",
+      "width": 736,
       "scrollWidth": 736,
       "canvasPixels": [
         48,
@@ -21,8 +21,8 @@
       ]
     },
     {
-      "width": 320,
       "scheme": "dark",
+      "width": 320,
       "scrollWidth": 320,
       "canvasPixels": [
         48,
@@ -30,8 +30,8 @@
       ]
     },
     {
-      "width": 320,
       "scheme": "light",
+      "width": 320,
       "scrollWidth": 320,
       "canvasPixels": [
         48,
@@ -62,7 +62,10 @@
   "reducedMotionStatic": true,
   "stateAndAppearanceControlsPass": true,
   "browserClosed": true,
-  "sourceSHA256": "b3521610bc8fddcdd499e992b3c16d41c035f0adbe8e444dbbabf5fdbbb45b3a",
+  "sourceSHA256": "032d683434670df7f44ff10a1bda35924a2649128ab4e43c7ff485e229719893",
   "ownerExitedSuccessfully": true,
-  "ownedScratchRemoved": true
+  "ownedScratchRemoved": true,
+  "geometryValidationSourceSHA256": "b3521610bc8fddcdd499e992b3c16d41c035f0adbe8e444dbbabf5fdbbb45b3a",
+  "geometryMethodsUnchanged": true,
+  "visualPolish": "Radial fades replace hard-edged glow discs; geometric and depth methods unchanged."
 }
