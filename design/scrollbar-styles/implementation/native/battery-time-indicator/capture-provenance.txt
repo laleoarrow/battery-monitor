@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.topprocessesqa.e3f532fd-c51f-4684-aa18-3fbb95aec4f5
+bundlePath=/Users/admin/Project/.wattson-ui-vm.noindex/run.lsxfYR/source/.build/battery-time-capture.noindex/run.qgUpMp/BatteryTimeProbe.app
+method=owned-window-production-runtime

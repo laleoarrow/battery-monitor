@@ -819,6 +819,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
     private let colorSchemePopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private let logoPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private let dockPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
+    private let scrollbarPopup = SettingsAppearancePopupButton(frame: .zero, pullsDown: false)
     private var appearanceObserver: NSObjectProtocol?
     private let loginDetail = NSTextField(labelWithString: "")
     private let loginError = NSTextField(labelWithString: "")
@@ -1400,6 +1401,30 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         dockRow.addSubview(dockPopup)
         dockRow.addSubview(dockHelp)
         dockPopup.focusScrollView = dockRow
+        scrollbarPopup.identifier = NSUserInterfaceItemIdentifier("settings.appearance.scrollbar-style")
+        scrollbarPopup.setAccessibilityLabel("Scrollbar")
+        scrollbarPopup.setAccessibilityHelp(
+            "Choose Hidden, the original gray Simple scrollbar, or theme-colored Flow. The popup keeps scrolling in every mode."
+        )
+        scrollbarPopup.font = .systemFont(ofSize: 12)
+        scrollbarPopup.controlSize = .small
+        scrollbarPopup.target = self
+        scrollbarPopup.action = #selector(selectScrollbarStyle(_:))
+        scrollbarPopup.translatesAutoresizingMaskIntoConstraints = false
+        for style in Settings.ScrollbarStyle.allCases {
+            scrollbarPopup.addItem(withTitle: style.title)
+            scrollbarPopup.lastItem?.representedObject = style.rawValue
+        }
+        refreshScrollbarControls()
+        let scrollbarLabel = NSTextField(labelWithString: "Scrollbar")
+        scrollbarLabel.font = SettingsStyle.primaryFont
+        scrollbarLabel.textColor = SettingsStyle.primaryText
+        scrollbarLabel.translatesAutoresizingMaskIntoConstraints = false
+        let scrollbarRow = NSView()
+        scrollbarRow.translatesAutoresizingMaskIntoConstraints = false
+        scrollbarRow.addSubview(scrollbarLabel)
+        scrollbarRow.addSubview(scrollbarPopup)
+        scrollbarPopup.focusScrollView = scrollbarRow
         let box = SettingsAdaptiveBorderBox(increaseContrast: dependencies.increaseContrast)
         box.boxType = .custom
         box.titlePosition = .noTitle
@@ -1412,11 +1437,12 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         box.addSubview(transparencyRow)
         box.addSubview(logoRow)
         box.addSubview(dockRow)
+        box.addSubview(scrollbarRow)
         option.translatesAutoresizingMaskIntoConstraints = false
         let surface = SettingsGlassSurface(controls: box)
         let section = settingsGroup(title: "Appearance", identifier: "settings.general.appearance",
                                     content: surface)
-        for peerRow in [themeRow, logoRow] {
+        for peerRow in [themeRow, logoRow, dockRow] {
             let separator = NSBox()
             separator.boxType = .separator
             separator.translatesAutoresizingMaskIntoConstraints = false
@@ -1436,7 +1462,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             switchSlot.heightAnchor.constraint(equalToConstant: SettingsStyle.toggleSize.height),
             liquidGlassSwitch.centerXAnchor.constraint(equalTo: switchSlot.centerXAnchor),
             liquidGlassSwitch.centerYAnchor.constraint(equalTo: switchSlot.centerYAnchor),
-            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 32 + 36 + 44 + 60),
+            surface.heightAnchor.constraint(equalToConstant: 44 + SettingsStyle.generalRowHeight + 32 + 32 + 36 + 44 + 60 + 44),
             themeRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             themeRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
             themeRow.topAnchor.constraint(equalTo: box.topAnchor),
@@ -1501,7 +1527,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             dockRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
             dockRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
             dockRow.topAnchor.constraint(equalTo: logoRow.bottomAnchor),
-            dockRow.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            dockRow.heightAnchor.constraint(equalToConstant: 60),
             dockLabel.leadingAnchor.constraint(equalTo: themeLabel.leadingAnchor),
             dockLabel.centerYAnchor.constraint(equalTo: dockRow.topAnchor, constant: 22),
             dockLabel.trailingAnchor.constraint(lessThanOrEqualTo: dockPopup.leadingAnchor, constant: -12),
@@ -1512,6 +1538,16 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             dockHelp.trailingAnchor.constraint(equalTo: dockRow.trailingAnchor, constant: -16),
             dockHelp.topAnchor.constraint(equalTo: dockRow.topAnchor, constant: 40),
             dockHelp.bottomAnchor.constraint(lessThanOrEqualTo: dockRow.bottomAnchor, constant: -6),
+            scrollbarRow.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            scrollbarRow.trailingAnchor.constraint(equalTo: box.trailingAnchor),
+            scrollbarRow.topAnchor.constraint(equalTo: dockRow.bottomAnchor),
+            scrollbarRow.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            scrollbarLabel.leadingAnchor.constraint(equalTo: themeLabel.leadingAnchor),
+            scrollbarLabel.centerYAnchor.constraint(equalTo: scrollbarRow.centerYAnchor),
+            scrollbarLabel.trailingAnchor.constraint(lessThanOrEqualTo: scrollbarPopup.leadingAnchor, constant: -12),
+            scrollbarPopup.trailingAnchor.constraint(equalTo: liquidGlassStylePopup.trailingAnchor),
+            scrollbarPopup.centerYAnchor.constraint(equalTo: scrollbarLabel.centerYAnchor),
+            scrollbarPopup.widthAnchor.constraint(equalTo: liquidGlassStylePopup.widthAnchor),
         ])
         return section
     }
@@ -1554,6 +1590,20 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
         guard let value = sender.selectedItem?.representedObject as? String,
               let style = Settings.DockIconStyle(rawValue: value) else { return }
         Settings.dockIconStyle = style
+    }
+
+    @objc private func selectScrollbarStyle(_ sender: NSPopUpButton) {
+        guard let value = sender.selectedItem?.representedObject as? String,
+              let style = Settings.ScrollbarStyle(rawValue: value) else { return }
+        Settings.scrollbarStyle = style
+    }
+
+    private func refreshScrollbarControls() {
+        if let item = scrollbarPopup.itemArray.first(where: {
+            $0.representedObject as? String == Settings.scrollbarStyle.rawValue
+        }) {
+            scrollbarPopup.select(item)
+        }
     }
 
     private func refreshDockControls() {
@@ -1688,6 +1738,7 @@ private final class GeneralSettingsSectionController: NSObject, SettingsSectionC
             if change == .liquidGlassAppearance || change == .liquidGlassTransparency || change == .popoverArrow || change == .colorScheme { self?.refreshAppearanceControls() }
             if change == .inAppLogoStyle { self?.refreshLogoControls() }
             if change == nil || change == .dockIconStyle { self?.refreshDockControls() }
+            if change == nil || change == .scrollbarStyle { self?.refreshScrollbarControls() }
         }
         displayOptionsObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
@@ -2643,7 +2694,7 @@ private final class MenuBarIconSettingsSectionController: NSObject,
             switch change {
             case .menuBarIconStyle, .menuBarPercentage:
                 self.refreshSelection()
-            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .processWhitelist, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .inAppLogoStyle, .dockIconStyle:
+            case .checkForUpdatesOnLaunch, .module, .moduleOrder, .ringMetrics, .topProcessCount, .topProcessesCompact, .processWhitelist, .liquidGlassAppearance, .liquidGlassTransparency, .popoverArrow, .colorScheme, .scrollbarStyle, .inAppLogoStyle, .dockIconStyle:
                 break
             }
         }

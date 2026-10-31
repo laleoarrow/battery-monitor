@@ -1,18 +1,21 @@
 # Scrollbar styles — design proposal
 
 Latest user corrections, 2026-10-31: preserve all existing App body design and
-the original **right-side** scrollbar placement. Default to **Hidden**. Simple
+the original **right-side** scrollbar placement. The final approval changed
+the default to **Flow**. Simple
 means the original **gray native scrollbar**. Replace the rejected orbit with
 a theme-colored flowing treatment inspired by the first section's power-flow
 line: unevenly spaced white points move only downward and fade at the bottom.
-This is a reviewable proposal, not a native implementation or release.
+The approved treatment is now integrated in the native source; this does not
+announce a release or a canonical installation update.
 
 ## Settings
 
 Add **Settings → General → Appearance → Scrollbar** using the existing small
 native popup menu. Options: **Hidden / Simple / Flow** (隐藏 / 简洁 / 流光).
-All three are preferences to ship together. Both the proposed product default
-and the preview's first-load selection are Hidden.
+All three are available together. The native product defaults to Flow. The
+earlier interactive design fragment retains its historical Hidden default;
+the final user instruction and native settings take precedence.
 
 - Hidden: no visible scrollbar; trackpad, wheel and keyboard scrolling remain.
 - Simple: keep the current gray native scrollbar, including its system behavior.
@@ -39,8 +42,8 @@ Earlier battery-time-source indicator timing is unrelated and remains unchanged.
 - Reduce Motion holds a static gradient and points. Hidden, offscreen, closed,
   and no-overflow states stop motion. Native implementation must also honor
   increased-contrast and reduced-transparency policies.
-- A 26px invisible interaction area is demonstrated around the 6px artwork.
-  Native integration must preserve content hit targets and the existing gutter.
+- The design demonstrated a 26px invisible interaction area. Native Flow stays
+  within AppKit's actual existing gutter so it cannot cover body controls.
 
 `scrollbar-style-preview.html` shows only the settings row and an isolated
 scrollbar component. Top/middle/bottom labels are abstract scroll-position
@@ -57,14 +60,23 @@ and its light counterpart (`composited=true` in their `evidence.json`). Native
 scroller for insufficient height, and sets `autohidesScrollers=true`; it has no
 left-side relocation override.
 
-## Native implementation, after design review
+## Native implementation
 
 `Core/Settings.swift` owns the persisted enum/default and change notification.
 `MenuBar/SettingsWindowController.swift` owns the appearance row. Update relevant
 exhaustive setting switches when adding the notification case.
 `Popover/PopoverContentView.swift` owns viewport sizing, scroll offsets and
-lifecycle. Preserve its native gray scroller for Simple; scope custom artwork
-and dragging to Flow. Reuse the existing motion/accessibility policy and palette.
+lifecycle. One native `NSScroller` instance owns the existing slot in all modes.
+Simple delegates drawing and input to AppKit for the original gray appearance;
+Hidden and Flow suppress those native parts and hit testing without removing
+the slot. This avoids AppKit reselecting its global style when a scroller is
+replaced. Flow overlays its independent native `NSScroller` inside that slot,
+preserving native hit testing/dragging while avoiding overlay fade-out of the
+chosen artwork. The scroll view retains the user's system scroller style.
+Its accessibility scrollbar relation exposes the active control and returns nil
+for Hidden. `FlowScroller.swift` owns the clipped Core Animation layers; there
+is no new sampling timer. All motion follows presentation and accessibility
+policy, and the existing instrument palette.
 
 Native acceptance must cover 240pt short screens, all three styles, default
 Hidden and preference persistence, exact top/bottom dragging, no jump when

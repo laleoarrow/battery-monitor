@@ -47,6 +47,18 @@ enum Settings {
         }
     }
 
+    enum ScrollbarStyle: String, CaseIterable {
+        case hidden, simple, flow
+
+        var title: String {
+            switch self {
+            case .hidden: return "Hidden"
+            case .simple: return "Simple"
+            case .flow: return "Flow"
+            }
+        }
+    }
+
     /// Branding inside Wattson only, independent of the system and menu-bar icons.
     enum InAppLogoStyle: String, CaseIterable {
         case color
@@ -128,6 +140,7 @@ enum Settings {
         case liquidGlassTransparency
         case popoverArrow
         case colorScheme
+        case scrollbarStyle
         case inAppLogoStyle
         case dockIconStyle
         case module(Module)
@@ -149,6 +162,7 @@ enum Settings {
     private static let liquidGlassTransparencyKey = "appearance.liquidGlassTransparency"
     private static let popoverArrowKey = "appearance.showPopoverArrow"
     private static let colorSchemeKey = "appearance.colorScheme"
+    private static let scrollbarStyleKey = "appearance.scrollbarStyle"
     private static let inAppLogoStyleKey = "appearance.inAppLogoStyle"
     private static let dockIconStyleKey = "appearance.dockIconStyle"
     private static let moduleOrderKey = "popover.moduleOrder"
@@ -272,6 +286,19 @@ enum Settings {
             guard colorScheme != newValue else { return }
             defaults.set(newValue.rawValue, forKey: colorSchemeKey)
             postChange(.colorScheme)
+        }
+    }
+
+    /// Only the popup's scrollbar changes; scrolling and body layout stay intact.
+    static var scrollbarStyle: ScrollbarStyle {
+        get {
+            guard let value = defaults.string(forKey: scrollbarStyleKey) else { return .flow }
+            return ScrollbarStyle(rawValue: value) ?? .flow
+        }
+        set {
+            guard scrollbarStyle != newValue else { return }
+            defaults.set(newValue.rawValue, forKey: scrollbarStyleKey)
+            postChange(.scrollbarStyle)
         }
     }
 

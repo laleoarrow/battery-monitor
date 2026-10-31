@@ -1,0 +1,3 @@
+bundleID=com.leoarrow.wattson.topprocessesqa.f9092ebc-4ac8-4a36-8248-e7f629686bb8
+bundlePath=/Users/admin/Project/.wattson-ui-vm.noindex/run.v1I7Nu/source/.build/scrollbar-capture.noindex/run.DoHFWM/ScrollbarProbe.app
+method=owned-window-production-scrollbar

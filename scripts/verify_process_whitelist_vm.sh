@@ -19,6 +19,7 @@ RUN_DIR="$(mktemp -d "$ROOT_DIR/.build/process-whitelist-vm.noindex/run.XXXXXX")
 wattson_cleanup_add_dir "$RUN_DIR"
 SHARE_DIR="$RUN_DIR/share"
 mkdir -p "$SHARE_DIR/results"
+if [[ "${WATTSON_SCROLLBAR_ONLY:-0}" == 1 ]]; then touch "$SHARE_DIR/scrollbar-only"; fi
 OWNED_VM=0
 VM_RUNNER_PID=''
 return_status() { return "$1"; }
@@ -65,9 +66,10 @@ wattson_run_timeout 10 "$TART_BIN" list --format json > "$OUTPUT_DIR/vms-before.
 # No host build output or existing app bundle enters the guest.
 /usr/bin/tar -czf "$SHARE_DIR/source.tar.gz" -C "$ROOT_DIR" \
     Core MenuBar Popover VERSION BatteryPowerApp.entitlements design/icon/in-app-logo \
-    scripts/verify_top_processes.sh scripts/verify_battery_time_indicator.sh scripts/verify_interaction.sh scripts/lib/local_cleanup.sh scripts/lib/run_owned.py \
+    scripts/verify_top_processes.sh scripts/verify_battery_time_indicator.sh scripts/verify_scrollbar.sh scripts/verify_interaction.sh scripts/lib/local_cleanup.sh scripts/lib/run_owned.py \
     tests/interaction/main.swift tests/visual/capture_top_processes.swift \
     tests/visual/capture_battery_time_indicator.swift \
+    tests/visual/capture_scrollbar.swift \
     tests/visual/capture_glass_shadow.c tests/visual/capture_glass_shadow.h
 /usr/bin/shasum -a 256 "$SHARE_DIR/source.tar.gz" > "$OUTPUT_DIR/source-archive.sha256"
 /bin/cp "$VM_HELPER" "$SHARE_DIR/ui_vm.py"
@@ -87,9 +89,12 @@ xcrun swift --version >> "$SHARE/results/system.txt"
 xcrun --show-sdk-version >> "$SHARE/results/system.txt"
 mkdir -p "$RUN_DIR/source"
 /usr/bin/tar -xzf "$SHARE/source.tar.gz" -C "$RUN_DIR/source"
-WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
-WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_battery_time_indicator.sh" "$SHARE/results/battery-time-indicator" > "$SHARE/results/battery-time-indicator.log" 2>&1
-wattson_run_script "$RUN_DIR/source/scripts/verify_interaction.sh" > "$SHARE/results/interaction.log" 2>&1
+if [[ ! -f "$SHARE/scrollbar-only" ]]; then
+    WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
+    WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_battery_time_indicator.sh" "$SHARE/results/battery-time-indicator" > "$SHARE/results/battery-time-indicator.log" 2>&1
+    wattson_run_script "$RUN_DIR/source/scripts/verify_interaction.sh" > "$SHARE/results/interaction.log" 2>&1
+fi
+WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_scrollbar.sh" "$SHARE/results/scrollbar" > "$SHARE/results/scrollbar.log" 2>&1
 GUEST
 OWNED_VM=1
 wattson_run_timeout 300 "$TART_BIN" clone macOS-TestLab-Base "$VM_NAME" > "$OUTPUT_DIR/vm-clone.log" 2>&1

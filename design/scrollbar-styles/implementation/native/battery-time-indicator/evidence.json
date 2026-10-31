@@ -1,0 +1,891 @@
+{
+  "assertions" : 22,
+  "cases" : [
+    {
+      "image" : "states-light.png",
+      "imageSHA256" : "b1296355aaa6bfdf20cc516cdb7cc36c085b5157275455b274125b60db54fa11",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "image" : "states-dark.png",
+      "imageSHA256" : "e790a62e8fe887283f69ae5315e72d4b7bdb6977809fc79aabcdd783c4bf6792",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.2916666662476928e-05,
+      "image" : "frames\/frame-000.png",
+      "imageSHA256" : "2331f9657c8e801b3dc468084ce2215fa888f00675028b8e3c13285d4dae04e1",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.12658345833332874,
+      "image" : "frames\/frame-001.png",
+      "imageSHA256" : "7d2b5f588762a1967e32038d6e3db4e03977f31809ed52e787f19ea2f2499bb4",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.2526847916666668,
+      "image" : "frames\/frame-002.png",
+      "imageSHA256" : "79523209862003730143957872c92782343d8629ebc2d518f3237292aec5b77a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.37809949999999048,
+      "image" : "frames\/frame-003.png",
+      "imageSHA256" : "cda75eefac501c6f2183d918472297117e60f90a11b3e38f3225cedcd47fc522",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.50560795833334282,
+      "image" : "frames\/frame-004.png",
+      "imageSHA256" : "5255b102922cfe204b1cfe4637500f9df9a14241f07b4985170c9d82db466c02",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.62811037500000566,
+      "image" : "frames\/frame-005.png",
+      "imageSHA256" : "860de5ead1b0683b21376bfd2282a7dec23cc7bb403b63601b557b6ae578d67c",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.75204470833332948,
+      "image" : "frames\/frame-006.png",
+      "imageSHA256" : "c81ce098a6a345724dd8a793be84c6a5cf9b111dee3a39a0ea5b120c207a493b",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 0.87859424999999192,
+      "image" : "frames\/frame-007.png",
+      "imageSHA256" : "cd2071f63046bf5beea42f20ddc2fed7858d0126b2e2623422646091aefa5c51",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.0023635416666536,
+      "image" : "frames\/frame-008.png",
+      "imageSHA256" : "5d4ecea904c4441ebbf94d6585e074984656deee234550ff63c46ee358fc9cb5",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.1275504166666508,
+      "image" : "frames\/frame-009.png",
+      "imageSHA256" : "bd6b8c275205ec112ea798b6abca3d97f9ff19b96cbb15996775d247bc732562",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.2524728333333428,
+      "image" : "frames\/frame-010.png",
+      "imageSHA256" : "63cb87e51dfe94e9bde1b93c663a6ce1fe4d75e8a8ad11a0a9f4e9c24c5077fd",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.3782407500000033,
+      "image" : "frames\/frame-011.png",
+      "imageSHA256" : "e5a490a130307a8978aa3ce6c1593377c97a8b5965f3fb389493d4dfe10334db",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.5024366250000014,
+      "image" : "frames\/frame-012.png",
+      "imageSHA256" : "77987d17024d9fdd347b0c65aee22070f4383b7dc35afb78a1b3fac82f353d79",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.6305592916666569,
+      "image" : "frames\/frame-013.png",
+      "imageSHA256" : "83345d1561197460bdc4fbac5e8e815b08f6e14c3fa1e6ff9ee1fcb67d9eb8cd",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.7554257083333198,
+      "image" : "frames\/frame-014.png",
+      "imageSHA256" : "855979928cebcb0d4d86cf87eaebf40dbbad48d32ccb9da4115e095fcbeb3f86",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 1.8788317916666699,
+      "image" : "frames\/frame-015.png",
+      "imageSHA256" : "033fd072659062a916830b4c65f46d3db7a992a2eaa66626ed5fe95d6da05a2f",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.0022828749999917,
+      "image" : "frames\/frame-016.png",
+      "imageSHA256" : "bcf4bca5566b25df3d8c9a3c3c423178c25ee3bd3519ada414b9dae001ee07a2",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.12804112500001,
+      "image" : "frames\/frame-017.png",
+      "imageSHA256" : "ac4effdf7e55bd2330942a72a561e1c68e57a041d9ef502649d31673820192cb",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.2523627500000032,
+      "image" : "frames\/frame-018.png",
+      "imageSHA256" : "788814f9db64aa521b5c7e78620e0fba879744f842f0486b9cca49cd5d07f0bb",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.387199708333327,
+      "image" : "frames\/frame-019.png",
+      "imageSHA256" : "7f0261970705f754f20b8a29d0c3d2307986bc49c950a9f8efa99385123a492a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.5024579583333377,
+      "image" : "frames\/frame-020.png",
+      "imageSHA256" : "c28774c295f8ff70a2b45b1461d376dae04078511d0eea483d0dfd4e37dfde7d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.6281498749999912,
+      "image" : "frames\/frame-021.png",
+      "imageSHA256" : "eb18845f22d5e618aa9a302ea5893696f7a4a31ab9411881a3ab47f3abae68d9",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.7527077083333324,
+      "image" : "frames\/frame-022.png",
+      "imageSHA256" : "865b0a2b7133aee122cc4581763656decb9c95e2d1a665dc86c3ebf201c3f01d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 2.8781592500000102,
+      "image" : "frames\/frame-023.png",
+      "imageSHA256" : "9dcfbf0c4246c94aed577a8eeaa4ca23baedcd7e3226519b403135cef243e5ba",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.0025409166666748,
+      "image" : "frames\/frame-024.png",
+      "imageSHA256" : "7fd912597f1c23e8f6468493a16c8f08a5ad1374f06d7405cb5f1fbe261e8dea",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.1276417083333286,
+      "image" : "frames\/frame-025.png",
+      "imageSHA256" : "6435081d33107cb0b827adbe2c0fa72656790113e0b8be3d52646477649cb92a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.2542214166666668,
+      "image" : "frames\/frame-026.png",
+      "imageSHA256" : "751c0ca20dbaf5f0a0f58482dae654a534eec8b091d609cf2a04eb7d9be821be",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.3788475416666586,
+      "image" : "frames\/frame-027.png",
+      "imageSHA256" : "692b6e9e499a78d40e96c387eb113f46915fe480430e5aedc2bcd4f60fc34fef",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.5057567916666699,
+      "image" : "frames\/frame-028.png",
+      "imageSHA256" : "595215bf95153b69a5f410441344c1df1a0a602a1bd35a83a3798a18ac02bd47",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.6279872916666704,
+      "image" : "frames\/frame-029.png",
+      "imageSHA256" : "69aa0bfcd786f4c7cc08cce21f9fe7eb085925c6834e42ee959b0f8a36868a08",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.7531186249999848,
+      "image" : "frames\/frame-030.png",
+      "imageSHA256" : "7cffc975f54262d0cc0a9295706cf3991e0c74a0ebbe50dd2f205ef66db301ee",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 3.8785494999999912,
+      "image" : "frames\/frame-031.png",
+      "imageSHA256" : "fb5418b03fec15e98fd0de89d116f9df776e82aa5a8af08e8f56dd58c35d8d8e",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.002603333333326,
+      "image" : "frames\/frame-032.png",
+      "imageSHA256" : "a3ad84d5239c9dbab642bedf496a2f61bec3f67b2c4589aeddb4b9dd43802167",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.1281911250000007,
+      "image" : "frames\/frame-033.png",
+      "imageSHA256" : "ffaa7860a829bf19da4eab42d2634e300a2c2e732607f62937ddd01ac7591d68",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.2554636250000044,
+      "image" : "frames\/frame-034.png",
+      "imageSHA256" : "b0b33a55999a8460e6bb49ca8ad85b27705ec67780de71cead1766b89e1a11b4",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.3798984999999959,
+      "image" : "frames\/frame-035.png",
+      "imageSHA256" : "a3db9f06576eb76c3514ee3ca7f04f77612372167be76afe5810758feac63638",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.5026827499999911,
+      "image" : "frames\/frame-036.png",
+      "imageSHA256" : "77254a469d54bdb938bf43dee5710b8f9eb8c9573f4512e31081d3ae4bca944d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.6293403333333174,
+      "image" : "frames\/frame-037.png",
+      "imageSHA256" : "52d8b54a324338c9cd6f865119a807e3222cef8d6c6656b52424b7420a2ac283",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.7533795416666749,
+      "image" : "frames\/frame-038.png",
+      "imageSHA256" : "27fce26c400799905af3aad992c4129774d7536bf865cf77ecb889c90f846d7b",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 4.8780800000000113,
+      "image" : "frames\/frame-039.png",
+      "imageSHA256" : "1bc66f304e5da37c727db1a8b68365124e5a30f3c901d32cd7f0e1e16ea6f2a2",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.002620874999991,
+      "image" : "frames\/frame-040.png",
+      "imageSHA256" : "9abf81595547d9f49e83264a579f1443a69de316ccc0df1f2106606c071edfb4",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.1284564166666655,
+      "image" : "frames\/frame-041.png",
+      "imageSHA256" : "4c9f5b4c16784a097822817bca33567c931713c50cd3188474fa6a6279a5f9a2",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.2530988333333255,
+      "image" : "frames\/frame-042.png",
+      "imageSHA256" : "2937840cd4799ef482557ad0e85b7a6b4151fbe71d4b4014f24e380976882088",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.3784997500000031,
+      "image" : "frames\/frame-043.png",
+      "imageSHA256" : "fc93aa0c19262645150dfebfccbf727cdcd518355ab81592b9ba68383d5ad291",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.5053517916666692,
+      "image" : "frames\/frame-044.png",
+      "imageSHA256" : "cf7f98c428b734481aea5089afccea9513a64bb9d76cedf47e4f549c45e22f58",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.6288635833333274,
+      "image" : "frames\/frame-045.png",
+      "imageSHA256" : "f2eb2894afa7b81a1af8619584c8c8f2b229ac7a82e3bfbc10604f11a746e2a3",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.7546983750000038,
+      "image" : "frames\/frame-046.png",
+      "imageSHA256" : "ed3fee97b90918a085e41e139695feb5acf6660bfaed4cf0d8952d74d5bfd81d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 5.888265083333323,
+      "image" : "frames\/frame-047.png",
+      "imageSHA256" : "7a4ef2aee1438e07fdb0455aa344629534837c83444abc36b76de26dd81e88c4",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.0119188749999921,
+      "image" : "frames\/frame-048.png",
+      "imageSHA256" : "81c6768e3973616f5f9ced4058121f3967a46dbe5e4c98f55e33ceb478a0f8b6",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.1387877083333251,
+      "image" : "frames\/frame-049.png",
+      "imageSHA256" : "282faffc4f4121e172fc5f3ffe5b6063cd1b05bebe833af5022c844680c79ca5",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.2554906249999931,
+      "image" : "frames\/frame-050.png",
+      "imageSHA256" : "31a4e191632f53bddf6c540130276e84903cfc2c6dd167bd53a24842332844b6",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.3877234583333404,
+      "image" : "frames\/frame-051.png",
+      "imageSHA256" : "6260a5af9d0592e0dbd06cae857a61d43ca656076364558d2281f5281fce499c",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.5123912500000074,
+      "image" : "frames\/frame-052.png",
+      "imageSHA256" : "d6d611c31bb7e9f15aa104016917514ca87e8d20973d43a49deb927e31ad8ff3",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.6389174166666578,
+      "image" : "frames\/frame-053.png",
+      "imageSHA256" : "69e8ee49ae8ce2db7453df798345d804b514124687bb1bf57ca0e7774f258a9f",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.7626585833333195,
+      "image" : "frames\/frame-054.png",
+      "imageSHA256" : "00b391817f14096a218154e56db66d207280f014daffa66d6831659b209e73af",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 6.955994666666669,
+      "image" : "frames\/frame-055.png",
+      "imageSHA256" : "d4a36347c1eaa7bd602c238b7473c8a99f3eca92acfcc704777f36243bf2287f",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.0619618750000086,
+      "image" : "frames\/frame-056.png",
+      "imageSHA256" : "b39ec8959e36b82036fc10188baacfab93ae7c120acfecc612228282a3bbe572",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.1443063749999851,
+      "image" : "frames\/frame-057.png",
+      "imageSHA256" : "d7927fbbed099ae7d3d4e27476346749aa9ba91d77eb55fa9ebb4e276a19b498",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.2531177083333205,
+      "image" : "frames\/frame-058.png",
+      "imageSHA256" : "7d65742018ea0be54222ac656e4463a9acd0d13fcd75f2ceefcdf630dfc5b807",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.4602664166666557,
+      "image" : "frames\/frame-059.png",
+      "imageSHA256" : "4e6867995baad613aa54b68b624aebcd8a45dd3c582a798c790fe3a195582c23",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.5763528749999978,
+      "image" : "frames\/frame-060.png",
+      "imageSHA256" : "4ce690fe2195e2594e58c638c8a4f5c92aef2171d7e9016f5b2151177309d9a5",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.7008343749999995,
+      "image" : "frames\/frame-061.png",
+      "imageSHA256" : "d33311877131111094a0f1374b854cdd971672e53e46ab0ab8379791377203d8",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.771185916666667,
+      "image" : "frames\/frame-062.png",
+      "imageSHA256" : "51cb9b86a3c5662437715fa95bb6f6ccada70482cbd014904f11b97cd2940cdc",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 7.889902208333325,
+      "image" : "frames\/frame-063.png",
+      "imageSHA256" : "6b9c146763118f89cdd0c6eb874a13ed68628bf77a44fd810e91e53f4b521f76",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.003085041666651,
+      "image" : "frames\/frame-064.png",
+      "imageSHA256" : "66f9a554d3fee2597669c79f1acd3ee0d786812b4c1d852134f57cea553992aa",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.139669291666678,
+      "image" : "frames\/frame-065.png",
+      "imageSHA256" : "a9419468f8741416269e8c95ad101745b09bc02a54676cb32cd6ef0cd8a1f27d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.3261965000000089,
+      "image" : "frames\/frame-066.png",
+      "imageSHA256" : "8603d3dfef10e8dd1fdbff4903ccda5c066e409b2afc19c8f7c16556c1ddb8e5",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.4489189583333371,
+      "image" : "frames\/frame-067.png",
+      "imageSHA256" : "0bf11224d592fc327cf842bdd7cf6a9c5b38118cb1a3e795db89b7e117c264b7",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.5450419999999951,
+      "image" : "frames\/frame-068.png",
+      "imageSHA256" : "618233faca52dd29018aacbbde062fc7b53a4f1a6112b64103cc6a832a45a657",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.6632880833333274,
+      "image" : "frames\/frame-069.png",
+      "imageSHA256" : "f2cb6a17141d322c4f0f057db1b20bb90df20d3ba1e4cc1b892c012fcdfdb814",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.8066622083333357,
+      "image" : "frames\/frame-070.png",
+      "imageSHA256" : "5bca10a89c494de5550c5fbf57314f37c2cae1ea2cd12481ac1f7906a7c58486",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 8.9377994166666781,
+      "image" : "frames\/frame-071.png",
+      "imageSHA256" : "50ed9c79cbb838f974b3b9e9b15b1482e27b7d1bc7594b196c66a2887539d986",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.0760595833333184,
+      "image" : "frames\/frame-072.png",
+      "imageSHA256" : "47a5fe7f276f9c465f75d621e25c9bdcf808c2001788ca5af7621b75ba3badab",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.1568405416666678,
+      "image" : "frames\/frame-073.png",
+      "imageSHA256" : "f28a3eeb4445deba4bb7ca3fc61d246d96e29a2119e1437d463a1afc06aad5e4",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.274245916666672,
+      "image" : "frames\/frame-074.png",
+      "imageSHA256" : "602a700fe3ff5521c754617d0da9223e1906599b6622110800482ca38396e522",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.4506659166666509,
+      "image" : "frames\/frame-075.png",
+      "imageSHA256" : "204d31f01a4f4fb04b4b000e0059cd6a69323a7ac1d1f18a41862cf5e3be0177",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.5769265416666656,
+      "image" : "frames\/frame-076.png",
+      "imageSHA256" : "c804f04fca27dffcbf511da323e7be17228831f7187bc7980f6fbbcb47c04871",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.6903016666666701,
+      "image" : "frames\/frame-077.png",
+      "imageSHA256" : "153685942d595f13fd029184c543dcc5679da0ce5887dcb02f65184f5418ace6",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.8075780000000066,
+      "image" : "frames\/frame-078.png",
+      "imageSHA256" : "711f0c0f0988a6a054a3c25491a634c523a3062246ff70cf657b2bfed2765fd0",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 9.9481987499999889,
+      "image" : "frames\/frame-079.png",
+      "imageSHA256" : "109f84c554f93e9533224a69df6bc23de33e8b4793ec02e077eb6c6a643bfebf",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 10.069219250000003,
+      "image" : "frames\/frame-080.png",
+      "imageSHA256" : "8366569d8423e47ea840b218198ded28ac836458070a5f0a708752bd65735d5b",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 10.19817900000001,
+      "image" : "frames\/frame-081.png",
+      "imageSHA256" : "53d3011c0411712558bfbeba2975f224a3c0664b913f6507dfd139c89af5a383",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 10.325569999999999,
+      "image" : "frames\/frame-082.png",
+      "imageSHA256" : "0e47434a3947b5865e27ff4be03b363af657c82d17f79f1d9f72da19d2b1f572",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 10.449561999999986,
+      "image" : "frames\/frame-083.png",
+      "imageSHA256" : "22500d059c80a3d419123cba5b9c2df20f284136ed43f402cd63fd407c7c450a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 11.51434708333332,
+      "image" : "frames\/frame-084.png",
+      "imageSHA256" : "22500d059c80a3d419123cba5b9c2df20f284136ed43f402cd63fd407c7c450a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.598064375000007,
+      "image" : "frames\/frame-085.png",
+      "imageSHA256" : "969a546b5360d074d30b4b88d5e94725c75ce2c7fea7a9911333c7a86cef674d",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.854294458333328,
+      "image" : "frames\/frame-086.png",
+      "imageSHA256" : "01764caaf53d8e2b83501d8349e13e12f0da2497f2f1936a14e35fb07f71c13a",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.881088833333337,
+      "image" : "frames\/frame-087.png",
+      "imageSHA256" : "fd33d31c32e229ce702ed2fae8eea6dcaf5f164fcc43decc7bca1c2719751a68",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.906604916666652,
+      "image" : "frames\/frame-088.png",
+      "imageSHA256" : "a504c035a7d881737d0380c8c659798f28671e8b59f07d7d9e67bcabb8a1a501",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.930362124999988,
+      "image" : "frames\/frame-089.png",
+      "imageSHA256" : "f9f6fc708dee9ca748470518c9077108b336ce54615776117af0d6b0634ef092",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.957728833333334,
+      "image" : "frames\/frame-090.png",
+      "imageSHA256" : "99c5946778befc61355b0b1162e035eb0057ca7e4859742a878dec76b60e0c78",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 12.982928625,
+      "image" : "frames\/frame-091.png",
+      "imageSHA256" : "d64b86a61a06da101a27fe7e91662dd54e5ad72ef6b6aa92f6a7d2f4d5af55d7",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 13.010762458333346,
+      "image" : "frames\/frame-092.png",
+      "imageSHA256" : "e69d08bfa3e8c375dffc6e9c8426f1afe51652620b3ba570d84d5bd20a21ff09",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 13.090824083333331,
+      "image" : "frames\/frame-093.png",
+      "imageSHA256" : "6dea6ad81007486fefcb5ad0a1b38b41979a6b53ab486aa34281c8594c8a9e83",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 13.125668375000004,
+      "image" : "frames\/frame-094.png",
+      "imageSHA256" : "d32d26251f8aa75986ac72eb07bddd88538d4ce0a7d9f8887d86e23d6d8611d1",
+      "pixels" : [
+        720,
+        1168
+      ]
+    },
+    {
+      "elapsedSeconds" : 13.151624458333345,
+      "image" : "frames\/frame-095.png",
+      "imageSHA256" : "e34275a5e88f0f597d52e4ba538d8f926b289dcb89749c4efa356d70f1d0edd3",
+      "pixels" : [
+        720,
+        1168
+      ]
+    }
+  ],
+  "failures" : 0,
+  "frameCount" : 96,
+  "framesPerSecond" : 8,
+  "limitations" : "Fixture labels and container are for comparison only. Battery values and sources are deterministic fixtures. This does not validate hardware telemetry or native popup compositing.",
+  "method" : "WindowServer capture of five production PopoverRuntimeView instances in an owned Classic fixture window, light and dark, followed by 12 seconds of live Core Animation output in dark appearance. The full-charge row uses the production 3D double orbit and the current power-state palette.",
+  "schema" : 1
+}

@@ -1,0 +1,55 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/9] Emitting module Wattson
+[5/9] Compiling Wattson PopoverContentView.swift
+[6/9] Compiling Wattson FullChargeOrbit.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking Wattson
+[8/11] Applying Wattson
+[10/13] Emitting module WattsonTests
+[11/13] Compiling WattsonTests ScrollbarIntegrationTests.swift
+[11/13] Write Objects.LinkFileList
+[12/13] Linking WattsonPackageTests
+Build complete! (3.61s)
+Test Suite 'Selected tests' started at 2026-10-31 10:50:37.690.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 10:50:37.691.
+Test Suite 'FlowScrollerTests' started at 2026-10-31 10:50:37.691.
+Test Case '-[WattsonTests.FlowScrollerTests testAnimationGroupsHaveUnevenSpacingAndOnlyInvisibleReturnJumps]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testAnimationGroupsHaveUnevenSpacingAndOnlyInvisibleReturnJumps]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testDetachedOrHiddenScrollerDoesNotRunAnimations]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testDetachedOrHiddenScrollerDoesNotRunAnimations]' passed (0.045 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testFlowUsesExistingStatePaletteAndRefreshesAppearanceWithoutMoving]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testFlowUsesExistingStatePaletteAndRefreshesAppearanceWithoutMoving]' passed (0.001 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testKnobArtTracksNativeMetricsAndStaysInsideItsClip]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testKnobArtTracksNativeMetricsAndStaysInsideItsClip]' passed (0.000 seconds).
+Test Suite 'FlowScrollerTests' passed at 2026-10-31 10:50:37.741.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.050 (0.050) seconds
+Test Suite 'ScrollbarIntegrationTests' started at 2026-10-31 10:50:37.741.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testFlowActionReachesBothEndsAndTallViewportRemovesControl]' started.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testFlowActionReachesBothEndsAndTallViewportRemovesControl]' passed (0.084 seconds).
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testStylesKeepDocumentGeometryAndReadingPositionInBothSystemStyles]' started.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testStylesKeepDocumentGeometryAndReadingPositionInBothSystemStyles]' passed (0.127 seconds).
+Test Suite 'ScrollbarIntegrationTests' passed at 2026-10-31 10:50:37.952.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.211 (0.211) seconds
+Test Suite 'ScrollbarSettingsTests' started at 2026-10-31 10:50:37.952.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testAppearancePopupOffersAllChoicesAndUpdatesInBothDirections]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testAppearancePopupOffersAllChoicesAndUpdatesInBothDirections]' passed (0.076 seconds).
+Test Case '-[WattsonTests.ScrollbarSettingsTests testEveryChoicePersistsBeforeSingleNotificationAndKeepsOtherPreferences]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testEveryChoicePersistsBeforeSingleNotificationAndKeepsOtherPreferences]' passed (0.009 seconds).
+Test Case '-[WattsonTests.ScrollbarSettingsTests testMissingAndInvalidPreferenceDefaultsToFlowWithoutWriting]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testMissingAndInvalidPreferenceDefaultsToFlowWithoutWriting]' passed (0.008 seconds).
+Test Suite 'ScrollbarSettingsTests' passed at 2026-10-31 10:50:38.045.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.093 (0.093) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-31 10:50:38.045.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.353 (0.354) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 10:50:38.045.
+	 Executed 9 tests, with 0 failures (0 unexpected) in 0.353 (0.355) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=5 remaining=0

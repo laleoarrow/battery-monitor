@@ -1,0 +1,38 @@
+[
+  {
+    "Disk" : 50,
+    "Accessed" : "2026-10-31T02:46:00Z",
+    "Name" : "Wattson-ProcessWhitelist-36E2BF8F-D5A3-4819-9A1A-5B77AAD46F62",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 31,
+    "Source" : "local"
+  },
+  {
+    "Disk" : 50,
+    "Accessed" : "2026-10-31T02:40:58Z",
+    "Name" : "Wattson-ProcessWhitelist-C48107B2-A3B4-45F3-9F84-B05AB450CF77",
+    "Running" : true,
+    "State" : "running",
+    "Size" : 31,
+    "Source" : "local"
+  },
+  {
+    "Disk" : 50,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Name" : "macOS-TestLab",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 33,
+    "Source" : "local"
+  },
+  {
+    "Disk" : 50,
+    "Accessed" : "2026-10-31T02:43:51Z",
+    "Name" : "macOS-TestLab-Base",
+    "Running" : false,
+    "State" : "stopped",
+    "Size" : 30,
+    "Source" : "local"
+  }
+]

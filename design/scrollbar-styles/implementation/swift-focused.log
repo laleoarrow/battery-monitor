@@ -1,0 +1,119 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[1/9] Write swift-version--58304C5D6DBC2206.txt
+[3/10] Compiling Wattson StatusItemController.swift
+[4/10] Emitting module Wattson
+[5/10] Compiling Wattson FullChargeOrbit.swift
+[5/10] Write Objects.LinkFileList
+[6/10] Linking Wattson
+[7/10] Applying Wattson
+[9/71] Compiling WattsonTests PopoverPlacementTests.swift
+[10/71] Compiling WattsonTests PowerFlowEfficiencyTests.swift
+[11/71] Compiling WattsonTests PowerHistoryFreshnessTests.swift
+[12/71] Compiling WattsonTests PowerInputFallbackTests.swift
+[13/75] Compiling WattsonTests SettingsIconReuseTests.swift
+[14/75] Compiling WattsonTests StatusClickDismissalTests.swift
+[15/75] Compiling WattsonTests SystemBatteryHealthTests.swift
+[16/75] Compiling WattsonTests TopProcessSettingsTests.swift
+[17/75] Compiling WattsonTests ScrollbarIntegrationTests.swift
+[18/75] Compiling WattsonTests ScrollbarSettingsTests.swift
+[19/75] Compiling WattsonTests SettingsControlsRecoveryTests.swift
+[20/75] Compiling WattsonTests SettingsGlassOpticalMarginTests.swift
+[21/75] Compiling WattsonTests GlassPopoverPanelTests.swift
+[22/75] Compiling WattsonTests GlassPopoverShapeTests.swift
+[23/75] Compiling WattsonTests GlassTransparencySettingsTests.swift
+[24/75] Compiling WattsonTests GlobalPopoverClickTests.swift
+[25/75] Compiling WattsonTests RingMetricSettingsTests.swift
+[26/75] Compiling WattsonTests RingMetricTelemetryTests.swift
+[27/75] Compiling WattsonTests RingMetricViewTests.swift
+[28/75] Compiling WattsonTests SamplingEfficiencyTests.swift
+[29/75] Compiling WattsonTests FlowScrollerTests.swift
+[30/75] Compiling WattsonTests FooterHoverFeedbackViewTests.swift
+[31/75] Compiling WattsonTests FooterHoverIntegrationTests.swift
+[32/75] Compiling WattsonTests GlassPopoverBackgroundTests.swift
+[33/75] Compiling WattsonTests HistoryChartTests.swift
+[34/75] Compiling WattsonTests HistoryViewTests.swift
+[35/75] Compiling WattsonTests InAppLogoSettingsTests.swift
+[36/75] Compiling WattsonTests InteractiveGlassModeControlTests.swift
+[37/75] Compiling WattsonTests PowerObservationRuntimeTests.swift
+[38/75] Compiling WattsonTests PowerObservationShadowTests.swift
+[39/75] Compiling WattsonTests PowerObservationWireV5Tests.swift
+[40/75] Compiling WattsonTests PowerPresentationStateTests.swift
+[41/75] Compiling WattsonTests ProcessWhitelistSettingsTests.swift
+[42/75] Compiling WattsonTests ProcessWhitelistTests.swift
+[43/75] Compiling WattsonTests ProcessWhitelistViewTests.swift
+[44/75] Compiling WattsonTests RawPowerObservationTests.swift
+[45/75] Compiling WattsonTests NativeGlassModeControlTests.swift
+[46/75] Compiling WattsonTests NativeModeSegmentedControlTests.swift
+[47/75] Compiling WattsonTests PopoverAppearanceTests.swift
+[48/75] Compiling WattsonTests PopoverArrowSettingsTests.swift
+[49/75] Compiling WattsonTests ColorSchemeSettingsTests.swift
+[50/75] Compiling WattsonTests DockIconSettingsTests.swift
+[51/75] Compiling WattsonTests FeedbackDiagnosticsTests.swift
+[52/75] Compiling WattsonTests FlowNodeIconTests.swift
+[53/75] Emitting module WattsonTests
+[54/75] Compiling WattsonTests PowerSymbolArtworkTests.swift
+[55/75] Compiling WattsonTests ProcessActionButtonTests.swift
+[56/75] Compiling WattsonTests ProcessTerminationPresenterTests.swift
+[57/75] Compiling WattsonTests ProcessTerminationTests.swift
+[58/75] Compiling WattsonTests BatteryIcon27Tests.swift
+[59/75] Compiling WattsonTests BatteryRuntimeEstimateTests.swift
+[60/75] Compiling WattsonTests BatteryRuntimePresentationTests.swift
+[61/75] Compiling WattsonTests BatteryTimeIndicatorTests.swift
+[62/75] Compiling WattsonTests LiquidGlassStyleSettingsTests.swift
+[63/75] Compiling WattsonTests MenuBarIconStyleSettingsTests.swift
+[64/75] Compiling WattsonTests ModeSliderAppearanceTests.swift
+[65/75] Compiling WattsonTests ModuleOrderTests.swift
+[66/75] Compiling WattsonTests PowerObservationCaptureTests.swift
+[67/75] Compiling WattsonTests PowerObservationFusionFoundationTests.swift
+[68/75] Compiling WattsonTests PowerObservationFusionReplayTests.swift
+[69/75] Compiling WattsonTests PowerObservationPhase2FixtureTests.swift
+[70/75] Compiling WattsonTests TopProcessesMonitorTests.swift
+[71/75] Compiling WattsonTests TopProcessesTests.swift
+[72/75] Compiling WattsonTests TopProcessesViewTests.swift
+[73/75] Compiling WattsonTests WattsonTests.swift
+[73/75] Write Objects.LinkFileList
+[74/75] Linking WattsonPackageTests
+Build complete! (5.80s)
+Test Suite 'Selected tests' started at 2026-10-31 10:29:15.154.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 10:29:15.155.
+Test Suite 'FlowScrollerTests' started at 2026-10-31 10:29:15.155.
+Test Case '-[WattsonTests.FlowScrollerTests testAnimationGroupsHaveUnevenSpacingAndOnlyInvisibleReturnJumps]' started.
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/FlowScrollerTests.swift:78: error: -[WattsonTests.FlowScrollerTests testAnimationGroupsHaveUnevenSpacingAndOnlyInvisibleReturnJumps] : XCTUnwrap failed: expected non-nil value of type "Array<Double>"
+Test Case '-[WattsonTests.FlowScrollerTests testAnimationGroupsHaveUnevenSpacingAndOnlyInvisibleReturnJumps]' failed (0.283 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testDetachedOrHiddenScrollerDoesNotRunAnimations]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testDetachedOrHiddenScrollerDoesNotRunAnimations]' passed (0.043 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testFlowUsesExistingStatePaletteAndRefreshesAppearanceWithoutMoving]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testFlowUsesExistingStatePaletteAndRefreshesAppearanceWithoutMoving]' passed (0.002 seconds).
+Test Case '-[WattsonTests.FlowScrollerTests testKnobArtTracksNativeMetricsAndStaysInsideItsClip]' started.
+Test Case '-[WattsonTests.FlowScrollerTests testKnobArtTracksNativeMetricsAndStaysInsideItsClip]' passed (0.000 seconds).
+Test Suite 'FlowScrollerTests' failed at 2026-10-31 10:29:15.484.
+	 Executed 4 tests, with 1 failure (0 unexpected) in 0.328 (0.328) seconds
+Test Suite 'ScrollbarIntegrationTests' started at 2026-10-31 10:29:15.484.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testFlowActionReachesBothEndsAndTallViewportRemovesControl]' started.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testFlowActionReachesBothEndsAndTallViewportRemovesControl]' passed (0.095 seconds).
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testStylesKeepDocumentGeometryAndReadingPositionInBothSystemStyles]' started.
+Test Case '-[WattsonTests.ScrollbarIntegrationTests testStylesKeepDocumentGeometryAndReadingPositionInBothSystemStyles]' passed (0.134 seconds).
+Test Suite 'ScrollbarIntegrationTests' passed at 2026-10-31 10:29:15.713.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.229 (0.229) seconds
+Test Suite 'ScrollbarSettingsTests' started at 2026-10-31 10:29:15.713.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testAppearancePopupOffersAllChoicesAndUpdatesInBothDirections]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testAppearancePopupOffersAllChoicesAndUpdatesInBothDirections]' passed (0.088 seconds).
+Test Case '-[WattsonTests.ScrollbarSettingsTests testEveryChoicePersistsBeforeSingleNotificationAndKeepsOtherPreferences]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testEveryChoicePersistsBeforeSingleNotificationAndKeepsOtherPreferences]' passed (0.010 seconds).
+Test Case '-[WattsonTests.ScrollbarSettingsTests testMissingAndInvalidPreferenceDefaultsToFlowWithoutWriting]' started.
+Test Case '-[WattsonTests.ScrollbarSettingsTests testMissingAndInvalidPreferenceDefaultsToFlowWithoutWriting]' passed (0.011 seconds).
+Test Suite 'ScrollbarSettingsTests' passed at 2026-10-31 10:29:15.822.
+	 Executed 3 tests, with 0 failures (0 unexpected) in 0.109 (0.109) seconds
+Test Suite 'WattsonPackageTests.xctest' failed at 2026-10-31 10:29:15.822.
+	 Executed 9 tests, with 1 failure (0 unexpected) in 0.666 (0.667) seconds
+Test Suite 'Selected tests' failed at 2026-10-31 10:29:15.822.
+	 Executed 9 tests, with 1 failure (0 unexpected) in 0.666 (0.667) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=5 remaining=0

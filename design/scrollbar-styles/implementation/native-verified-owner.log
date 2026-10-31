@@ -1,0 +1,7 @@
+PROCESS_WHITELIST_VM_READY Wattson-ProcessWhitelist-61877E5A-4882-4B4C-A20D-1AF5F46729C2
+Traceback (most recent call last):
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/performance/ui_vm.py", line 196, in <module>
+    sys.exit(main())
+  File "/Users/leoarrow/Project/mypackage/agents/电池功率/tests/performance/ui_vm.py", line 185, in main
+    raise RuntimeError("Owned clone deletion/inventory check failed")
+RuntimeError: Owned clone deletion/inventory check failed

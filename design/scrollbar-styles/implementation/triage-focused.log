@@ -1,0 +1,26 @@
+[0/1] Planning build
+Test Suite 'Selected tests' started at 2026-10-31 10:31:24.803.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 10:31:24.804.
+Test Suite 'BatteryRuntimePresentationTests' started at 2026-10-31 10:31:24.804.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' started.
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/BatteryRuntimePresentationTests.swift:216: error: -[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView] : XCTAssertTrue failed
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' failed (0.083 seconds).
+Test Suite 'BatteryRuntimePresentationTests' failed at 2026-10-31 10:31:24.887.
+	 Executed 1 test, with 1 failure (0 unexpected) in 0.083 (0.083) seconds
+Test Suite 'WattsonTests' started at 2026-10-31 10:31:24.887.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' started.
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' failed (0.212 seconds).
+Test Suite 'WattsonTests' failed at 2026-10-31 10:31:25.099.
+	 Executed 1 test, with 3 failures (0 unexpected) in 0.212 (0.212) seconds
+Test Suite 'WattsonPackageTests.xctest' failed at 2026-10-31 10:31:25.099.
+	 Executed 2 tests, with 4 failures (0 unexpected) in 0.295 (0.295) seconds
+Test Suite 'Selected tests' failed at 2026-10-31 10:31:25.099.
+	 Executed 2 tests, with 4 failures (0 unexpected) in 0.295 (0.296) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

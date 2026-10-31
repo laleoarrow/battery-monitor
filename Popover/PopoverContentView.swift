@@ -804,7 +804,62 @@ private final class PopoverDocumentView: NSView {
     override var isFlipped: Bool { true }
 }
 
+private final class PopoverNativeScroller: NSScroller {
+    var drawsNativeScrollbar = false {
+        didSet {
+            alphaValue = drawsNativeScrollbar ? 1 : 0
+            needsDisplay = true
+        }
+    }
+    // AppKit caches overlay parts separately from drawKnob(). Keep those
+    // cached parts invisible too, without removing or resizing the slot.
+    override var alphaValue: CGFloat {
+        get { drawsNativeScrollbar ? super.alphaValue : 0 }
+        set { super.alphaValue = drawsNativeScrollbar ? newValue : 0 }
+    }
+    override class var isCompatibleWithOverlayScrollers: Bool { true }
+    override func drawKnob() { if drawsNativeScrollbar { super.drawKnob() } }
+    override func drawKnobSlot(in slotRect: NSRect, highlight flag: Bool) {
+        if drawsNativeScrollbar { super.drawKnobSlot(in: slotRect, highlight: flag) }
+    }
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        drawsNativeScrollbar ? super.hitTest(point) : nil
+    }
+    override func isAccessibilityElement() -> Bool {
+        drawsNativeScrollbar && super.isAccessibilityElement()
+    }
+}
+
 private final class PopoverScrollView: NSScrollView {
+    let flowScroller = FlowScroller(frame: .zero)
+    private let nativeScroller = PopoverNativeScroller(frame: .zero)
+    private var scrollbarStyle: Settings.ScrollbarStyle = .flow
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        // The visible Flow control is independent of AppKit's overlay fade.
+        // The native slot still owns the original gutter and document geometry.
+        flowScroller.scrollerStyle = .legacy
+        flowScroller.target = self
+        flowScroller.action = #selector(scrollFromFlow(_:))
+        flowScroller.onScrollWheel = { [weak self] event in self?.scrollWheel(with: event) }
+        addSubview(flowScroller)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    func setScrollbarStyle(_ style: Settings.ScrollbarStyle) {
+        let offset = contentView.bounds.origin
+        scrollbarStyle = style
+        // Keep one native instance: replacing it lets AppKit asynchronously
+        // reapply the system mode, which can change the existing gutter width.
+        if verticalScroller !== nativeScroller { verticalScroller = nativeScroller }
+        nativeScroller.drawsNativeScrollbar = style == .simple
+        tile()
+        contentView.scroll(to: offset)
+        reflectScrolledClipView(contentView)
+    }
+
     override func tile() {
         super.tile()
         // AppKit may select a legacy scroller when the window attaches or the
@@ -815,6 +870,49 @@ private final class PopoverScrollView: NSScrollView {
             documentView.setFrameSize(NSSize(width: contentSize.width,
                                              height: documentView.frame.height))
         }
+        synchronizeFlowScroller()
+    }
+
+    override func reflectScrolledClipView(_ clipView: NSClipView) {
+        super.reflectScrolledClipView(clipView)
+        synchronizeFlowScroller()
+    }
+
+    override func accessibilityVerticalScrollBar() -> Any? {
+        switch scrollbarStyle {
+        case .hidden: return nil
+        case .simple: return super.accessibilityVerticalScrollBar()
+        case .flow: return flowScroller.isHidden ? nil : flowScroller
+        }
+    }
+
+    private func synchronizeFlowScroller() {
+        guard let native = verticalScroller else {
+            flowScroller.isHidden = true
+            return
+        }
+        flowScroller.isHidden = scrollbarStyle != .flow || !hasVerticalScroller
+            || native.knobProportion >= 1 || contentView.bounds.height >= (documentView?.frame.height ?? 0)
+        flowScroller.frame = convert(native.bounds, from: native)
+        flowScroller.knobProportion = native.knobProportion
+        flowScroller.doubleValue = native.doubleValue
+        flowScroller.isEnabled = native.isEnabled
+        flowScroller.synchronizeKnob()
+    }
+
+    @objc private func scrollFromFlow(_ sender: NSScroller) {
+        let maximum = max(0, (documentView?.frame.height ?? 0) - contentView.bounds.height)
+        let current = contentView.bounds.minY
+        let offset: CGFloat
+        switch sender.hitPart {
+        case .incrementPage: offset = current + contentView.bounds.height * 0.9
+        case .decrementPage: offset = current - contentView.bounds.height * 0.9
+        case .incrementLine: offset = current + 16
+        case .decrementLine: offset = current - 16
+        default: offset = CGFloat(sender.doubleValue) * maximum
+        }
+        contentView.scroll(to: NSPoint(x: contentView.bounds.minX, y: min(maximum, max(0, offset))))
+        reflectScrolledClipView(contentView)
     }
 }
 
@@ -949,6 +1047,7 @@ final class PopoverContentViewController: NSViewController {
 
         view.effectiveAppearance.performAsCurrentDrawingAppearance {
             header.update(snapshot: snapshot, degraded: degraded)
+            scrollView.flowScroller.update(snapshot: snapshot)
             for module in PopoverModule.allCases where isVisible(module) {
                 updateModule(module)
             }
@@ -1025,6 +1124,7 @@ final class PopoverContentViewController: NSViewController {
         ringView.setAnimationsEnabled(allowsMotion && !ringView.isHidden)
         laneView.setAnimationsEnabled(allowsMotion && !laneView.isHidden)
         historyView.setAnimationsEnabled(allowsMotion && !historyView.isHidden)
+        scrollView.flowScroller.setAnimationsEnabled(allowsMotion)
         if !allowsMotion, let root = view.layer {
             removeAnimationsRecursively(from: root)
         }
@@ -1035,6 +1135,7 @@ final class PopoverContentViewController: NSViewController {
 
     func setPresentationActive(_ active: Bool) {
         presentationActive = active
+        scrollView.flowScroller.setPresentationActive(active)
         runtimeView.setPresentationActive(active && isVisible(.runtime))
         footer.setHoverPresentationActive(active)
         historyView.setPresentationActive(active)
@@ -1071,6 +1172,7 @@ final class PopoverContentViewController: NSViewController {
         scrollView.autohidesScrollers = true
         scrollView.hasHorizontalScroller = false
         scrollView.documentView = documentView
+        scrollView.setScrollbarStyle(Settings.scrollbarStyle)
         // tile() tracks the actual clip width. Autoresizing from the initial
         // zero-sized clip would instead add the viewport width twice.
         documentView.addSubview(stack)
@@ -1145,6 +1247,8 @@ final class PopoverContentViewController: NSViewController {
             guard let change = notification.userInfo?[Settings.changeUserInfoKey]
                     as? Settings.Change else { return }
             switch change {
+            case .scrollbarStyle:
+                self?.scrollView.setScrollbarStyle(Settings.scrollbarStyle)
             case .module:
                 self?.reloadModuleVisibility()
                 self?.applyModuleVisibility()
@@ -1333,6 +1437,9 @@ final class PopoverContentViewController: NSViewController {
     }
 
 #if DEBUG
+    var scrollViewForTest: NSScrollView { scrollView }
+    var flowScrollbarForTest: FlowScroller { scrollView.flowScroller }
+
     func presentSettingsFromQuickMenuForTest() {
         showSettings()
     }

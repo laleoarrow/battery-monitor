@@ -1,0 +1,29 @@
+[
+  {
+    "State" : "running",
+    "Running" : true,
+    "Disk" : 50,
+    "Accessed" : "2026-10-31T02:33:59Z",
+    "Name" : "Wattson-ProcessWhitelist-EE4AB327-8301-4561-B902-E71AB659026A",
+    "Size" : 30,
+    "Source" : "local"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Accessed" : "2026-10-18T17:24:53Z",
+    "Name" : "macOS-TestLab",
+    "Size" : 33,
+    "Source" : "local"
+  },
+  {
+    "State" : "stopped",
+    "Running" : false,
+    "Disk" : 50,
+    "Accessed" : "2026-10-31T02:33:46Z",
+    "Name" : "macOS-TestLab-Base",
+    "Size" : 30,
+    "Source" : "local"
+  }
+]

@@ -525,6 +525,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let transparency = view("settings.appearance.glass-transparency", in: first) as! NSSlider
             let logoPopup = view("settings.appearance.in-app-logo", in: first) as! NSPopUpButton
             let dockPopup = view("settings.appearance.dock-icon", in: first) as! NSPopUpButton
+            let scrollbarPopup = view("settings.appearance.scrollbar-style", in: first) as! NSPopUpButton
             let colorScheme = view("settings.appearance.color-scheme", in: first) as! NSPopUpButton
             let feedbackButton = button("Send Feedback", in: first)
             let keyLoopEnd: NSView = colorScheme
@@ -567,7 +568,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                 "Liquid Glass belongs to General Appearance, outside sidebar navigation")
             require(glassSwitch.nextKeyView === logoPopup
                 && logoPopup.nextKeyView === dockPopup
-                && dockPopup.nextKeyView === feedbackButton
+                && dockPopup.nextKeyView === scrollbarPopup
+                && scrollbarPopup.nextKeyView === feedbackButton
                 && feedbackButton.nextKeyView === controller.sidebarForTest,
                 "appearance keyboard loop reaches feedback and returns to navigation")
             require(logoPopup.itemTitles == ["Color", "Clear"] && logoPopup.isEnabled
@@ -592,6 +594,19 @@ class SettingsWindowContractTests(unittest.TestCase):
                 && dockPopup.accessibilityHelp()?.contains("Hidden keeps Wattson menu-bar-only.") == true
                 && dockHelp.stringValue == "Restart Wattson to apply." && !dockHelp.isHidden,
                 "Dock choice shows concise restart help and accessibly explains Finder scope and Hidden behavior")
+            require(scrollbarPopup.itemTitles == ["Hidden", "Simple", "Flow"]
+                && scrollbarPopup.isEnabled && Settings.scrollbarStyle == .flow
+                && scrollbarPopup.selectedItem?.representedObject as? String == "flow",
+                "scrollbar offers all three choices and defaults to Flow independently of Liquid Glass")
+            require(scrollbarPopup.accessibilityLabel() == "Scrollbar"
+                && scrollbarPopup.isDescendant(of: view("settings.general.appearance", in: first)),
+                "scrollbar has an accessible purpose and belongs to General Appearance")
+            for style in Settings.ScrollbarStyle.allCases {
+                scrollbarPopup.selectItem(withTitle: style.title)
+                scrollbarPopup.sendAction(scrollbarPopup.action!, to: scrollbarPopup.target)
+                require(Settings.scrollbarStyle == style,
+                    "native scrollbar popup saves every choice")
+            }
             if #available(macOS 26, *) {
                 require(glassSwitch.isEnabled, "native Liquid Glass is selectable on macOS 26")
             } else {
@@ -808,7 +823,7 @@ class SettingsWindowContractTests(unittest.TestCase):
             let appearanceSection = view("settings.general.appearance", in: first)
             for (title, inset) in [
                 ("Theme", CGFloat(16)), ("Liquid Glass", 16),
-                ("In-App Logo", 16), ("Dock Icon", 16),
+                ("In-App Logo", 16), ("Dock Icon", 16), ("Scrollbar", 16),
                 ("Popup background", 32), ("Show Popover Arrow", 32), ("Transparency", 32),
             ] {
                 let appearanceLabel = descendants(ofType: NSTextField.self, in: appearanceSection)
@@ -886,7 +901,8 @@ class SettingsWindowContractTests(unittest.TestCase):
             require(controller.sidebarNextKeyViewForTest === login, "Tab enters first General switch")
             require(controller.lastVisibleSwitchNextKeyViewForTest === controller.sidebarForTest,
                     "General feedback action returns to navigation")
-            require(dockPopup.nextKeyView === feedbackButton,
+            require(dockPopup.nextKeyView === scrollbarPopup
+                    && scrollbarPopup.nextKeyView === feedbackButton,
                     "appearance controls reach the feedback action")
             require(feedbackButton.isEnabled && feedbackButton.title == "Report…"
                     && feedbackButton.accessibilityLabel() == "Send Feedback",
@@ -2374,7 +2390,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && popoverArrow.nextKeyView === (transparencyIsAdjustable ? transparency : logoPopup)
                     && (!transparencyIsAdjustable || transparency.nextKeyView === logoPopup)
                     && logoPopup.nextKeyView === dockPopup
-                    && dockPopup.nextKeyView === feedbackButton,
+                    && dockPopup.nextKeyView === scrollbarPopup
+                    && scrollbarPopup.nextKeyView === feedbackButton,
                     "glass-on includes the background popup in the General keyboard loop")
                 require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
                     "glass-on retains the independent next-launch Dock preference")
@@ -2642,7 +2659,8 @@ class SettingsWindowContractTests(unittest.TestCase):
                     "disabling glass retains its hidden arrow choice without an active control")
                 require(glassSwitch.nextKeyView === logoPopup
                     && logoPopup.nextKeyView === dockPopup
-                    && dockPopup.nextKeyView === feedbackButton,
+                    && dockPopup.nextKeyView === scrollbarPopup
+                    && scrollbarPopup.nextKeyView === feedbackButton,
                     "glass-off removes the disabled style popup from the keyboard loop")
                 require(dockPopup.isEnabled && Settings.dockIconStyle == .clear,
                     "Dock picker stays available in Classic with its saved next-launch choice")
@@ -2718,6 +2736,7 @@ class SettingsWindowContractTests(unittest.TestCase):
                 let restoredArrow = view("settings.appearance.popover-arrow", in: glassWindow) as! NSSwitch
                 let restoredLogo = view("settings.appearance.in-app-logo", in: glassWindow) as! NSPopUpButton
                 let restoredDock = view("settings.appearance.dock-icon", in: glassWindow) as! NSPopUpButton
+                let restoredScrollbar = view("settings.appearance.scrollbar-style", in: glassWindow) as! NSPopUpButton
                 let restoredFeedback = button("Send Feedback", in: glassWindow)
                 let restoredTransparency = view("settings.appearance.glass-transparency", in: glassWindow) as! NSSlider
                 require(glassBackground.isEnabled
@@ -2727,9 +2746,13 @@ class SettingsWindowContractTests(unittest.TestCase):
                     && restoredArrow.nextKeyView === (transparencyIsAdjustable ? restoredTransparency : restoredLogo)
                     && (!transparencyIsAdjustable || restoredTransparency.nextKeyView === restoredLogo)
                     && restoredLogo.nextKeyView === restoredDock
-                    && restoredDock.nextKeyView === restoredFeedback
+                    && restoredDock.nextKeyView === restoredScrollbar
+                    && restoredScrollbar.nextKeyView === restoredFeedback
                     && restoredFeedback.nextKeyView === glassController.sidebarForTest,
                     "new Settings windows restore the background and complete the native key loop")
+                require(restoredScrollbar.isEnabled
+                    && restoredScrollbar.selectedItem?.representedObject as? String == "flow",
+                    "new Settings windows restore the selected scrollbar style")
                 require(restoredArrow.isEnabled && restoredArrow.state == .off,
                     "new Settings windows restore the independently saved hidden arrow")
                 require(restoredDock.isEnabled
@@ -2804,6 +2827,11 @@ class SettingsWindowContractTests(unittest.TestCase):
                 followNativeKeyLoop(in: glassWindow, from: restoredDock, to: restoredLogo, reverse: true)
                 require(glassWindow.firstResponder === restoredLogo,
                     "logo choice receives focus after the Dock reverse key-loop verification")
+                followNativeKeyLoop(in: glassWindow, from: restoredDock, to: restoredScrollbar)
+                require(normalGlassScroll.documentVisibleRect.contains(restoredScrollbar.convert(
+                    restoredScrollbar.bounds, to: normalGlassScroll.documentView)),
+                    "keyboard focus reveals the complete scrollbar picker")
+                followNativeKeyLoop(in: glassWindow, from: restoredScrollbar, to: restoredDock, reverse: true)
                 _ = restoredDockHelp.scrollToVisible(restoredDockHelp.bounds)
                 require(normalGlassScroll.documentVisibleRect.contains(restoredDockHelp.convert(
                     restoredDockHelp.bounds, to: normalGlassScroll.documentView)),

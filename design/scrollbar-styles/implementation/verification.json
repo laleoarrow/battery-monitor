@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "defaultStyle": "flow",
+  "styles": [
+    "hidden",
+    "simple",
+    "flow"
+  ],
+  "side": "right",
+  "nativeAssertions": 1517,
+  "nativeFailures": 0,
+  "geometryCases": 72,
+  "motion": {
+    "downwardSteps": 523,
+    "durationSeconds": 5.521359333333322,
+    "reducedMotionStatic": true,
+    "sampledFrames": 107,
+    "transparentResets": 7,
+    "unevenFrames": 107,
+    "visibleClippingFailures": 0,
+    "visibleUpwardSteps": 0
+  },
+  "focusedSwiftTests": 9,
+  "focusedSettingsContractTests": 55,
+  "sourceFiles": {
+    "Core/Settings.swift": {
+      "sha256": "53863d95068c7120059f6c0affc92f1833db5496cae177ac2cb05c13396b3455",
+      "matchesNativeCapture": true
+    },
+    "MenuBar/SettingsWindowController.swift": {
+      "sha256": "2060567d37e8a832ca05a3988c22230861d08c8a92c4e0abbad90f3b074fd562",
+      "matchesNativeCapture": true
+    },
+    "MenuBar/StatusItemController.swift": {
+      "sha256": "ebfa96c8e4b727635f42ff800b663a4565e9badcf75145ca0dc6f89e96b0c3ae",
+      "matchesNativeCapture": true
+    },
+    "Popover/PopoverContentView.swift": {
+      "sha256": "a487f9b9e8c75e56b48ddb86310cd8d416dea5def30390bca5f0b82ac5c64664",
+      "matchesNativeCapture": true
+    },
+    "Popover/FlowScroller.swift": {
+      "sha256": "c88e9b36fa6baca2c4b44e004f0f2521722a6e05512b1c3ef195d88d65826263",
+      "matchesNativeCapture": true
+    }
+  },
+  "cleanup": [
+    {
+      "directory": "native",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": true,
+      "otherClonesMissingAtEnd": []
+    },
+    {
+      "directory": "native-clean",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": true,
+      "otherClonesMissingAtEnd": []
+    },
+    {
+      "directory": "native-final",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": true,
+      "otherClonesMissingAtEnd": []
+    },
+    {
+      "directory": "native-refined",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": true,
+      "otherClonesMissingAtEnd": []
+    },
+    {
+      "directory": "native-stable",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": true,
+      "otherClonesMissingAtEnd": []
+    },
+    {
+      "directory": "native-verified",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": false,
+      "otherClonesMissingAtEnd": [
+        "Wattson-ProcessWhitelist-EE4AB327-8301-4561-B902-E71AB659026A"
+      ]
+    },
+    {
+      "directory": "native-window",
+      "guestResourcesClean": true,
+      "ownedCloneRemoved": true,
+      "fixedVMStatesPreserved": true,
+      "hostInventoryAuditPassed": false,
+      "otherClonesMissingAtEnd": [
+        "Wattson-ProcessWhitelist-C48107B2-A3B4-45F3-9F84-B05AB450CF77"
+      ]
+    }
+  ],
+  "parallelWorkingTreeChangesExcludedFromScrollbarScope": true,
+  "fullSuiteLimitsDocumented": true,
+  "canonicalInstallationUpdated": false,
+  "releasePublished": false
+}

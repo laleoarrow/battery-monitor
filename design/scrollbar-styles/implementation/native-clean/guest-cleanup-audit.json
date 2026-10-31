@@ -1,0 +1,33 @@
+{
+  "after": {
+    "applicationScripts": [],
+    "canonicalAppExists": false,
+    "canonicalHelperExists": false,
+    "containers": [],
+    "helperSocketExists": false,
+    "preferences": []
+  },
+  "allPassed": true,
+  "before": {
+    "applicationScripts": [],
+    "canonicalAppExists": false,
+    "canonicalHelperExists": false,
+    "containers": [],
+    "helperSocketExists": false,
+    "preferences": []
+  },
+  "checks": {
+    "delayedPreferenceWritesAbsent": true,
+    "guestLocalScratchRemoved": true,
+    "ownedAppRegistrationsRemoved": true,
+    "ownedProcessesStopped": true,
+    "resourcesPreserved": true
+  },
+  "filesystemChecks": 230,
+  "filesystemObservationSeconds": 37.486,
+  "preferencesMethod": "filesystem-only; no defaults or CFPreferences read",
+  "processes": [],
+  "registrations": [],
+  "schema": 1,
+  "unexpectedResourceObservations": []
+}
