@@ -1,65 +1,68 @@
 {
-  "kind": "Design preview only; no App changes or release",
+  "revision": 2,
+  "kind": "3D geometry projected to an opaque composited sphere; design only",
   "cases": [
     {
       "width": 736,
       "scheme": "dark",
       "scrollWidth": 736,
-      "height": 424.5,
-      "centerOpacity": "1",
-      "heads": [
-        "0.775266",
-        "0.824188",
-        "0.775266",
-        "0.824188"
+      "canvasPixels": [
+        48,
+        240
       ]
     },
     {
       "width": 736,
       "scheme": "light",
       "scrollWidth": 736,
-      "height": 424.5,
-      "centerOpacity": "1",
-      "heads": [
-        "0.776897",
-        "0.822197",
-        "0.776897",
-        "0.822197"
+      "canvasPixels": [
+        48,
+        240
       ]
     },
     {
       "width": 320,
       "scheme": "dark",
       "scrollWidth": 320,
-      "height": 595.5,
-      "centerOpacity": "1",
-      "heads": [
-        "0.772221",
-        "0.828249",
-        "0.772221",
-        "0.828249"
+      "canvasPixels": [
+        48,
+        240
       ]
     },
     {
       "width": 320,
       "scheme": "light",
       "scrollWidth": 320,
-      "height": 595.5,
-      "centerOpacity": "1",
-      "heads": [
-        "0.770144",
-        "0.83135",
-        "0.770144",
-        "0.83135"
+      "canvasPixels": [
+        48,
+        240
       ]
     }
   ],
   "errors": [],
-  "bothStarsMove": true,
+  "geometry": [
+    {
+      "orbit": 0,
+      "frontInsideBody": 216,
+      "backInsideBody": 297,
+      "minProjectedRadius": 1.4617913397759899
+    },
+    {
+      "orbit": 1,
+      "frontInsideBody": 251,
+      "backInsideBody": 298,
+      "minProjectedRadius": 1.5328845556772144
+    }
+  ],
+  "depthSegments": {
+    "unsplitDepthCrossings": 0,
+    "depthSorted": true,
+    "sphereRemainsOpaque": true
+  },
   "reducedMotionStatic": true,
   "stateAndAppearanceControlsPass": true,
   "browserClosed": true,
-  "sourceSHA256": "a6d5e8ff2f6e992b2f77e6fef353e258b5be47601c170e14a5070e398c5b0e6d",
+  "sourceSHA256": "b3521610bc8fddcdd499e992b3c16d41c035f0adbe8e444dbbabf5fdbbb45b3a",
   "ownerExitedSuccessfully": true,
   "ownedScratchRemoved": true
 }
