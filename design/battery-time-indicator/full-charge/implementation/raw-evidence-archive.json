@@ -1,0 +1,27 @@
+{
+  "archive": "dist/full-charge-native-validation-20261031-4ea23e9d.tar.gz",
+  "sha256": "94b4a837d1acfd5d96fc2eb6ba006e3758b41d8d8c3fe31257b5e2396f07a2ea",
+  "bytes": 82483628,
+  "entries": 1466,
+  "archivedPNGFilesRemovedFromWorkingEvidence": 593,
+  "retainedPNGs": [
+    "accepted/native/battery-time-indicator/frames/frame-000.png",
+    "accepted/native/battery-time-indicator/frames/frame-016.png",
+    "accepted/native/battery-time-indicator/frames/frame-032.png",
+    "accepted/native/battery-time-indicator/frames/frame-048.png",
+    "accepted/native/battery-time-indicator/frames/frame-064.png",
+    "accepted/native/battery-time-indicator/frames/frame-080.png",
+    "accepted/native/battery-time-indicator/frames/frame-095.png",
+    "accepted/native/battery-time-indicator/states-dark.png",
+    "accepted/native/battery-time-indicator/states-light.png",
+    "lifecycle-regression/native/captures/classic-dark-full-3-bottom.png",
+    "lifecycle-regression/native/captures/classic-dark-full-3-top.png",
+    "lifecycle-regression/native/captures/classic-light-full-3-bottom.png",
+    "lifecycle-regression/native/captures/classic-light-full-3-top.png",
+    "lifecycle-regression/native/captures/glass-dark-full-3-bottom.png",
+    "lifecycle-regression/native/captures/glass-dark-full-3-top.png",
+    "lifecycle-regression/native/captures/glass-light-full-3-bottom.png",
+    "lifecycle-regression/native/captures/glass-light-full-3-top.png"
+  ],
+  "purpose": "Complete raw native verification evidence; selected screenshots and motion remain in the tracked review record."
+}

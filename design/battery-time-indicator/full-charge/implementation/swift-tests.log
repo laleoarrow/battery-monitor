@@ -1,0 +1,37 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/10] Write sources
+[2/10] Write swift-version--58304C5D6DBC2206.txt
+[4/15] Compiling Wattson SettingsWindowController.swift
+[5/15] Compiling Wattson FullChargeOrbit.swift
+[6/15] Compiling Wattson BatteryTimeIndicatorView.swift
+[7/15] Compiling Wattson FlowScroller.swift
+[8/15] Compiling Wattson PopoverContentView.swift
+[9/15] Emitting module Wattson
+[10/15] Compiling Wattson Settings.swift
+[11/29] Compiling Wattson ProcessTerminationPresenter.swift
+[12/29] Compiling Wattson main.swift
+[13/29] Compiling Wattson ModuleIconArtwork.swift
+[14/29] Compiling Wattson ProcessWhitelistWindowController.swift
+[15/29] Compiling Wattson RingGaugeLayer.swift
+[16/29] Compiling Wattson GlassBackgroundView.swift
+[17/29] Compiling Wattson PopoverController.swift
+[18/29] Compiling Wattson SettingsAppearance.swift
+[19/29] Compiling Wattson BatteryIcon.swift
+[20/29] Compiling Wattson GlassPopoverPanel.swift
+[21/29] Compiling Wattson AppDelegate.swift
+[22/29] Compiling Wattson FeedbackDiagnostics.swift
+[23/29] Compiling Wattson TopProcessesView.swift
+[24/29] Compiling Wattson StatusItemController.swift
+/Users/leoarrow/Project/mypackage/agents/电池功率/MenuBar/StatusItemController.swift:324:13: error: switch must be exhaustive
+322 |             forName: Settings.didChange, object: nil, queue: .main
+323 |         ) { [weak self] notification in
+324 |             switch notification.userInfo?[Settings.changeUserInfoKey] as? Settings.Change {
+    |             |- error: switch must be exhaustive
+    |             `- note: add missing case: '.some(.scrollbarStyle)'
+325 |             case .menuBarPercentage, .menuBarIconStyle:
+326 |                 self?.refreshStatusItem()
+error: fatalError
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

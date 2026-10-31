@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "implementation": "full-charge 3D double orbit",
+  "baseCommit": "cce72f9551ce5023153dfc88c4f85bd2c2a7bb08",
+  "finalFocusedSwift": {
+    "tests": 23,
+    "failures": 0,
+    "registeredPreferences": 3,
+    "remainingPreferences": 0
+  },
+  "finalNativeInteraction": {
+    "checks": 524,
+    "failures": 0
+  },
+  "finalLiveCapture": {
+    "frames": 96,
+    "fps": 8,
+    "assertions": 22,
+    "failures": 0
+  },
+  "earlierStaticMatrix": {
+    "assertions": 6926,
+    "failures": 0,
+    "note": "Before final implicit-visibility fix; unchanged geometry/layout."
+  },
+  "finalUniversalBuild": {
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "passed": true,
+    "distribution": "ad-hoc verification only"
+  },
+  "fullSwiftSuite": {
+    "tests": 739,
+    "failedTests": 1,
+    "failedAssertions": 3,
+    "baselineReproduced": true,
+    "test": "testModeSliderRestingSelectionMeetsTrackEdges"
+  },
+  "guestCleanupPassed": true,
+  "ownedVMRemoved": true,
+  "canonicalInstallationChanged": false,
+  "releasePublished": false,
+  "hostCleanupPassed": true,
+  "rawEvidenceArchive": {
+    "archive": "dist/full-charge-native-validation-20261031-4ea23e9d.tar.gz",
+    "sha256": "94b4a837d1acfd5d96fc2eb6ba006e3758b41d8d8c3fe31257b5e2396f07a2ea",
+    "bytes": 82483628
+  }
+}

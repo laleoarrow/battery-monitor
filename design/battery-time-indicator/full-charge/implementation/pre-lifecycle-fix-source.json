@@ -1,0 +1,14 @@
+{
+  "baseCommit": "cce72f9551ce5023153dfc88c4f85bd2c2a7bb08",
+  "sourceArchiveSHA256": "4fe74cf7ecf72896017d265c675e9f199d94a50b9a9ad7f98d45d838dd5a7c3b",
+  "scope": "Base commit plus full-charge production/test changes; excludes in-progress concurrent scrollbar implementation.",
+  "overlaidFiles": {
+    "Popover/BatteryTimeIndicatorView.swift": "73bcd6ec4b9b00ed426482fcb1aa402a2346a59f6e912e9147a9d60d960b834c",
+    "Popover/FullChargeOrbit.swift": "cea6a9dfb5978e53133414bb48f11d4b700369e8cf09d4b48a32fa3f74dfac19",
+    "SwiftTests/BatteryTimeIndicatorTests.swift": "9e9136ec901c3e1d4605828ac77b49667d7b0cdb638ed6c6f8fa312458ed7e45",
+    "tests/interaction/main.swift": "900afa41e9e1c554b4a70781f5e2d9f50976dbdb87c984351939804b11c7272a",
+    "tests/visual/capture_battery_time_indicator.swift": "0db0059eab700a963dcefa08d22a22d275da712fa45c094ada379cedaed38a04",
+    "Popover/PopoverContentView.swift": "bf77ad95a93413289119aa4570fe6ca64c932e6000521fef85cb56bd0ad57944",
+    "SwiftTests/BatteryRuntimePresentationTests.swift": "7974742d3d99dd47427d6ce7eb4d6a1138ee796e28810281fdf97ff48691d322"
+  }
+}

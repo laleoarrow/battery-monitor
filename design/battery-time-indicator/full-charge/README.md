@@ -1,8 +1,10 @@
 # Fully Charged — 3D double-orbit design proposal
 
-2026-10-31 design preview requested by the user. This is a proposal awaiting
-review: no production App code, installed payload, release, or mail was changed.
-The previously selected placement beside the time caption is retained.
+2026-10-31 design preview requested and approved by the user. The approved
+revision is integrated into the native App; verification is recorded in
+`implementation/README.md`. The previously selected placement beside the time
+caption is retained. The previews below remain design artifacts, separate from
+the native verification captures.
 
 The initial draft was rejected because its projected ellipses remained outside
 the sphere, so the front/back layering did not produce visible occlusion. Its

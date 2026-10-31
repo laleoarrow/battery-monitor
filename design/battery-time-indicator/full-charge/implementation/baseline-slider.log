@@ -1,0 +1,196 @@
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/.codex': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/.github': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/design-qa.md': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/TODO.md': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/docs': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/README.md': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/AGENTS.md': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/script': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/Support': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/HANDOFF.md': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/WidgetExtensionInfo.plist': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/dist': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/battery_monitor.py': File not found.
+warning: 'run.n5s3di': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/website': File not found.
+Building for debugging...
+[0/19] /Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/.build/arm64-apple-macosx/debug/WattsonPackageTests.derived/runner.swift
+[1/19] Write sources
+[4/19] Write Wattson-entitlement.plist
+[5/19] Write sources
+[5/19] Write wattson-helper-entitlement.plist
+[5/19] Write sources
+[9/19] Copying Fixtures
+[10/19] Write swift-version--58304C5D6DBC2206.txt
+[12/85] Compiling WattsonHelperV5Support TopProcesses.swift
+[13/85] Compiling WattsonHelperV5Support ProcessTermination.swift
+[14/85] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[15/85] Emitting module WattsonHelperV5Support
+[16/91] Emitting module WattsonHelper
+[17/91] Compiling WattsonHelper wattson-helper.swift
+[17/91] Write Objects.LinkFileList
+[18/91] Linking wattson-helper
+[19/91] Applying wattson-helper
+[21/91] Compiling Wattson HistoryChart.swift
+[22/91] Compiling Wattson LoginItemController.swift
+[23/91] Compiling Wattson PopoverPlacement.swift
+[24/91] Compiling Wattson PopupEventLog.swift
+[25/91] Compiling Wattson BatteryIcon.swift
+[26/91] Compiling Wattson BatteryIcon27.swift
+[27/91] Compiling Wattson ClickRouter.swift
+[28/91] Compiling Wattson ModuleIconArtwork.swift
+[29/95] Compiling Wattson PopoverStyle.swift
+[30/95] Compiling Wattson PowerFlowLayer.swift
+[31/95] Compiling Wattson PowerIconView.swift
+[32/95] Compiling Wattson ProcessActionButton.swift
+[33/95] Compiling Wattson PowerObservationShadow.swift
+[34/95] Compiling Wattson PowerObservationTrace.swift
+[35/95] Compiling Wattson PowerObservationWireV5.swift
+[36/95] Compiling Wattson PowerSnapshot.swift
+[37/95] Compiling Wattson FeedbackDiagnostics.swift
+[38/95] Compiling Wattson GlassBackgroundView.swift
+[39/95] Compiling Wattson HelperClient.swift
+[40/95] Compiling Wattson HelperClientPowerObservationV5.swift
+[41/95] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[42/95] Compiling Wattson BatteryRuntimeEstimate.swift
+[43/95] Compiling Wattson BatterySampler.swift
+[44/95] Compiling Wattson AppleSmartBatteryObservationReader.swift
+[45/95] Compiling Wattson DirectSMCObservationReader.swift
+[46/95] Compiling Wattson PowerHistory.swift
+[47/95] Compiling Wattson PowerObservationFusion.swift
+[48/95] Compiling Wattson PowerObservationFusionReplay.swift
+[49/95] Compiling Wattson PowerObservationRuntimeController.swift
+[50/95] Emitting module Wattson
+[51/95] Compiling Wattson PowerObservationCaptureCommand.swift
+[52/95] Compiling Wattson PowerObservationCollector.swift
+[53/95] Compiling Wattson PowerObservationJSONLWriter.swift
+[54/95] Compiling Wattson EnergyMode.swift
+[55/95] Compiling Wattson NativeModeSegmentedControl.swift
+[56/95] Compiling Wattson PopoverContentView.swift
+[57/95] Compiling Wattson PopoverController.swift
+[58/95] Compiling Wattson PopoverPreview.swift
+[59/95] Compiling Wattson SettingsAppearance.swift
+[60/95] Compiling Wattson SystemBatteryHealth.swift
+[61/95] Compiling Wattson SystemBatteryIcon.swift
+[62/95] Compiling Wattson TopProcesses.swift
+[63/95] Compiling Wattson InteractiveGlassModeControl.swift
+[64/95] Compiling Wattson LaneLayer.swift
+[65/95] Compiling Wattson ModeSliderView.swift
+[66/95] Compiling Wattson NativeGlassModeControl.swift
+[67/95] Compiling Wattson ProcessTermination.swift
+[68/95] Compiling Wattson ProcessWhitelist.swift
+[69/95] Compiling Wattson RawPowerObservation.swift
+[70/95] Compiling Wattson Settings.swift
+[71/95] Compiling Wattson TopProcessesMonitor.swift
+[72/95] Compiling Wattson UpdateChecker.swift
+[73/95] Compiling Wattson VisualEncoding.swift
+[74/95] Compiling Wattson AppDelegate.swift
+[75/95] Compiling Wattson ProcessTerminationPresenter.swift
+[76/95] Compiling Wattson RingGaugeLayer.swift
+[77/95] Compiling Wattson TopProcessesView.swift
+[78/95] Compiling Wattson main.swift
+[79/95] Compiling WattsonHelperV5SupportTests ProcessTerminationTests.swift
+[80/95] Compiling WattsonHelperV5SupportTests PowerObservationV5SupportTests.swift
+[81/95] Emitting module WattsonHelperV5SupportTests
+[82/95] Compiling WattsonHelperV5SupportTests TopProcessesTests.swift
+[83/95] Compiling Wattson FooterHoverFeedbackView.swift
+[84/95] Compiling Wattson GlassPopoverMaterialView.swift
+[85/95] Compiling Wattson GlassPopoverPanel.swift
+[86/95] Compiling Wattson HistoryLayer.swift
+[87/95] Compiling Wattson ProcessWhitelistWindowController.swift
+[88/95] Compiling Wattson SettingsWindowController.swift
+[89/95] Compiling Wattson StatusItemController.swift
+[90/95] Compiling Wattson BatteryTimeIndicatorView.swift
+[90/95] Write Objects.LinkFileList
+[91/95] Linking Wattson
+[92/95] Applying Wattson
+[94/156] Compiling WattsonTests ColorSchemeSettingsTests.swift
+[95/156] Compiling WattsonTests DockIconSettingsTests.swift
+[96/156] Compiling WattsonTests FeedbackDiagnosticsTests.swift
+[97/156] Compiling WattsonTests FlowNodeIconTests.swift
+[98/156] Emitting module WattsonTests
+[99/159] Compiling WattsonTests TestDefaultsCleanup.swift
+[100/159] Compiling WattsonTests TopProcessSettingsTests.swift
+[101/159] Compiling WattsonTests TopProcessesMonitorTests.swift
+[102/159] Compiling WattsonTests TopProcessesTests.swift
+[103/159] Compiling WattsonTests ProcessActionButtonTests.swift
+[104/159] Compiling WattsonTests ProcessTerminationPresenterTests.swift
+[105/159] Compiling WattsonTests ProcessTerminationTests.swift
+[106/159] Compiling WattsonTests ProcessWhitelistSettingsTests.swift
+[107/159] Compiling WattsonTests GlassPopoverShapeTests.swift
+[108/159] Compiling WattsonTests GlassTransparencySettingsTests.swift
+[109/159] Compiling WattsonTests GlobalPopoverClickTests.swift
+[110/159] Compiling WattsonTests HistoryChartTests.swift
+[111/159] Compiling WattsonTests PowerObservationFusionFoundationTests.swift
+[112/159] Compiling WattsonTests PowerObservationFusionReplayTests.swift
+[113/159] Compiling WattsonTests PowerObservationPhase2FixtureTests.swift
+[114/159] Compiling WattsonTests PowerObservationRuntimeTests.swift
+[115/159] Compiling WattsonTests HistoryViewTests.swift
+[116/159] Compiling WattsonTests InAppLogoSettingsTests.swift
+[117/159] Compiling WattsonTests InteractiveGlassModeControlTests.swift
+[118/159] Compiling WattsonTests LiquidGlassStyleSettingsTests.swift
+[119/159] Compiling WattsonTests RingMetricTelemetryTests.swift
+[120/159] Compiling WattsonTests RingMetricViewTests.swift
+[121/159] Compiling WattsonTests SamplingEfficiencyTests.swift
+[122/159] Compiling WattsonTests SettingsControlsRecoveryTests.swift
+[123/159] Compiling WattsonTests MenuBarIconStyleSettingsTests.swift
+[124/159] Compiling WattsonTests ModeSliderAppearanceTests.swift
+[125/159] Compiling WattsonTests ModuleOrderTests.swift
+[126/159] Compiling WattsonTests NativeGlassModeControlTests.swift
+[127/159] Compiling WattsonTests SettingsGlassOpticalMarginTests.swift
+[128/159] Compiling WattsonTests SettingsIconReuseTests.swift
+[129/159] Compiling WattsonTests StatusClickDismissalTests.swift
+[130/159] Compiling WattsonTests SystemBatteryHealthTests.swift
+[131/159] Compiling WattsonTests PowerObservationShadowTests.swift
+[132/159] Compiling WattsonTests PowerObservationWireV5Tests.swift
+[133/159] Compiling WattsonTests PowerPresentationStateTests.swift
+[134/159] Compiling WattsonTests PowerSymbolArtworkTests.swift
+[135/159] Compiling WattsonTests FooterHoverFeedbackViewTests.swift
+[136/159] Compiling WattsonTests FooterHoverIntegrationTests.swift
+[137/159] Compiling WattsonTests GlassPopoverBackgroundTests.swift
+[138/159] Compiling WattsonTests GlassPopoverPanelTests.swift
+[139/159] Compiling WattsonTests NativeModeSegmentedControlTests.swift
+[140/159] Compiling WattsonTests PopoverAppearanceTests.swift
+[141/159] Compiling WattsonTests PopoverArrowSettingsTests.swift
+[142/159] Compiling WattsonTests PopoverPlacementTests.swift
+[143/159] Compiling WattsonTests PowerFlowEfficiencyTests.swift
+[144/159] Compiling WattsonTests PowerHistoryFreshnessTests.swift
+[145/159] Compiling WattsonTests PowerInputFallbackTests.swift
+[146/159] Compiling WattsonTests PowerObservationCaptureTests.swift
+[147/159] Compiling WattsonTests BatteryIcon27Tests.swift
+[148/159] Compiling WattsonTests BatteryRuntimeEstimateTests.swift
+[149/159] Compiling WattsonTests BatteryRuntimePresentationTests.swift
+[150/159] Compiling WattsonTests BatteryTimeIndicatorTests.swift
+[151/159] Compiling WattsonTests ProcessWhitelistTests.swift
+[152/159] Compiling WattsonTests ProcessWhitelistViewTests.swift
+[153/159] Compiling WattsonTests RawPowerObservationTests.swift
+[154/159] Compiling WattsonTests RingMetricSettingsTests.swift
+[155/159] Compiling WattsonTests TopProcessesViewTests.swift
+[156/159] Compiling WattsonTests WattsonTests.swift
+[157/159] Compiling WattsonTests resource_bundle_accessor.swift
+[158/161] Compiling WattsonPackageTests runner.swift
+[159/161] Emitting module WattsonPackageTests
+[159/161] Write Objects.LinkFileList
+[160/161] Linking WattsonPackageTests
+Build complete! (18.92s)
+Test Suite 'Selected tests' started at 2026-10-31 10:32:37.240.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 10:32:37.241.
+Test Suite 'WattsonTests' started at 2026-10-31 10:32:37.241.
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' started.
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-baseline.noindex/run.N5s3Di/SwiftTests/WattsonTests.swift:354: error: -[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges] : XCTAssertEqualWithAccuracy failed: ("15.0") is not equal to ("15.5") +/- ("0.01")
+Test Case '-[WattsonTests.WattsonTests testModeSliderRestingSelectionMeetsTrackEdges]' failed (0.491 seconds).
+Test Suite 'WattsonTests' failed at 2026-10-31 10:32:37.732.
+	 Executed 1 test, with 3 failures (0 unexpected) in 0.491 (0.491) seconds
+Test Suite 'WattsonPackageTests.xctest' failed at 2026-10-31 10:32:37.732.
+	 Executed 1 test, with 3 failures (0 unexpected) in 0.491 (0.491) seconds
+Test Suite 'Selected tests' failed at 2026-10-31 10:32:37.732.
+	 Executed 1 test, with 3 failures (0 unexpected) in 0.491 (0.492) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=0 remaining=0

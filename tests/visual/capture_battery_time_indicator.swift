@@ -1,7 +1,7 @@
 import AppKit
 import CryptoKit
 
-/// Four production runtime sections in an owned fixture window. Captures the
+/// Five production runtime sections in an owned fixture window. Captures the
 /// actual WindowServer output, including Core Animation's presentation layers.
 @main
 private enum CaptureBatteryTimeIndicator {
@@ -46,6 +46,10 @@ private final class Probe: NSObject, NSApplicationDelegate {
         ("Calculating", .init(percent: 67, batteryW: -12, systemW: 12,
                              batteryTimeEstimate: .remaining(nil))),
         ("Unavailable", .init(percent: 67, batteryW: -12, systemW: 12)),
+        ("Fully Charged · 3D double orbit", .init(percent: 100, plugged: true,
+                                               adapterW: 21.1, systemW: 21.1,
+                                               batteryTimeEstimate: .full,
+                                               batteryTimeEstimateSource: .system)),
     ]
 
     init(directory: URL) { self.directory = directory }
@@ -88,7 +92,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
         background.isOpaque = true
         windows.append(background)
         background.orderFrontRegardless()
-        let size = NSSize(width: PopoverStyle.width, height: 4 * (PopoverRuntimeView.preferredHeight + 24) + 24)
+        let size = NSSize(width: PopoverStyle.width,
+                          height: CGFloat(fixtures.count) * (PopoverRuntimeView.preferredHeight + 24) + 24)
         let window = NSWindow(contentRect: NSRect(x: screen.frame.midX - size.width / 2,
                                                  y: screen.frame.midY - size.height / 2,
                                                  width: size.width, height: size.height),
@@ -133,6 +138,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try check(animationCount(rows[1].layer) > 0, "Fallback indicator is not breathing")
             try check(animationCount(rows[2].layer) > 0, "Calculating indicator is not animated")
             try check(animationCount(rows[3].layer) > 0, "Unavailable indicator is not animated")
+            try check(animationCount(rows[4].layer) > 0, "Full-charge double orbit is not animated")
             try capture(window, background: background, name: "states-\(scheme.rawValue)", elapsed: nil)
         }
         // Restart only the fixture's presentation so the saved sequence begins
@@ -154,7 +160,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         let evidence: [String: Any] = [
             "schema": 1, "assertions": assertions, "failures": 0, "cases": records,
             "framesPerSecond": 8, "frameCount": 96,
-            "method": "WindowServer capture of four production PopoverRuntimeView instances in an owned Classic fixture window, light and dark, followed by 12 seconds of live Core Animation output in dark appearance.",
+            "method": "WindowServer capture of five production PopoverRuntimeView instances in an owned Classic fixture window, light and dark, followed by 12 seconds of live Core Animation output in dark appearance. The full-charge row uses the production 3D double orbit and the current power-state palette.",
             "limitations": "Fixture labels and container are for comparison only. Battery values and sources are deterministic fixtures. This does not validate hardware telemetry or native popup compositing.",
         ]
         try JSONSerialization.data(withJSONObject: evidence, options: [.prettyPrinted, .sortedKeys])
@@ -179,7 +185,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
 
     private func animationCount(_ layer: CALayer?) -> Int {
         guard let layer else { return 0 }
-        return (layer.animationKeys()?.count ?? 0) + (layer.sublayers ?? []).reduce(0) { $0 + animationCount($1) }
+        return (layer.animationKeys()?.count ?? 0) + animationCount(layer.mask)
+            + (layer.sublayers ?? []).reduce(0) { $0 + animationCount($1) }
     }
     private func pause(_ seconds: Double) async throws { try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000)) }
     private func check(_ passed: Bool, _ message: String) throws { assertions += 1; if !passed { throw failure(message) } }

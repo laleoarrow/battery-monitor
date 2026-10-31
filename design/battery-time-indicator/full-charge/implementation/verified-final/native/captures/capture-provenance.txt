@@ -1,0 +1,7 @@
+bundleID=com.leoarrow.wattson.topprocessesqa.d5cce4f1-9d02-443e-ab0b-2341d5188821
+bundlePath=/Users/admin/Project/.wattson-ui-vm.noindex/run.N4e0bU/source/.build/top-processes-capture.noindex/run.tEh0kA/TopProcessesProbe.app
+moduleOnly=0
+gradientComparison=0
+compactOnly=0
+settingsOnly=0
+highContrast=0

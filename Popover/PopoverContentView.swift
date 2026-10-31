@@ -191,7 +191,8 @@ final class PopoverRuntimeView: PopoverSection {
                 ? "macOS estimates time until the battery is full while charging. It changes with charging conditions and workload."
                 : "macOS estimates remaining battery time for current usage. It changes with workload."
         }
-        if sourceIndicator.status == .calculating || sourceIndicator.status == .unavailable {
+        if sourceIndicator.status == .calculating || sourceIndicator.status == .unavailable
+            || sourceIndicator.status == .full {
             help = sourceIndicator.accessibilityHelp() ?? help
         }
         runtime.setAccessibilityLabel(snapshot.plugged ? "Estimated time to full charge" : "Estimated battery runtime")

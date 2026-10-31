@@ -2877,7 +2877,7 @@ if !screenLocked {
     setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
     func indicatorLayers(_ layer: CALayer?) -> [CALayer] {
         guard let layer else { return [] }
-        return [layer] + (layer.sublayers ?? []).flatMap { indicatorLayers($0) }
+        return [layer] + (layer.sublayers ?? []).flatMap { indicatorLayers($0) } + indicatorLayers(layer.mask)
     }
     func indicatorAnimations(_ view: NSView) -> [(CALayer, String, CAAnimation)] {
         indicatorLayers(view.layer).flatMap { layer in
@@ -2982,7 +2982,7 @@ if !screenLocked {
                   && lap[5].planetOpacity > 0.9 && lap.last!.planetOpacity < 0.65)
         let pauseStart = observe(at: 2.9)
         let pauseEnd = observe(at: 3.15)
-        let particles = (fixture.layer?.sublayers ?? []).filter { !($0 is CAGradientLayer) }
+        let particles = (fixture.layer?.sublayers ?? []).filter { !($0 is CAGradientLayer) && !$0.isHidden }
         check("每圈后半秒星点和尾迹均不可见，主光点保持暗态",
               pauseStart.cometOpacity >= 0 && pauseStart.cometOpacity < 0.02
                   && pauseEnd.cometOpacity >= 0 && pauseEnd.cometOpacity < 0.02
@@ -3003,6 +3003,107 @@ if !screenLocked {
     sample.batteryTimeEstimateSource = .system
     refreshIndicator()
     check("系统预测恢复立即清除呼吸星轨及所有尾迹动画",
+          fixture.status == .system && indicatorAnimations(fixture).isEmpty)
+
+    sample = PowerSnapshot(percent: 100, plugged: true, adapterW: 12, systemW: 12,
+                           batteryTimeEstimate: .full, batteryTimeEstimateSource: .system)
+    refreshIndicator()
+    let fullAnimations = indicatorAnimations(fixture)
+    let fullHeads = [0, 1].compactMap { index in
+        indicatorLayers(fixture.layer).first { $0.name == "full-orbit-\(index)-head" }
+    }
+    check("满电使用两颗慢速错周期星点，主体恒亮",
+          fixture.status == .full && fullHeads.count == 2
+              && fullHeads.enumerated().allSatisfy { index, head in
+                  abs((head.animation(forKey: "full-orbit")?.duration ?? 0)
+                      - FullChargeOrbitGeometry.periods[index]) < 0.000_001
+              }
+              && !fullAnimations.contains { $0.1 == "breathing" }
+              && (planet?.opacity ?? 0) == 1)
+    let fullEpochs = fullAnimations.map { $0.2.beginTime }
+    spin(0.1)
+    refreshIndicator()
+    check("满电重复采样保留双轨连续相位",
+          !fullEpochs.isEmpty && indicatorAnimations(fixture).map { $0.2.beginTime } == fullEpochs)
+    fixture.appearance = NSAppearance(named: .darkAqua)
+    fixture.viewDidChangeEffectiveAppearance()
+    check("满电切换主题不重新启动双轨动画",
+          indicatorAnimations(fixture).map { $0.2.beginTime } == fullEpochs)
+    CATransaction.flush()
+    spin(0.05)
+    let firstPositions = fullHeads.map { $0.presentation()?.position }
+    spin(0.3)
+    let nextPositions = fullHeads.map { $0.presentation()?.position }
+    check("真实窗口中的两颗满电星点持续移动",
+          fullHeads.count == 2 && zip(firstPositions, nextPositions).allSatisfy { first, next in
+              guard let first, let next else { return false }
+              return hypot(next.x - first.x, next.y - first.y) > 0.05
+          })
+    check("满电星点透视缩放仍保持圆形",
+          fullHeads.count == 2 && fullHeads.allSatisfy {
+              guard let shown = $0.presentation() else { return false }
+              return abs(shown.bounds.width - shown.bounds.height) < 0.000_001
+                  && abs(shown.transform.m11 - shown.transform.m22) < 0.000_001
+          })
+    fixture.setPresentationActive(false)
+    fixture.setPresentationActive(true)
+    CATransaction.flush()
+    if fullHeads.count == 2, let animation = fullHeads[0].animation(forKey: "full-orbit") {
+        let epoch = fullHeads[0].convertTime(animation.beginTime, to: nil)
+        var crossings: [(orbit: Int, front: Bool, elapsed: Double)] = []
+        for orbit in 0..<2 {
+            for front in [false, true] {
+                let times = (1...1000).map { FullChargeOrbitGeometry.periods[orbit] * Double($0) / 1000 }
+                let time = times.filter {
+                    (FullChargeOrbitGeometry.sample(orbit: orbit, time: $0).depth > 0) == front
+                }.min {
+                    let a = FullChargeOrbitGeometry.sample(orbit: orbit, time: $0).point
+                    let b = FullChargeOrbitGeometry.sample(orbit: orbit, time: $1).point
+                    return hypot(a.x, a.y) < hypot(b.x, b.y)
+                }!
+                crossings.append((orbit, front, time))
+            }
+        }
+        for crossing in crossings.sorted(by: { $0.elapsed < $1.elapsed }) {
+            spin(max(0, epoch + crossing.elapsed - CACurrentMediaTime()))
+            let head = fullHeads[crossing.orbit]
+            let expected = FullChargeOrbitGeometry.sample(orbit: crossing.orbit,
+                                                           time: CACurrentMediaTime() - epoch)
+            let shown = head.presentation()
+            let point = CGPoint(x: (shown?.position.x ?? -100) - fixture.bounds.midX,
+                                y: (shown?.position.y ?? -100) - fixture.bounds.midY)
+            check("满电星点\(crossing.orbit + 1)真实经过球体\(crossing.front ? "前方" : "后方")",
+                  hypot(point.x, point.y) < FullChargeOrbitGeometry.planetRadius
+                      && (shown?.zPosition ?? 0) * expected.depth > 0
+                      && (crossing.front ? (shown?.zPosition ?? 0) > 0 : (shown?.zPosition ?? 0) < 0)
+                      && hypot(point.x - expected.point.x, point.y - expected.point.y) < 0.45)
+        }
+        check("满电球体不透明且位于前后星轨之间",
+              planet?.zPosition == 0 && planet?.opacity == 1
+                  && ((planet as? CAGradientLayer)?.colors as? [CGColor] ?? []).allSatisfy { $0.alpha == 1 })
+    } else { check("满电具备可取样的双星轨真实呈现层", false) }
+    for (name, cancel, restore) in cancellations {
+        refreshIndicator()
+        check("满电双轨\(name)前确有动画", !indicatorAnimations(fixture).isEmpty)
+        cancel()
+        check("满电双轨\(name)立即停止所有动画", indicatorAnimations(fixture).isEmpty)
+        refreshIndicator()
+        check("满电双轨\(name)期间刷新不重启动画", indicatorAnimations(fixture).isEmpty)
+        restore()
+    }
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+    refreshIndicator()
+    check("减少动态效果保留满电状态和说明，静止双轨",
+          fixture.status == .full && indicatorAnimations(fixture).isEmpty
+              && (fixture.accessibilityValue() as? String ?? "").localizedCaseInsensitiveContains("full"))
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    refreshIndicator()
+    check("恢复动态效果继续显示满电双轨", !indicatorAnimations(fixture).isEmpty)
+    fixture.appearance = nil
+    sample = PowerSnapshot(percent: 67, batteryW: -12, systemW: 12,
+                           batteryTimeEstimate: .remaining(120), batteryTimeEstimateSource: .system)
+    refreshIndicator()
+    check("退出满电状态立即清除双星轨动画",
           fixture.status == .system && indicatorAnimations(fixture).isEmpty)
 
     // Failure is a source status, while stale power flow must stay frozen.

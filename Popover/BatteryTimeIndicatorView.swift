@@ -3,13 +3,14 @@ import AppKit
 /// A small source indicator. Its animation is presentation-only: it never
 /// schedules sampling or changes the battery estimate.
 final class BatteryTimeIndicatorView: NSView {
-    enum Status { case system, fallback, calculating, unavailable }
+    enum Status { case system, fallback, calculating, full, unavailable }
 
     private(set) var status: Status = .unavailable
     private let planet = CAGradientLayer()
     private let halo = CAGradientLayer()
     private let comet = CALayer()
     private let dust = (0..<7).map { _ in CALayer() }
+    private lazy var fullOrbit = FullChargeOrbit(host: layer!)
     private var tint = PopoverStyle.neutral
     private var animationsEnabled = false
     private var presentationActive = false
@@ -27,7 +28,9 @@ final class BatteryTimeIndicatorView: NSView {
              .charging(let minutes) where snapshot.plugged:
             guard let minutes else { return .calculating }
             guard minutes >= 0 else { return .unavailable }
-        case .full where snapshot.plugged, .notCharging where snapshot.plugged:
+        case .full where snapshot.plugged:
+            return .full
+        case .notCharging where snapshot.plugged:
             break
         default:
             return .unavailable
@@ -76,6 +79,7 @@ final class BatteryTimeIndicatorView: NSView {
                 particle.opacity = 0
             }
         }
+        fullOrbit.layout(in: bounds)
         syncMotion()
     }
 
@@ -101,6 +105,7 @@ final class BatteryTimeIndicatorView: NSView {
             default: source = "Battery reading"
             }
         case .calculating: source = "Calculating"
+        case .full: source = "Fully Charged"
         case .unavailable: source = "Unavailable"
         }
         let help: String
@@ -112,10 +117,13 @@ final class BatteryTimeIndicatorView: NSView {
                 ? "Waiting for a usable time-to-full estimate while charging."
                 : "Waiting for a usable estimate of remaining battery time.")
                 + " Breathing theme light with an orbiting spark."
+        case .full:
+            help = "Battery fully charged. Two slowly orbiting stars around a steady theme light."
         case .unavailable:
             help = degraded ? "Battery data could not be read. Red pulse."
                 : "A battery time estimate is currently unavailable. Red pulse; monitoring continues."
         }
+        setAccessibilityLabel(status == .full ? "Battery charge state" : "Battery time source")
         setAccessibilityValue(source)
         setAccessibilityHelp(help)
         toolTip = help
@@ -142,10 +150,12 @@ final class BatteryTimeIndicatorView: NSView {
                 self.halo.colors = [color.withAlphaComponent(0.30).cgColor,
                                     color.withAlphaComponent(0.13).cgColor,
                                     color.withAlphaComponent(0).cgColor]
+                self.halo.zPosition = self.status == .full ? -3 : 0
                 self.halo.isHidden = contrast || reduceTransparency
                 self.comet.backgroundColor = highlight.cgColor
                 for particle in self.dust { particle.backgroundColor = color.cgColor }
             }
+            fullOrbit.updateColors(base: color, highContrast: contrast, reduceTransparency: reduceTransparency)
         }
         syncMotion()
     }
@@ -165,9 +175,14 @@ final class BatteryTimeIndicatorView: NSView {
     }
 
     private func syncMotion() {
+        fullOrbit.setVisible(status == .full)
         guard animationsEnabled, presentationActive, window?.isVisible == true,
               !isHiddenOrHasHiddenAncestor, !visibleRect.isEmpty, !Self.reducesMotion,
               status != .system else { stopMotion(); return }
+        if status == .full {
+            fullOrbit.start(at: CACurrentMediaTime())
+            return
+        }
         // Fixed keys preserve phase across normal two-second telemetry updates.
         if planet.animation(forKey: "breathing") == nil
             || (status == .calculating && comet.animation(forKey: "orbit") == nil) {
@@ -198,6 +213,7 @@ final class BatteryTimeIndicatorView: NSView {
 
     private func stopMotion() {
         for item in [planet, halo, comet] + dust { item.removeAllAnimations() }
+        fullOrbit.stop()
     }
 
     private func orbitPoint(angle: CGFloat) -> CGPoint {

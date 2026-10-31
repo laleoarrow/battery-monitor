@@ -1,0 +1,69 @@
+Building Wattson 5.0.2 (5.0.2) for arm64 and x86_64...
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/docs': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/WidgetExtensionInfo.plist': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/TODO.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/AGENTS.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.github': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/battery_monitor.py': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/script': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/Support': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/design-qa.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/README.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/website': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.codex': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/HANDOFF.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/dist': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.swift': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (27.59s)
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/Support': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.entitlements': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.swift': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/TODO.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/dist': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/website': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.github': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/README.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/docs': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/WidgetExtensionInfo.plist': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/design-qa.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/BatteryPowerWidgetExtension.xcodeproj': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/battery_monitor.py': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/script': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.codex': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/AGENTS.md': File not found.
+warning: 'run.o9gfhq': Invalid Exclude '/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/HANDOFF.md': File not found.
+Building for production...
+[0/8] Write sources
+[3/8] Write swift-version--58304C5D6DBC2206.txt
+[5/10] Compiling WattsonHelperV5Support PowerObservationV5Support.swift
+[6/11] Compiling WattsonHelper wattson-helper.swift
+[6/11] Write Objects.LinkFileList
+[7/11] Linking wattson-helper
+[9/11] Compiling Wattson AppleSmartBatteryPowerObservationReader.swift
+[9/11] Write Objects.LinkFileList
+[10/11] Linking Wattson
+Build complete! (28.73s)
+/* com.apple.actool.compilation-results */
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/icon-assets/Assets.car
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/icon-assets/WattsonGlass.icns
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/icon-assets/icon-info.plist
+
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/com.leoarrow.wattson.helper: replacing existing signature
+/Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/Wattson.app: replacing existing signature
+Verified universal release build for Wattson 5.0.2
+Built universal app: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/Wattson.app
+Built universal helper: /Users/leoarrow/Project/mypackage/agents/电池功率/.build/full-charge-verification.noindex/run.O9gfHQ/.build/local.noindex/release.dpR7vh/com.leoarrow.wattson.helper
+Signing: ad-hoc community build (not notarized)
+Build verified; disposable app and build files are removed on exit.

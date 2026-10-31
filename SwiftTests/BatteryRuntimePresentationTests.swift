@@ -213,8 +213,15 @@ final class BatteryRuntimePresentationTests: XCTestCase {
             let reading = try XCTUnwrap(runtime.subviews.compactMap { $0 as? NSTextField }.first { $0.stringValue == value })
             XCTAssertEqual(reading.accessibilityLabel(), snapshot.plugged
                 ? "Estimated time to full charge" : "Estimated battery runtime")
-            XCTAssertTrue(reading.accessibilityHelp()?.contains(snapshot.plugged
-                ? "while charging" : "remaining battery time") ?? false)
+            let help = try XCTUnwrap(reading.accessibilityHelp())
+            if snapshot.batteryTimeEstimate == .full {
+                XCTAssertTrue(help.localizedCaseInsensitiveContains("fully charged"))
+                XCTAssertFalse(help.contains("while charging"))
+                XCTAssertFalse(help.contains("macOS"))
+                XCTAssertFalse(help.localizedCaseInsensitiveContains("estimate"))
+            } else {
+                XCTAssertTrue(help.contains(snapshot.plugged ? "while charging" : "remaining battery time"))
+            }
             XCTAssertTrue(zip(runtime.subviews, originalSubviews).allSatisfy { $0 === $1 })
         }
     }

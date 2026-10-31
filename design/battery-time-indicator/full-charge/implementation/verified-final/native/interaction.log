@@ -1,0 +1,7 @@
+/Users/admin/Project/.wattson-ui-vm.noindex/run.N4e0bU/source/tests/interaction/main.swift:3083:31: error: value of type 'CALayer' has no member 'colors'
+3081 |         check("满电球体不透明且位于前后星轨之间",
+3082 |               planet?.zPosition == 0 && planet?.opacity == 1
+3083 |                   && (planet?.colors as? [CGColor] ?? []).allSatisfy { $0.alpha == 1 })
+     |                               `- error: value of type 'CALayer' has no member 'colors'
+3084 |     } else { check("满电具备可取样的双星轨真实呈现层", false) }
+3085 |     for (name, cancel, restore) in cancellations {
