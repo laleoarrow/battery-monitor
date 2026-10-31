@@ -33,6 +33,9 @@ phase and leaving full charge removes every animation, including masks.
 
 - Final focused Swift run: **23 tests, 0 failures** across the indicator and
   runtime presentation suites; registered preference domains **3, remaining 0**.
+- After both feature commits were integrated, current source `6de93c1` also
+  compiled and passed the same **23 tests**, with **3 registered / 0 remaining**
+  preference domains (`integrated-swift-tests.log`).
 - Final real-window interaction: **524 checks, 0 failures**, including actual
   presentation-layer crossings before and behind the sphere, round heads,
   continuous phase, hiding, detaching, closing, and Reduce Motion.

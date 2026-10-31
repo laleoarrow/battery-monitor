@@ -1,0 +1,69 @@
+warning: '电池功率': found 1 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /Users/leoarrow/Project/mypackage/agents/电池功率/__pycache__/battery_monitor.cpython-314.pyc
+[0/1] Planning build
+Building for debugging...
+[0/6] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.67s)
+Test Suite 'Selected tests' started at 2026-10-31 10:59:47.453.
+Test Suite 'WattsonPackageTests.xctest' started at 2026-10-31 10:59:47.454.
+Test Suite 'BatteryRuntimePresentationTests' started at 2026-10-31 10:59:47.454.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeRejectsEstimatesFromTheOppositePowerSource]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeRejectsEstimatesFromTheOppositePowerSource]' passed (0.058 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testBatteryTimeSwitchesDirectionAndAccessibleLabelWithoutRebuildingTheView]' passed (0.005 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testFallbackRuntimeShowsApproximationAndExplainsItsSource]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testFallbackRuntimeShowsApproximationAndExplainsItsSource]' passed (0.003 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testHiddenRuntimeSkipsRenderingAndShowsNewestCachedDirectionAndState]' passed (0.083 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testLowBatteryAndLowPowerKeepTheMacOSEstimate]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testLowBatteryAndLowPowerKeepTheMacOSEstimate]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMissingDataUnknownEstimatesAndDegradationNeverReuseOldNumbers]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMissingDataUnknownEstimatesAndDegradationNeverReuseOldNumbers]' passed (0.002 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMixedSupplyNeverShowsATimeToFull]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testMixedSupplyNeverShowsATimeToFull]' passed (0.002 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeMenuChoiceRemovesExactlyItsOwnHeightAndPersists]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeMenuChoiceRemovesExactlyItsOwnHeightAndPersists]' passed (0.068 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionAccessibilityChangesRefreshNeutralWellAndSeparatorInTheExistingContent]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionAccessibilityChangesRefreshNeutralWellAndSeparatorInTheExistingContent]' passed (0.173 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionFollowsLightDarkChangesWithoutChangingItsReadingOrGeometry]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionFollowsLightDarkChangesWithoutChangingItsReadingOrGeometry]' passed (0.003 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionKeepsTheClockBesideItsCaptionAndProminentTime]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeSectionKeepsTheClockBesideItsCaptionAndProminentTime]' passed (0.006 seconds).
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeUsesHoursAndMinutesWithoutLosingOtherHeaderReadings]' started.
+Test Case '-[WattsonTests.BatteryRuntimePresentationTests testRuntimeUsesHoursAndMinutesWithoutLosingOtherHeaderReadings]' passed (0.003 seconds).
+Test Suite 'BatteryRuntimePresentationTests' passed at 2026-10-31 10:59:47.861.
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.406 (0.407) seconds
+Test Suite 'BatteryTimeIndicatorTests' started at 2026-10-31 10:59:47.861.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testCalculatingTakesPrecedenceOverSourceUntilMinutesAreAvailable]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testCalculatingTakesPrecedenceOverSourceUntilMinutesAreAvailable]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullHasItsOwnStateWhilePausedAndMixedSupplyKeepSourceSemantics]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullHasItsOwnStateWhilePausedAndMixedSupplyKeepSourceSemantics]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitLoopsJoinWithoutPositionOrSpeedJumps]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitLoopsJoinWithoutPositionOrSpeedJumps]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitsCrossInFrontOfAndBehindTheOpaquePlanet]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitsCrossInFrontOfAndBehindTheOpaquePlanet]' passed (0.003 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitStarsTrailsAndRingsFollowEverySuppliedThemeColor]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullOrbitStarsTrailsAndRingsFollowEverySuppliedThemeColor]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullTrailsFollowHistoricalMotionOnTheCorrectSideOfThePlanet]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testFullTrailsFollowHistoricalMotionOnTheCorrectSideOfThePlanet]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testMissingInvalidAndWrongDirectionReadingsCannotShowAHealthySource]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testMissingInvalidAndWrongDirectionReadingsCannotShowAHealthySource]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testNumericEstimatesDistinguishSystemAndFallbackSources]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testNumericEstimatesDistinguishSystemAndFallbackSources]' passed (0.000 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testPlanetResolvesItsOwnAppearanceAndFailureColorWithoutMoving]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testPlanetResolvesItsOwnAppearanceAndFailureColorWithoutMoving]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testPlanetUsesTheSameStatePaletteAsTheOtherInstruments]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testPlanetUsesTheSameStatePaletteAsTheOtherInstruments]' passed (0.001 seconds).
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testRuntimeIndicatorUpdatesInPlaceAndExplainsStateWithoutMotion]' started.
+Test Case '-[WattsonTests.BatteryTimeIndicatorTests testRuntimeIndicatorUpdatesInPlaceAndExplainsStateWithoutMotion]' passed (0.002 seconds).
+Test Suite 'BatteryTimeIndicatorTests' passed at 2026-10-31 10:59:47.872.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.010 (0.011) seconds
+Test Suite 'WattsonPackageTests.xctest' passed at 2026-10-31 10:59:47.872.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 0.417 (0.418) seconds
+Test Suite 'Selected tests' passed at 2026-10-31 10:59:47.872.
+	 Executed 23 tests, with 0 failures (0 unexpected) in 0.417 (0.418) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.
+SWIFT_TEST_DEFAULTS_CLEANUP registered=3 remaining=0

@@ -47,5 +47,13 @@
     "archive": "dist/full-charge-native-validation-20261031-4ea23e9d.tar.gz",
     "sha256": "94b4a837d1acfd5d96fc2eb6ba006e3758b41d8d8c3fe31257b5e2396f07a2ea",
     "bytes": 82483628
+  },
+  "integratedWorkingSource": {
+    "commit": "6de93c1",
+    "includesConcurrentScrollbarCommit": "97e7c76",
+    "focusedSwiftTests": 23,
+    "failures": 0,
+    "registeredPreferences": 3,
+    "remainingPreferences": 0
   }
 }
