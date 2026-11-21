@@ -2674,7 +2674,7 @@ check("文件菜单提供标准关闭窗口命令",
           && closeMenuItem?.keyEquivalent == "w"
           && closeMenuItem?.keyEquivalentModifierMask == [.command])
 check("窗口菜单提供标准最小化命令",
-      minimizeMenuItem?.action == #selector(NSWindow.performMiniaturize(_:))
+      minimizeMenuItem?.action == #selector(NSWindow.miniaturize(_:))
           && minimizeMenuItem?.target == nil
           && minimizeMenuItem?.keyEquivalent == "m"
           && minimizeMenuItem?.keyEquivalentModifierMask == [.command])
@@ -2782,7 +2782,8 @@ func postCommand(
 
 let settingsMinimized = postCommand("m", keyCode: 46, to: firstSettingsWindow)
     && runApplication(until: { firstSettingsWindow?.isMiniaturized == true }, timeout: 2.5)
-check("Command-M 经 AppKit 事件循环最小化 Settings 窗口", settingsMinimized)
+check("Command-M 经 AppKit 事件循环最小化 Settings 窗口", settingsMinimized,
+      "visible=\(firstSettingsWindow?.isVisible == true), minimized=\(firstSettingsWindow?.isMiniaturized == true), active=\(app.isActive), key=\(app.keyWindow?.title ?? "nil")")
 
 settingsOwner.showSettings()
 let restoredSettingsBecameKey = runApplication(
@@ -2842,7 +2843,8 @@ if let firstSettingsWindow, unhiddenSettingsBecameKey {
         until: { firstSettingsWindow.attachedSheet == nil && sheet?.isVisible == false },
         timeout: 2.5
     )
-    check("Escape 关闭白名单并释放设置窗口的模态状态", sheetClosed)
+    check("Escape 关闭白名单并释放设置窗口的模态状态", sheetClosed,
+          "visible=\(sheet?.isVisible == true), attached=\(firstSettingsWindow.attachedSheet != nil), key=\(app.keyWindow?.title ?? "nil")")
     if !sheetClosed { whitelist.close() }
 }
 

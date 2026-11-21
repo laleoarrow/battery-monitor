@@ -20,6 +20,7 @@ wattson_cleanup_add_dir "$RUN_DIR"
 SHARE_DIR="$RUN_DIR/share"
 mkdir -p "$SHARE_DIR/results"
 if [[ "${WATTSON_SCROLLBAR_ONLY:-0}" == 1 ]]; then touch "$SHARE_DIR/scrollbar-only"; fi
+if [[ "${WATTSON_SETTINGS_ONLY:-0}" == 1 ]]; then touch "$SHARE_DIR/settings-only"; fi
 OWNED_VM=0
 VM_RUNNER_PID=''
 return_status() { return "$1"; }
@@ -90,11 +91,17 @@ xcrun --show-sdk-version >> "$SHARE/results/system.txt"
 mkdir -p "$RUN_DIR/source"
 /usr/bin/tar -xzf "$SHARE/source.tar.gz" -C "$RUN_DIR/source"
 if [[ ! -f "$SHARE/scrollbar-only" ]]; then
-    WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
-    WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_battery_time_indicator.sh" "$SHARE/results/battery-time-indicator" > "$SHARE/results/battery-time-indicator.log" 2>&1
+    if [[ -f "$SHARE/settings-only" ]]; then
+        WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" --settings-only "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
+    else
+        WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
+        WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_battery_time_indicator.sh" "$SHARE/results/battery-time-indicator" > "$SHARE/results/battery-time-indicator.log" 2>&1
+    fi
     WATTSON_TEST_SETTINGS_SHORTCUTS_CLIPBOARD=1 wattson_run_script "$RUN_DIR/source/scripts/verify_interaction.sh" > "$SHARE/results/interaction.log" 2>&1
 fi
-WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_scrollbar.sh" "$SHARE/results/scrollbar" > "$SHARE/results/scrollbar.log" 2>&1
+if [[ ! -f "$SHARE/settings-only" ]]; then
+    WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_scrollbar.sh" "$SHARE/results/scrollbar" > "$SHARE/results/scrollbar.log" 2>&1
+fi
 GUEST
 OWNED_VM=1
 wattson_run_timeout 300 "$TART_BIN" clone macOS-TestLab-Base "$VM_NAME" > "$OUTPUT_DIR/vm-clone.log" 2>&1

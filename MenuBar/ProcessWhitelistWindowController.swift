@@ -111,6 +111,7 @@ final class ProcessWhitelistWindowController: NSWindowController, NSTableViewDat
         done.setAccessibilityIdentifier("settings.process-whitelist.done")
         done.bezelStyle = .rounded
         done.keyEquivalent = "\u{1b}"
+        done.keyEquivalentModifierMask = []
         let footer = NSStackView(views: [removeButton, NSView(), done])
         footer.orientation = .horizontal
         footer.spacing = 8
