@@ -3839,7 +3839,8 @@ final class SettingsWindowController: NSWindowController, NSTableViewDataSource,
             }
             NSApp.activate(ignoringOtherApps: true)
             DispatchQueue.main.async { [weak window] in
-                guard let window, window.isVisible else { return }
+                guard let window, window.isVisible, !window.isKeyWindow,
+                      !window.isMiniaturized else { return }
                 window.makeKeyAndOrderFront(nil)
             }
         } else {

@@ -2674,8 +2674,8 @@ check("文件菜单提供标准关闭窗口命令",
           && closeMenuItem?.keyEquivalent == "w"
           && closeMenuItem?.keyEquivalentModifierMask == [.command])
 check("窗口菜单提供标准最小化命令",
-      minimizeMenuItem?.action == #selector(NSWindow.miniaturize(_:))
-          && minimizeMenuItem?.target == nil
+      minimizeMenuItem?.action == NSSelectorFromString("minimizeKeyWindow:")
+          && minimizeMenuItem?.target === settingsOwner
           && minimizeMenuItem?.keyEquivalent == "m"
           && minimizeMenuItem?.keyEquivalentModifierMask == [.command])
 
@@ -2780,18 +2780,19 @@ func postCommand(
     return true
 }
 
-let settingsMinimized = postCommand("m", keyCode: 46, to: firstSettingsWindow)
-    && runApplication(until: { firstSettingsWindow?.isMiniaturized == true }, timeout: 2.5)
-check("Command-M 经 AppKit 事件循环最小化 Settings 窗口", settingsMinimized,
-      "visible=\(firstSettingsWindow?.isVisible == true), minimized=\(firstSettingsWindow?.isMiniaturized == true), active=\(app.isActive), key=\(app.keyWindow?.title ?? "nil")")
-
-settingsOwner.showSettings()
-let restoredSettingsBecameKey = runApplication(
-    until: { firstSettingsWindow?.isKeyWindow == true && firstSettingsWindow?.isMiniaturized == false },
-    timeout: 2.5
-)
-check("最小化后 Settings 命令恢复同一窗口",
-      restoredSettingsBecameKey && firstSettingsWindow === settingsOwner.settingsWindowForTest)
+for attempt in 1...3 {
+    let settingsMinimized = postCommand("m", keyCode: 46, to: firstSettingsWindow)
+        && runApplication(until: { firstSettingsWindow?.isMiniaturized == true }, timeout: 2.5)
+    check("Command-M 经 AppKit 事件循环最小化 Settings 窗口（\(attempt)）", settingsMinimized,
+          "visible=\(firstSettingsWindow?.isVisible == true), minimized=\(firstSettingsWindow?.isMiniaturized == true), active=\(app.isActive), key=\(app.keyWindow?.title ?? "nil")")
+    settingsOwner.showSettings()
+    let restored = runApplication(
+        until: { firstSettingsWindow?.isKeyWindow == true && firstSettingsWindow?.isMiniaturized == false },
+        timeout: 2.5
+    )
+    check("最小化后 Settings 命令恢复同一窗口（\(attempt)）",
+          restored && firstSettingsWindow === settingsOwner.settingsWindowForTest)
+}
 
 let settingsHidden = postCommand("h", keyCode: 4, to: firstSettingsWindow)
     && runApplication(until: { firstSettingsWindow?.isVisible == false }, timeout: 2.5)

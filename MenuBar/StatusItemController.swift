@@ -202,7 +202,7 @@ struct SamplingCadence {
     }
 }
 
-final class StatusItemController: NSObject {
+final class StatusItemController: NSObject, NSMenuItemValidation {
     /// The system menu bar font with tabular figures switched on. Deriving from
     /// menuBarFont keeps size and weight identical to every neighbouring item;
     /// the feature setting stops the width jumping as digits change.
@@ -456,9 +456,24 @@ final class StatusItemController: NSObject {
         editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
 
         let windowMenu = addMenu("Window")
-        windowMenu.addItem(withTitle: "Minimize", action: #selector(NSWindow.miniaturize(_:)), keyEquivalent: "m")
+        windowMenu.addItem(withTitle: "Minimize", action: #selector(minimizeKeyWindow(_:)),
+                           keyEquivalent: "m").target = self
 
         NSApp.mainMenu = mainMenu
+    }
+
+    private var minimizableKeyWindow: NSWindow? {
+        guard let window = NSApp.keyWindow, window.isVisible, !window.isMiniaturized,
+              window.styleMask.contains(.miniaturizable), window.attachedSheet == nil else { return nil }
+        return window
+    }
+
+    @objc private func minimizeKeyWindow(_ sender: Any?) {
+        minimizableKeyWindow?.miniaturize(sender)
+    }
+
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        menuItem.action != #selector(minimizeKeyWindow(_:)) || minimizableKeyWindow != nil
     }
 
     @objc private func hideWattson(_ sender: Any?) {
