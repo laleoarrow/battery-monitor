@@ -124,7 +124,8 @@ EXECUTABLE
         self.assertFalse(any(line.startswith("unregister-missing:") for line in events))
         for index, event in enumerate(events):
             if event == f"unregister-existing:{self.app}":
-                self.assertEqual(events[index - 2], "self-test")
+                self.assertEqual(events[index - 4:index - 1],
+                                 ["self-test", "codesign:--force", "codesign:--verify"])
 
     def test_failures_preserve_previous_app_and_remove_staging(self):
         marker = self.seed_existing_app()

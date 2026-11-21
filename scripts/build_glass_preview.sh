@@ -74,12 +74,14 @@ for dock_logo_resource in AppDockLogoColor.png AppDockLogoClearLight.png AppDock
         "$STAGED_APP/Contents/Resources/$dock_logo_resource"
 done
 /usr/bin/plutil -lint "$STAGED_APP/Contents/Info.plist"
-/usr/bin/codesign --force --sign - \
-    --entitlements "$ROOT_DIR/Tests/visual/glass_preview.entitlements" "$STAGED_APP"
-/usr/bin/codesign --verify --deep --strict "$STAGED_APP"
+# Headless defaults are in memory. Run before applying the GUI sandbox so
+# this check does not create a persistent, system-managed app container.
 mkdir -p "$BUILD_DIR/preferences"
 wattson_run_timeout 30 /usr/bin/env CFFIXED_USER_HOME="$BUILD_DIR/preferences" \
     "$STAGED_APP/Contents/MacOS/WattsonGlassPreview" --verify-defaults
+/usr/bin/codesign --force --sign - \
+    --entitlements "$ROOT_DIR/Tests/visual/glass_preview.entitlements" "$STAGED_APP"
+/usr/bin/codesign --verify --deep --strict "$STAGED_APP"
 
 if [[ "$KEEP_APP" == 1 ]]; then
     # Explicit handoff retains only one verified app, never backup bundles.
