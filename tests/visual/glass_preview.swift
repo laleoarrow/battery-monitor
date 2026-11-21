@@ -211,7 +211,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
             let classic = popover.classicPopoverForTest
             let activeWindow = expected == .classic ? classic.contentViewController?.view.window : panel
             let installed = activeWindow?.contentView.map(descendants) ?? []
-            let material = panel?.contentView?.subviews.compactMap { $0 as? NSGlassEffectView }.first
+            let material = panel?.materialView
             let visibleGlassPanels = NSApp.windows.filter { $0 is GlassPopoverPanel && $0.isVisible }
             guard visibleGlassPanels.count == (expected == .classic ? 0 : 1),
                   visibleGlassPanels.allSatisfy({ $0 === panel }) else {
@@ -695,9 +695,7 @@ private final class PreviewDelegate: NSObject, NSApplicationDelegate {
         // its existing renderer with the fixture mode without touching pmset.
         func update(in view: NSView) {
             if let footer = view as? PopoverFooterView {
-                footer.update(mode: previewMode, helperInstalled: true,
-                              systemBatteryIconHidden: hiddenBatteryIcon,
-                              tint: PopoverStyle.stateColor(snapshot.state))
+                footer.update(mode: previewMode, helperInstalled: true, tint: PopoverStyle.stateColor(snapshot.state))
             }
             view.subviews.forEach { update(in: $0) }
         }
