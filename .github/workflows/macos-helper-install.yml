@@ -309,11 +309,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: macos-14
-            test_v2_upgrade: true
           - runner: macos-15
             test_v2_upgrade: true
           - runner: macos-26
+            test_v2_upgrade: true
+          - runner: xcode-27
             test_v2_upgrade: true
           - runner: macos-15-intel
             test_v2_upgrade: false
@@ -324,6 +324,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Verify the macOS 27 Apple silicon runner
+        if: matrix.runner == 'xcode-27'
+        shell: bash
+        run: |
+          [[ "$(/usr/bin/sw_vers -productVersion)" == 27.* && "$(/usr/bin/uname -m)" == arm64 ]]
 
       - name: Download the single release build
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1

@@ -135,11 +135,11 @@ bash scripts/verify_interaction.sh
 bash scripts/verify_animation_stress.sh
 ```
 
-Pushing the frozen `main` commit unchanged to `release-candidate` starts the
-`Wattson release candidate` workflow. It first replays the native and legacy
+Manually dispatch the `Wattson release candidate` workflow on the frozen
+`main` commit after its Headless CI succeeds. It first replays the native and legacy
 AppKit interaction suites plus the animation stress test on its disposable
 macOS 26 build runner. It then builds the artifact set once, then downloads
-those exact bytes on macOS 14, 15, and 26 Apple-silicon runners and macOS 15
+those exact bytes on macOS 15, 26, and 27 Apple-silicon runners and macOS 15
 and 26 Intel runners. It verifies checksums, universal slices, first install,
 disabled-service reinstall, the shipped uninstaller, reinstall, app-process
 launch stability, helper health, v2.1.5 upgrade, launch-at-login migration, and

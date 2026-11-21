@@ -272,7 +272,7 @@ class InstallMigrationContractTests(unittest.TestCase):
         )
         self.assertNotIn("branches-ignore:", self.ci_helper_workflow)
         self.assertIn("runs-on: macos-26", self.ci_helper_workflow)
-        for runner in ("macos-14", "macos-15", "macos-26", "macos-15-intel", "macos-26-intel"):
+        for runner in ("macos-15", "macos-26", "xcode-27", "macos-15-intel", "macos-26-intel"):
             self.assertIn(f"runner: {runner}", self.ci_helper_workflow)
         self.assertIn("persist-credentials: false", self.ci_helper_workflow)
         self.assertNotIn("uses: actions/checkout@v4", self.ci_helper_workflow)

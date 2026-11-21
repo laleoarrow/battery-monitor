@@ -103,8 +103,8 @@ Actions, choose **Wattson release candidate**, and run it on `main`. Explicitly
 select `distribution_mode=developer-id-notarized`. That dispatch imports
 the credentials into a temporary keychain, signs the helper/app/PKG/DMG,
 notarizes and staples the PKG and DMG, deletes the credentials, and uploads one
-artifact set. Fresh GitHub-hosted macOS 14, 15, and 26 runners on Intel and
-Apple silicon then install, reinstall, upgrade, launch, and uninstall those
+artifact set. Fresh GitHub-hosted Apple silicon runners on macOS 15, 26, and 27
+and Intel runners on macOS 15 and 26 install, reinstall, upgrade, launch, and uninstall those
 exact bytes. After reviewing a fully successful signed run, manually dispatch
 `promote-release.yml` on `main` with its `candidate_run_id`. Promotion is
 manual-only; its signing, notarization, exact-SHA and public validation gates
