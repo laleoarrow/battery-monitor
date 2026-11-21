@@ -1,5 +1,17 @@
 import AppKit
 
+private final class ProcessWhitelistPanel: NSPanel {
+    override func sendEvent(_ event: NSEvent) {
+        if event.type == .keyDown, event.charactersIgnoringModifiers == "\u{1b}",
+           event.modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty,
+           (firstResponder as? NSTextView)?.hasMarkedText() != true {
+            windowController?.close()
+            return
+        }
+        super.sendEvent(event)
+    }
+}
+
 final class ProcessWhitelistWindowController: NSWindowController, NSTableViewDataSource,
     NSTableViewDelegate, NSTextFieldDelegate
 {
@@ -14,8 +26,10 @@ final class ProcessWhitelistWindowController: NSWindowController, NSTableViewDat
     private var settingsObserver: NSObjectProtocol?
 
     init() {
-        let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 520, height: 400),
-                            styleMask: [.titled, .closable], backing: .buffered, defer: false)
+        let panel = ProcessWhitelistPanel(
+            contentRect: NSRect(x: 0, y: 0, width: 520, height: 400),
+            styleMask: [.titled, .closable], backing: .buffered, defer: false
+        )
         panel.title = "Process Whitelist"
         panel.isReleasedWhenClosed = false
         panel.isRestorable = false
