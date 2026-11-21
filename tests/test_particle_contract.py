@@ -11,12 +11,22 @@ class ParticleContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.flow = FLOW.read_text(encoding="utf-8")
         cls.style = STYLE.read_text(encoding="utf-8")
+        cls.fusion = (ROOT / "Popover" / "EnergyFlowParticleLayer.swift").read_text(encoding="utf-8")
 
-    def test_particles_are_core_animation_driven(self):
-        # Set once, then run in the render server. No per-frame timer.
+    def test_resting_particles_are_core_animation_driven(self):
+        # Resting motion remains in the render server. The structural morph
+        # alone owns a short-lived geometry timer and cancels it on settlement.
         self.assertIn('CAKeyframeAnimation(keyPath: "position")', self.flow)
-        self.assertNotIn("CVDisplayLink", self.flow)
-        self.assertNotIn("Timer.scheduledTimer", self.flow)
+        for source in (self.flow, self.fusion):
+            self.assertNotIn("CVDisplayLink", source)
+            self.assertNotIn("Timer.scheduledTimer", source)
+        self.assertIn('CAKeyframeAnimation(keyPath: "contents")', self.fusion)
+        self.assertIn("transitionDuration: CFTimeInterval = 0.32", self.flow)
+        self.assertIn("if progress >= 1", self.flow)
+        cancel = self.flow.split("private func cancelMorph()", 1)[1].split("\n    }", 1)[0]
+        self.assertIn("stopMorphTimer()", cancel)
+        stop = self.flow.split("private func stopMorphTimer()", 1)[1].split("\n    }", 1)[0]
+        self.assertIn("morphTimer?.invalidate(); morphTimer = nil", stop)
 
     def test_particles_exist_at_every_power_level(self):
         # Not a high-power easter egg: the count floor is 2.
@@ -40,7 +50,7 @@ class ParticleContractTests(unittest.TestCase):
         self.assertIn("saturationParticle", self.flow)
         self.assertIn("0xDBEAFF", self.style)
         # Tried and rejected: at 360pt wide these outweigh the pipe itself.
-        for excluded in ("halo", "filament", "bolt.fill", "lightning"):
+        for excluded in ("filament", "bolt.fill", "lightning"):
             self.assertNotIn(excluded, self.flow)
 
 
@@ -71,13 +81,12 @@ class ParticleContractTests(unittest.TestCase):
         # 99.9/100.1 W telemetry noise must not rebuild the entire pool and its
         # animations once per second.
         self.assertIn("particlesStayHotAbove", self.flow)
-        self.assertIn("let hot = particlesAreHot", self.flow)
-        self.assertIn("? total >= Self.particlesStayHotAbove", self.flow)
+        self.assertIn("? snapshot.totalInputW >= Self.particlesStayHotAbove", self.flow)
 
     def test_stopping_flow_records_that_particles_stopped(self):
         # Stripping the animations without updating the bookkeeping made the
         # pool believe it was still animating, so the next rebuild was skipped.
-        body = self.flow.split("func stopFlow()", 1)[1].split("\n    }", 1)[0]
+        body = self.flow.split("func stopFlow(", 1)[1].split("\n    }", 1)[0]
         self.assertIn("removeAllAnimations", body)
         self.assertIn("particlesAreAnimating = false", body)
 

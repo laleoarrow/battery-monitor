@@ -76,6 +76,7 @@ struct StartupAvailabilityReducer {
                 snapshot: nil, shouldRecordHistory: false
             )
         case let .snapshot(snapshot):
+            guard snapshot.hasPowerReading else { return start(.temporarilyUnavailable) }
             return accept(snapshot, recordHistory: true)
         }
     }
@@ -84,7 +85,7 @@ struct StartupAvailabilityReducer {
         _ snapshot: PowerSnapshot?,
         recordHistory: Bool
     ) -> Plan {
-        guard let snapshot else {
+        guard let snapshot, snapshot.hasPowerReading else {
             isDegraded = true
             return Plan(
                 shouldTerminate: false, shouldRetry: false,
@@ -401,11 +402,15 @@ final class StatusItemController: NSObject {
         guard NSApp.mainMenu == nil else { return }
 
         let mainMenu = NSMenu(title: "Wattson")
-        let applicationItem = NSMenuItem()
-        let applicationMenu = NSMenu(title: "Wattson")
-        applicationItem.submenu = applicationMenu
-        mainMenu.addItem(applicationItem)
+        func addMenu(_ title: String) -> NSMenu {
+            let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+            let menu = NSMenu(title: title)
+            item.submenu = menu
+            mainMenu.addItem(item)
+            return menu
+        }
 
+        let applicationMenu = addMenu("Wattson")
         let settingsItem = NSMenuItem(
             title: "Settings…",
             action: #selector(showSettings),
@@ -416,6 +421,18 @@ final class StatusItemController: NSObject {
         applicationMenu.addItem(settingsItem)
         applicationMenu.addItem(.separator())
 
+        applicationMenu.addItem(withTitle: "Hide Wattson", action: #selector(hideWattson(_:)),
+                                keyEquivalent: "h").target = self
+        let hideOthers = applicationMenu.addItem(
+            withTitle: "Hide Others", action: #selector(NSApplication.hideOtherApplications(_:)),
+            keyEquivalent: "h"
+        )
+        hideOthers.target = NSApp
+        hideOthers.keyEquivalentModifierMask = [.command, .option]
+        applicationMenu.addItem(withTitle: "Show All", action: #selector(NSApplication.unhideAllApplications(_:)),
+                                keyEquivalent: "").target = NSApp
+        applicationMenu.addItem(.separator())
+
         let quitItem = NSMenuItem(
             title: "Quit Wattson",
             action: #selector(NSApplication.terminate(_:)),
@@ -424,7 +441,34 @@ final class StatusItemController: NSObject {
         quitItem.target = NSApp
         quitItem.keyEquivalentModifierMask = [.command]
         applicationMenu.addItem(quitItem)
+
+        // Window and editing actions use the active responder chain.
+        let fileMenu = addMenu("File")
+        fileMenu.addItem(withTitle: "Close", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+
+        let editMenu = addMenu("Edit")
+        editMenu.addItem(withTitle: "Undo", action: NSSelectorFromString("undo:"), keyEquivalent: "z")
+        editMenu.addItem(withTitle: "Redo", action: NSSelectorFromString("redo:"), keyEquivalent: "Z")
+        editMenu.addItem(.separator())
+        editMenu.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        editMenu.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        editMenu.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+
+        let windowMenu = addMenu("Window")
+        windowMenu.addItem(withTitle: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+
         NSApp.mainMenu = mainMenu
+    }
+
+    @objc private func hideWattson(_ sender: Any?) {
+        guard NSApp.activationPolicy() == .accessory else {
+            NSApp.hide(sender)
+            return
+        }
+        // macOS does not hide accessory apps. Hide their Settings window instead.
+        let window = NSApp.keyWindow?.sheetParent ?? NSApp.keyWindow
+        if window?.windowController is SettingsWindowController { window?.orderOut(sender) }
     }
 
     @objc func showSettings() {

@@ -42,8 +42,8 @@ final class PowerSymbolArtworkTests: XCTestCase {
         let connected = try XCTUnwrap(PowerIconImageView.image(for: "powerplug"))
         let disconnected = try XCTUnwrap(PowerIconImageView.image(for: "powerplug.slash"))
         XCTAssertNotEqual(connected.tiffRepresentation, disconnected.tiffRepresentation)
-        XCTAssertNil(PowerIconImageView.image(for: "device.output.port"))
-        XCTAssertTrue(try XCTUnwrap(FlowNodeView.iconImageForTest(symbol: "device.output.port")).isTemplate)
+        XCTAssertNotNil(PowerIconImageView.image(for: "device.output.port"))
+        XCTAssertFalse(try XCTUnwrap(FlowNodeView.iconImageForTest(symbol: "device.output.port")).isTemplate)
     }
 
     func testCacheReusesTelemetryOnlyArtworkAndRefreshesResolvedColors() throws {
@@ -68,11 +68,39 @@ final class PowerSymbolArtworkTests: XCTestCase {
                                 accent: PopoverStyle.green, side: 32, inset: 4)
         XCTAssertEqual(icon.renderCountForTest, 3)
         XCTAssertNotEqual(icon.image?.tiffRepresentation, light)
-        XCTAssertFalse(icon.configurePowerIcon(symbol: "device.output.port", description: "Device Output",
+        XCTAssertFalse(icon.configurePowerIcon(symbol: "unsupported.power.icon", description: "Unsupported",
                                               accent: PopoverStyle.green, side: 32, inset: 4))
         icon.configurePowerIcon(symbol: "cpu", description: "System",
                                 accent: PopoverStyle.green, side: 32, inset: 4)
         XCTAssertEqual(icon.renderCountForTest, 4)
+    }
+
+    func testDeviceOutputUsesCachedColoredArtworkAcrossTelemetryAndAppearanceChanges() throws {
+        let icon = PowerIconImageView()
+        icon.appearance = NSAppearance(named: .aqua)
+        XCTAssertTrue(icon.configurePowerIcon(symbol: "device.output.port", description: "Device Output",
+                                             accent: PopoverStyle.blue, side: 32, inset: 4))
+        let first = try XCTUnwrap(icon.image)
+        XCTAssertFalse(first.isTemplate)
+        XCTAssertNil(icon.contentTintColor)
+        XCTAssertEqual(first.size, NSSize(width: 32, height: 32))
+        XCTAssertGreaterThan(try bluePixels(first), 0)
+        icon.configurePowerIcon(symbol: "device.output.port", description: "USB Device Output",
+                                accent: PopoverStyle.blue, side: 32, inset: 4)
+        XCTAssertTrue(icon.image === first)
+        XCTAssertEqual(icon.renderCountForTest, 1)
+        XCTAssertEqual(icon.image?.accessibilityDescription, "USB Device Output")
+
+        icon.configurePowerIcon(symbol: "device.output.port", description: "Device Output",
+                                accent: PopoverStyle.green, side: 32, inset: 4)
+        XCTAssertEqual(icon.renderCountForTest, 2)
+        XCTAssertNotEqual(icon.image?.tiffRepresentation, first.tiffRepresentation)
+        let light = icon.image?.tiffRepresentation
+        icon.appearance = NSAppearance(named: .darkAqua)
+        icon.configurePowerIcon(symbol: "device.output.port", description: "Device Output",
+                                accent: PopoverStyle.green, side: 32, inset: 4)
+        XCTAssertEqual(icon.renderCountForTest, 3)
+        XCTAssertNotEqual(icon.image?.tiffRepresentation, light)
     }
 
     func testConnectedAndDisconnectedShareTheSelectedPlugGeometry() throws {
@@ -105,8 +133,8 @@ final class PowerSymbolArtworkTests: XCTestCase {
                 XCTAssertTrue(images.prefix(3).allSatisfy { $0.size == NSSize(width: 32, height: 32) })
                 XCTAssertTrue(images.suffix(2).allSatisfy { $0.size == NSSize(width: 16, height: 16) })
                 if snapshot.state == .mixedSupply {
-                    for index in [0, 2, 3] { XCTAssertGreaterThan(try bluePixels(images[index]), 0) }
-                    for index in [1, 4] { XCTAssertEqual(try bluePixels(images[index]), 0) }
+                    for index in [0, 1, 2, 3] { XCTAssertGreaterThan(try bluePixels(images[index]), 0) }
+                    XCTAssertEqual(try bluePixels(images[4]), 0)
                 }
                 if snapshot.state == .pluggedIdle {
                     let expected = try XCTUnwrap(PowerIconImageView.image(
@@ -132,7 +160,7 @@ final class PowerSymbolArtworkTests: XCTestCase {
     }
 
     func testContrastKeepsFunctionalMarksAndChangesDecorativeFills() throws {
-        for symbol in ["cpu", "powerplug", "powerplug.slash", "battery.50", "battery.100.bolt"] {
+        for symbol in ["cpu", "powerplug", "powerplug.slash", "battery.50", "battery.100.bolt", "device.output.port"] {
             let normal = try XCTUnwrap(PowerIconImageView.image(for: symbol, ink: .gray, accent: .systemBlue))
             let contrast = try XCTUnwrap(PowerIconImageView.image(for: symbol, ink: .gray, accent: .systemBlue,
                                                                 increasedContrast: true))

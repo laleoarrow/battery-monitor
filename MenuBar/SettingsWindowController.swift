@@ -689,6 +689,28 @@ private final class SettingsTransparencySlider: NSSlider {
         if accepted, let row = superview { row.scrollToVisible(row.bounds) }
         return accepted
     }
+
+    override func keyDown(with event: NSEvent) {
+        guard isEnabled,
+              event.modifierFlags.intersection([.command, .control, .option, .shift]).isEmpty else {
+            super.keyDown(with: event)
+            return
+        }
+        let step: Double
+        switch event.keyCode {
+        case 123: step = userInterfaceLayoutDirection == .rightToLeft ? 1 : -1
+        case 124: step = userInterfaceLayoutDirection == .rightToLeft ? -1 : 1
+        case 125: step = -1
+        case 126: step = 1
+        default:
+            super.keyDown(with: event)
+            return
+        }
+        let value = min(maxValue, max(minValue, doubleValue + step))
+        guard value != doubleValue else { return }
+        doubleValue = value
+        sendAction(action, to: target)
+    }
 }
 
 private final class SettingsScrollingSwitch: NSSwitch {

@@ -100,7 +100,7 @@ final class LaneView: PopoverSection {
         let systemWatts = snapshot.systemW
         let batteryWatts = snapshot.state == .pluggedIdle ? 0 : abs(snapshot.batteryW)
         let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
-        let systemCaption = hasPositiveDeviceOutput ? "System Total" : "System Load"
+        let systemCaption = hasPositiveDeviceOutput || snapshot.hasConnectedUSBDevice ? "System Total" : "System Load"
 
         // Normalise against the larger lane so the ratio between them is exact
         // and the dominant lane always fills its track.

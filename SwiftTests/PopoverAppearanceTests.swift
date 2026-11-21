@@ -251,7 +251,7 @@ final class PopoverAppearanceTests: XCTestCase {
         }
     }
 
-    func testFooterButtonsRevealKeyboardFocusWithoutInvokingActions() throws {
+    func testFooterMenuButtonRevealsKeyboardFocusWithoutInvokingActions() throws {
         let content = PopoverContentViewController()
         content.setViewportHeight(240)
         content.view.layoutSubtreeIfNeeded()
@@ -259,7 +259,10 @@ final class PopoverAppearanceTests: XCTestCase {
         let document = try XCTUnwrap(scroll.documentView)
         let footer = try XCTUnwrap(descendants(document).compactMap { $0 as? PopoverFooterView }.first)
         let buttons = descendants(footer).compactMap { $0 as? NSButton }
-        XCTAssertEqual(buttons.count, 2)
+        XCTAssertEqual(buttons.count, 1)
+        XCTAssertEqual(buttons.first?.action, NSSelectorFromString("showMenu"))
+        var menuOpened = false
+        footer.onShowMenu = { _ in menuOpened = true }
         for button in buttons {
             button.isEnabled = true
             scroll.contentView.scroll(to: .zero)
@@ -268,6 +271,7 @@ final class PopoverAppearanceTests: XCTestCase {
             XCTAssertTrue(scroll.documentVisibleRect.contains(frame))
             XCTAssertTrue(button.resignFirstResponder())
         }
+        XCTAssertFalse(menuOpened, "Revealing keyboard focus must not open the menu")
     }
 
     func testReducedMotionChooserRevealsKeyboardFocusWithoutSelectingMode() {

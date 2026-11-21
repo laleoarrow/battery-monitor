@@ -368,7 +368,9 @@ while True:
             with self.subTest(mode=mode):
                 child_ready.unlink(missing_ok=True)
                 marker.unlink(missing_ok=True)
-                fixture = source.replace("wattson_run_timeout 45", "wattson_run_timeout 0.5") if mode == "timeout" else source
+                # The deadline includes interpreter startup; measured readiness
+                # for both workers can exceed 0.5s before cleanup is exercised.
+                fixture = source.replace("wattson_run_timeout 45", "wattson_run_timeout 2") if mode == "timeout" else source
                 script.write_text("export PACKAGING_SHELL=$$\n" + fixture)
                 environment = dict(self.environment, PACKAGING_PIDS=str(marker),
                                    CHILD_READY=str(child_ready), PACKAGING_MODE=mode)

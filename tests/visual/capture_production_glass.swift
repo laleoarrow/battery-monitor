@@ -145,7 +145,7 @@ private final class ProbeDelegate: NSObject, NSApplicationDelegate {
                 else { throw failure("Production hierarchy unavailable") }
                 // Reuse the existing preview's footer-fixture API. No helper
                 // calls, pmset changes, or geometry modifications are made.
-                footer.update(mode: .auto, helperInstalled: true, systemBatteryIconHidden: false,
+                footer.update(mode: .auto, helperInstalled: true,
                               tint: PopoverStyle.stateColor(sample.state))
                 content.layoutSubtreeIfNeeded()
                 try await Task.sleep(nanoseconds: 400_000_000)

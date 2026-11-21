@@ -6,6 +6,7 @@ final class FooterHoverFeedbackView: NSView {
     struct Region: Equatable {
         let rect: NSRect
         let enabled: Bool
+        var cornerRadius: CGFloat? = nil
     }
 
     private var regions: [Region] = []
@@ -109,7 +110,8 @@ final class FooterHoverFeedbackView: NSView {
                 for (gradient, mask) in [(self.reflection, self.reflectionMask), (self.rimReflection, self.rimMask)] {
                     gradient.frame = self.regions[index].rect
                     mask.frame = gradient.bounds
-                    mask.path = self.path(for: Region(rect: gradient.bounds, enabled: true))
+                    mask.path = self.path(for: Region(rect: gradient.bounds, enabled: true,
+                                                      cornerRadius: self.regions[index].cornerRadius))
                 }
             }
         }
@@ -146,8 +148,9 @@ final class FooterHoverFeedbackView: NSView {
 
     private func path(for region: Region) -> CGPath {
         let rect = region.rect.insetBy(dx: 0.5, dy: 0.5)
-        return CGPath(roundedRect: rect, cornerWidth: rect.height / 2,
-                      cornerHeight: rect.height / 2, transform: nil)
+        let radius = region.cornerRadius.map { max(0, $0 - 0.5) } ?? rect.height / 2
+        return CGPath(roundedRect: rect, cornerWidth: radius,
+                      cornerHeight: radius, transform: nil)
     }
 
     @objc func cancelHover() {

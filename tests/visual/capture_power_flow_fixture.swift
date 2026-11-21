@@ -6,8 +6,8 @@ import Foundation
 @main
 private enum CapturePowerFlowFixture {
     static func main() {
-        guard CommandLine.arguments.count == 3 else {
-            fputs("usage: capture_power_flow_fixture charging|idle|idle-device|battery|battery-device|battery-device-low|mixed|website OUTPUT.png\n", stderr)
+        guard [3, 4].contains(CommandLine.arguments.count) else {
+            fputs("usage: capture_power_flow_fixture STATE OUTPUT.png [dark|light]\n", stderr)
             exit(2)
         }
 
@@ -24,6 +24,30 @@ private enum CapturePowerFlowFixture {
                 cycleCount: 116,
                 lowPowerMode: false
             )
+        case "charging-device":
+            snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+                batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5,
+                systemChargingState: .charging)
+        case "mixed-device":
+            snapshot = PowerSnapshot(percent: 44, plugged: true, adapterW: 30,
+                batteryW: -9.7, systemW: 39.7, deviceOutputW: 12.2)
+        case "deadband-device":
+            snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 31.8,
+                batteryW: -0.2, systemW: 32, deviceOutputW: 7.5,
+                systemChargingState: .charging)
+        case "zero-adapter-device":
+            snapshot = PowerSnapshot(percent: 44, plugged: true,
+                batteryW: -20, systemW: 20, deviceOutputW: 5)
+        case "zero-mac-device":
+            snapshot = PowerSnapshot(percent: 44, plugged: true, adapterW: 10,
+                batteryW: -10, systemW: 20, deviceOutputW: 20)
+        case "partial-device":
+            snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+                batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5,
+                deviceOutputIsComplete: false)
+        case "incoherent-device":
+            snapshot = PowerSnapshot(percent: 72, plugged: true, adapterW: 68,
+                batteryW: 22.2, systemW: 45.8, deviceOutputW: 50)
         case "idle":
             snapshot = PowerSnapshot(
                 percent: 100,
@@ -121,8 +145,12 @@ private enum CapturePowerFlowFixture {
             height: PowerFlowView.preferredHeight
         ))
         root.wantsLayer = true
-        root.layer?.backgroundColor = PopoverStyle.surface.cgColor
-        root.appearance = NSAppearance(named: .darkAqua)
+        let theme = CommandLine.arguments.count == 4 ? CommandLine.arguments[3] : "dark"
+        guard ["dark", "light"].contains(theme) else { exit(64) }
+        root.appearance = NSAppearance(named: theme == "light" ? .aqua : .darkAqua)
+        root.appearance?.performAsCurrentDrawingAppearance {
+            root.layer?.backgroundColor = PopoverStyle.surface.cgColor
+        }
         flow.frame = root.bounds
         root.addSubview(flow)
         flow.update(snapshot: snapshot, animated: false)

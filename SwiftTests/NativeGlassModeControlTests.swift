@@ -35,8 +35,8 @@ final class NativeGlassModeControlTests: XCTestCase {
     private func footerAndControl() -> (PopoverFooterView, NativeGlassModeControl) {
         Settings.liquidGlassEnabled = true
         let footer = PopoverFooterView()
-        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth, height: 78)
-        footer.update(mode: .auto, helperInstalled: true, systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth, height: PopoverFooterView.preferredHeight)
+        footer.update(mode: .auto, helperInstalled: true, tint: .systemBlue)
         footer.layoutSubtreeIfNeeded()
         return (footer, descendants(footer).compactMap { $0 as? NativeGlassModeControl }.first!)
     }
@@ -165,7 +165,7 @@ final class NativeGlassModeControlTests: XCTestCase {
         var completion: ((EnergyMode?) -> Void)?
         footer.onSelect = { _, callback in completion = callback }
         control.selectModeForTest(.low)
-        footer.update(mode: .high, helperInstalled: true, systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.update(mode: .high, helperInstalled: true, tint: .systemBlue)
         let finished = expectation(description: "main-thread rollback")
         let callback = completion
         DispatchQueue.global().async {
@@ -181,7 +181,7 @@ final class NativeGlassModeControlTests: XCTestCase {
     func testRuntimeToggleTransfersFocusFromGroupAndEveryChildAndReusesButtons() {
         guard #available(macOS 26.0, *) else { return }
         let (footer, control) = footerAndControl()
-        footer.update(mode: .low, helperInstalled: true, systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.update(mode: .low, helperInstalled: true, tint: .systemBlue)
         let originalButtons = buttons(control)
         let window = NSWindow(contentRect: footer.bounds, styleMask: [.borderless], backing: .buffered, defer: false)
         window.contentView = footer

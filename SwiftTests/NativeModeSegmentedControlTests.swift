@@ -81,7 +81,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                               height: PopoverFooterView.preferredHeight)
         footer.update(mode: .low, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         footer.layoutSubtreeIfNeeded()
         let slider = modeSlider(in: footer)
         let native = nativeControl(in: footer)
@@ -99,7 +99,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertTrue(native.isHidden)
         XCTAssertFalse(menu.isBordered)
         XCTAssertEqual(baselineMenuFrame,
-                       NSRect(x: footer.bounds.width - 22, y: 42, width: 22, height: 20))
+                       NSRect(x: footer.bounds.width - 22, y: 16, width: 22, height: 20))
         XCTAssertTrue(window.makeFirstResponder(slider))
 
         setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
@@ -113,7 +113,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertTrue(window.firstResponder === glass.keyboardFocusView)
         XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
         XCTAssertEqual(glass.convert(glass.bounds, to: footer),
-                       NSRect(x: 0, y: 36, width: baselineModeFrame.width, height: 38))
+                       NSRect(x: 0, y: 10, width: baselineModeFrame.width, height: 38))
         XCTAssertGreaterThan(menu.convert(menu.bounds, to: footer).minX,
                              glass.convert(glass.bounds, to: footer).maxX)
         XCTAssertEqual(menu.bezelStyle, .glass)
@@ -145,7 +145,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         guard #available(macOS 26.0, *) else { return }
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         var requests: [EnergyMode] = []
         var completion: ((EnergyMode?) -> Void)?
@@ -161,7 +161,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(glass.selectedModeForTest, .low)
         XCTAssertTrue(glass.subviews.compactMap { $0 as? NSButton }.allSatisfy { !$0.isEnabled })
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemGreen)
+                      tint: .systemGreen)
         setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         Settings.liquidGlassEnabled = false
         XCTAssertEqual(slider.selectedIndexForTest, 1)
@@ -189,7 +189,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         let native = nativeControl(in: footer)
         let baselineNativeBordered = native.cell?.isBordered
         footer.update(mode: .low, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         footer.layoutSubtreeIfNeeded()
         let baselineNativeFrame = native.frame
         let baselineMenuFrame = menu.frame
@@ -261,11 +261,11 @@ final class NativeModeSegmentedControlTests: XCTestCase {
             if enabled {
                 XCTAssertTrue(native.superview === footer)
                 XCTAssertTrue(menu.superview === content)
-                XCTAssertEqual(container.frame, NSRect(x: 0, y: 36, width: footer.bounds.width, height: 38))
+                XCTAssertEqual(container.frame, NSRect(x: 0, y: 10, width: footer.bounds.width, height: 38))
                 let modeFrame = group.convert(group.bounds, to: footer)
                 let menuFrame = menu.convert(menu.bounds, to: footer)
-                XCTAssertEqual(modeFrame, NSRect(x: 0, y: 36, width: footer.bounds.width - 46, height: 38))
-                XCTAssertEqual(menuFrame, NSRect(x: footer.bounds.width - 38, y: 36, width: 38, height: 38))
+                XCTAssertEqual(modeFrame, NSRect(x: 0, y: 10, width: footer.bounds.width - 46, height: 38))
+                XCTAssertEqual(menuFrame, NSRect(x: footer.bounds.width - 38, y: 10, width: 38, height: 38))
                 XCTAssertEqual(menuFrame.minX - modeFrame.maxX, 8)
                 XCTAssertEqual(native.cell?.isBordered, baselineNativeBordered)
                 XCTAssertEqual(group.subviews.compactMap { $0 as? NSButton }.count, 3)
@@ -308,152 +308,167 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         XCTAssertEqual(requests, [.auto])
     }
 
-    func testFooterOnlyShowsActionableStatusAndClearsItOnRecovery() throws {
+    private func batteryMenuItem(in menu: NSMenu) throws -> NSMenuItem {
+        try XCTUnwrap(menu.items.first { $0.action == NSSelectorFromString("toggleSystemBatteryIcon:") })
+    }
+
+    private func activateBatteryItem(_ item: NSMenuItem) {
+        _ = NSApp.sendAction(item.action!, to: item.target, from: item)
+    }
+
+    func testBatteryVisibilityLivesInQuickMenuAndFooterReclaimsItsRow() throws {
         let footer = PopoverFooterView()
         footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                               height: PopoverFooterView.preferredHeight)
         footer.layoutSubtreeIfNeeded()
-        let controlFrame = modeSlider(in: footer).frame
-        let menuFrame = menuButton(in: footer).frame
-        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
-            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
-        })
-        let checkboxFrame = checkbox.frame
-        let states: [(Bool, Bool?, SystemBatteryIconReadStatus, String?)] = [
-            (true, nil, .notRequested, nil),
+        XCTAssertEqual(PopoverFooterView.preferredHeight, 52)
+        XCTAssertEqual(modeSlider(in: footer).frame.minY, 10)
+        XCTAssertFalse(descendants(of: footer).compactMap { $0 as? NSButton }
+            .contains { $0.title == "Hide System Battery Icon" })
+
+        let content = PopoverContentViewController()
+        let states: [(Bool, Bool?, SystemBatteryIconReadStatus, String)] = [
+            (true, nil, .notRequested, ""),
             (true, nil, .checking, "Reading…"),
             (true, nil, .failed(.requestFailed), "Status Unavailable"),
-            (true, nil, .checking, "Reading…"),
-            (true, false, .ready, nil),
+            (true, false, .ready, ""),
             (true, false, .checking, "Reading…"),
-            (true, true, .ready, nil),
-            (false, nil, .failed(.helperUnavailable), "Helper Not Installed"),
-            (true, false, .ready, nil),
+            (true, true, .ready, ""),
+            (false, nil, .failed(.helperUnavailable), "Full Installer Required"),
         ]
-        for (helperInstalled, iconHidden, readStatus, expectedStatus) in states {
-            footer.update(mode: .auto, helperInstalled: helperInstalled,
-                          systemBatteryIconHidden: iconHidden, tint: .systemBlue,
-                          readStatus: readStatus)
-            footer.layoutSubtreeIfNeeded()
-            let messages = footer.subviews.compactMap { $0 as? NSTextField }
-            XCTAssertEqual(messages.filter { !$0.isHidden }.map(\.stringValue), expectedStatus.map { [$0] } ?? [])
-            XCTAssertTrue(messages.filter(\.isHidden).allSatisfy { $0.frame == .zero && $0.stringValue.isEmpty })
-            XCTAssertEqual(checkbox.isEnabled, helperInstalled && iconHidden != nil && readStatus == .ready)
-            XCTAssertEqual(checkbox.state, iconHidden.map { $0 ? .on : .off } ?? .mixed)
-            XCTAssertEqual(checkbox.frame, checkboxFrame)
-            XCTAssertEqual(modeSlider(in: footer).frame, controlFrame)
-            XCTAssertEqual(menuButton(in: footer).frame, menuFrame)
+        for (helper, hidden, status, suffix) in states {
+            content.updateSystemBatteryIconState(hidden, readStatus: status)
+            let menu = content.quickMenuForTest(helperInstalled: helper)
+            let item = try batteryMenuItem(in: menu)
+            menu.update()
+            XCTAssertFalse(menu.autoenablesItems)
+            XCTAssertEqual(item.isEnabled, helper && hidden != nil && status == .ready)
+            XCTAssertEqual(item.state, hidden.map { $0 ? .on : .off } ?? .mixed)
+            XCTAssertEqual(item.title, "Hide System Battery Icon" + (suffix.isEmpty ? "" : " (\(suffix))"))
+            let position = menu.index(of: item)
+            XCTAssertEqual(menu.items[position - 1].title, "Show Battery Percentage in Menu Bar")
+            XCTAssertTrue(menu.items[position + 1].title.hasPrefix("Launch at Login"))
         }
     }
 
-    func testBatteryNativeClickTogglesBothAuthoritativeStates() throws {
+    func testBatteryMenuActionTogglesBothAuthoritativeStates() throws {
         _ = NSApplication.shared
-        let footer = PopoverFooterView()
-        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
-            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
-        })
+        let content = PopoverContentViewController()
+        let menu = content.quickMenuForTest(helperInstalled: true)
+        let item = try batteryMenuItem(in: menu)
         var requests: [Bool] = []
         var finish: ((Bool) -> Void)?
-        footer.onSystemBatteryIconToggle = { requested, completion in
+        content.setSystemBatteryIconToggleHandler { requested, completion in
             requests.append(requested)
             finish = completion
         }
-        footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
-
+        content.updateSystemBatteryIconState(false)
         for hidden in [true, false] {
             let previousCount = requests.count
-            checkbox.performClick(nil)
+            item.state = .mixed // A sender's presentation is not authoritative.
+            menu.performActionForItem(at: menu.index(of: item))
             XCTAssertEqual(requests.count, previousCount + 1)
             XCTAssertEqual(requests.last, hidden)
-            XCTAssertFalse(checkbox.isEnabled)
-            footer.update(mode: .auto, helperInstalled: true,
-                          systemBatteryIconHidden: hidden, tint: .systemBlue, readStatus: .ready)
-            XCTAssertFalse(checkbox.isEnabled, "An observation must not finish the pending write")
+            XCTAssertFalse(item.isEnabled)
+            XCTAssertTrue(item.title.hasSuffix("(Updating…)"))
+            content.updateSystemBatteryIconState(hidden)
+            XCTAssertFalse(item.isEnabled, "An observation must not finish the pending write")
             let completion = try XCTUnwrap(finish)
             finish = nil
             completion(true)
-            XCTAssertEqual(checkbox.state, hidden ? .on : .off)
-            XCTAssertTrue(checkbox.isEnabled)
+            XCTAssertEqual(item.state, hidden ? .on : .off)
+            XCTAssertTrue(item.isEnabled)
         }
         XCTAssertEqual(requests, [true, false])
     }
 
-    func testBatteryNativeClickPreservesDisabledStatesAndFailureRollback() throws {
+    func testBatteryMenuActionPreservesDisabledStatesAndFailureRollback() throws {
         _ = NSApplication.shared
-        let footer = PopoverFooterView()
-        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
-            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
-        })
+        let content = PopoverContentViewController()
         var requests: [Bool] = []
         var finish: ((Bool) -> Void)?
-        footer.onSystemBatteryIconToggle = { requested, completion in
+        content.setSystemBatteryIconToggleHandler { requested, completion in
             requests.append(requested)
             finish = completion
         }
-        let disabledStates: [(Bool, Bool?, SystemBatteryIconReadStatus)] = [
-            (true, nil, .notRequested),
-            (true, nil, .checking),
-            (true, nil, .failed(.requestFailed)),
-            (true, false, .checking),
+        let disabled: [(Bool, Bool?, SystemBatteryIconReadStatus)] = [
+            (true, nil, .notRequested), (true, nil, .checking),
+            (true, nil, .failed(.requestFailed)), (true, false, .checking),
             (false, false, .ready),
         ]
-        for (helperInstalled, hidden, status) in disabledStates {
-            footer.update(mode: .auto, helperInstalled: helperInstalled,
-                          systemBatteryIconHidden: hidden, tint: .systemBlue, readStatus: status)
-            XCTAssertFalse(checkbox.isEnabled)
-            checkbox.performClick(nil)
+        for (helper, hidden, status) in disabled {
+            content.updateSystemBatteryIconState(hidden, readStatus: status)
+            let menu = content.quickMenuForTest(helperInstalled: helper)
+            let item = try batteryMenuItem(in: menu)
+            XCTAssertFalse(item.isEnabled)
+            activateBatteryItem(item) // The action itself must reject stale or forced sends.
             XCTAssertTrue(requests.isEmpty)
             XCTAssertNil(finish)
         }
-
-        footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
-        checkbox.performClick(nil)
+        content.updateSystemBatteryIconState(false)
+        let menu = content.quickMenuForTest(helperInstalled: true)
+        let item = try batteryMenuItem(in: menu)
+        activateBatteryItem(item)
         XCTAssertEqual(requests, [true])
-        XCTAssertFalse(checkbox.isEnabled)
-        checkbox.performClick(nil)
+        XCTAssertFalse(item.isEnabled)
+        activateBatteryItem(item)
         XCTAssertEqual(requests, [true], "A pending write cannot submit another request")
         let completion = try XCTUnwrap(finish)
         finish = nil
         completion(false)
-        XCTAssertEqual(checkbox.state, .off, "A failed write restores the authoritative value")
-        XCTAssertTrue(checkbox.isEnabled)
-        checkbox.performClick(nil)
-        XCTAssertEqual(requests, [true, true], "A retry still inverts the authoritative value")
-        let retryCompletion = try XCTUnwrap(finish)
-        footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: true, tint: .systemBlue, readStatus: .ready)
-        retryCompletion(true)
-        XCTAssertEqual(checkbox.state, .on)
-        XCTAssertTrue(checkbox.isEnabled)
+        XCTAssertEqual(item.state, .off)
+        XCTAssertTrue(item.isEnabled)
+        activateBatteryItem(item)
+        XCTAssertEqual(requests, [true, true])
+        let retry = try XCTUnwrap(finish)
+        content.updateSystemBatteryIconState(true)
+        retry(true)
+        XCTAssertEqual(item.state, .on)
+        XCTAssertTrue(item.isEnabled)
     }
 
     func testBatteryCompletionDoesNotOverwriteNewerAuthorityOrPendingRead() throws {
-        let footer = PopoverFooterView()
-        let checkbox = try XCTUnwrap(descendants(of: footer).compactMap { $0 as? NSButton }.first {
-            $0.action == NSSelectorFromString("systemBatteryIconChanged:")
-        })
+        _ = NSApplication.shared
+        let content = PopoverContentViewController()
+        let menu = content.quickMenuForTest(helperInstalled: true)
+        let item = try batteryMenuItem(in: menu)
         var finish: ((Bool) -> Void)?
-        footer.onSystemBatteryIconToggle = { _, completion in finish = completion }
+        content.setSystemBatteryIconToggleHandler { _, completion in finish = completion }
         for status: SystemBatteryIconReadStatus in [.ready, .checking] {
-            footer.update(mode: .auto, helperInstalled: true,
-                          systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
-            checkbox.performClick(nil)
+            content.updateSystemBatteryIconState(false)
+            activateBatteryItem(item)
             XCTAssertNotNil(finish)
-            // A newer shared observation is delivered before this older write's callback.
-            footer.update(mode: .auto, helperInstalled: true,
-                          systemBatteryIconHidden: false, tint: .systemBlue, readStatus: status)
+            content.updateSystemBatteryIconState(false, readStatus: status)
             finish?(true)
-            XCTAssertEqual(checkbox.state, .off)
-            XCTAssertEqual(checkbox.isEnabled, status == .ready)
+            XCTAssertEqual(item.state, .off)
+            XCTAssertEqual(item.isEnabled, status == .ready)
         }
+    }
+
+    func testBatteryWriteStaysBusyAcrossMenuCloseAndReopen() throws {
+        _ = NSApplication.shared
+        let content = PopoverContentViewController()
+        content.updateSystemBatteryIconState(false)
+        var finish: ((Bool) -> Void)?
+        content.setSystemBatteryIconToggleHandler { _, completion in finish = completion }
+        var firstMenu: NSMenu? = content.quickMenuForTest(helperInstalled: true)
+        activateBatteryItem(try batteryMenuItem(in: firstMenu!))
+        firstMenu = nil
+        let reopened = content.quickMenuForTest(helperInstalled: true)
+        let item = try batteryMenuItem(in: reopened)
+        XCTAssertFalse(item.isEnabled)
+        XCTAssertTrue(item.title.hasSuffix("(Updating…)"))
+        content.updateSystemBatteryIconState(true)
+        XCTAssertFalse(item.isEnabled)
+        try XCTUnwrap(finish)(true)
+        XCTAssertEqual(item.state, .on)
+        XCTAssertTrue(item.isEnabled)
     }
 
     func testUnrelatedSettingsDoNotReselectOrRestyleModeControls() {
         let footer = PopoverFooterView()
         footer.update(mode: .low, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         let baseline = slider.highlightCallCountForTest
         Settings.showsMenuBarPercentage.toggle()
@@ -561,7 +576,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testFooterReturnsBackgroundHandlerCompletionToMainAndRollsBackNativeIntent() {
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let native = nativeControl(in: footer)
         let updated = expectation(description: "main-thread footer completion")
         footer.onSelect = { _, completion in
@@ -582,7 +597,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testFooterIgnoresStaleCompletionAcrossNativeIntents() {
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let native = nativeControl(in: footer)
         var requested: [EnergyMode] = []
         var completions: [(EnergyMode?) -> Void] = []
@@ -608,7 +623,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                               height: PopoverFooterView.preferredHeight)
         footer.update(mode: .low, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         footer.layoutSubtreeIfNeeded()
         let slider = modeSlider(in: footer)
         let native = nativeControl(in: footer)
@@ -640,7 +655,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testFooterKeepsAsyncRollbackAndConfirmationAcrossControlSwitches() {
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         let native = nativeControl(in: footer)
         var completion: ((EnergyMode?) -> Void)?
@@ -650,7 +665,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         native.selectModeForTest(.low)
         XCTAssertEqual(native.selectedModeForTest, .low)
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemGreen)
+                      tint: .systemGreen)
         footer.applyReduceMotionChangeForTest(false)
         XCTAssertEqual(slider.selectedIndexForTest, 1)
 
@@ -668,7 +683,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testNormalSliderAsyncSelectionSurvivesSwitchToReducedMotion() throws {
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         let native = nativeControl(in: footer)
         var completion: ((EnergyMode?) -> Void)?
@@ -693,7 +708,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testNewestIntentReplacesAStaleSliderRequestAcrossControlSwitches() throws {
         let footer = PopoverFooterView()
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         let native = nativeControl(in: footer)
         var completions: [(EnergyMode?) -> Void] = []
@@ -717,7 +732,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
     func testFailedIntentRollsBackToLatestAuthoritativeRefresh() {
         let footer = PopoverFooterView()
         footer.update(mode: .low, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let native = nativeControl(in: footer)
         var completion: ((EnergyMode?) -> Void)?
         footer.onSelect = { _, callback in completion = callback }
@@ -725,7 +740,7 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         footer.applyReduceMotionChangeForTest(true)
         native.selectModeForTest(.auto)
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemGreen)
+                      tint: .systemGreen)
         XCTAssertEqual(native.selectedModeForTest, .auto)
 
         completion?(nil)
@@ -736,18 +751,18 @@ final class NativeModeSegmentedControlTests: XCTestCase {
         let footer = PopoverFooterView()
         footer.applyReduceMotionChangeForTest(false)
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         let slider = modeSlider(in: footer)
         let baseline = slider.highlightCallCountForTest
 
         for _ in 0..<1_000 {
             footer.update(mode: .auto, helperInstalled: true,
-                          systemBatteryIconHidden: false, tint: .systemBlue)
+                          tint: .systemBlue)
         }
         XCTAssertEqual(slider.highlightCallCountForTest, baseline)
 
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemGreen)
+                      tint: .systemGreen)
         XCTAssertEqual(slider.highlightCallCountForTest, baseline + 1)
     }
 

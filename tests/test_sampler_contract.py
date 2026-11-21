@@ -46,7 +46,8 @@ class SamplerContractTests(unittest.TestCase):
         self.assertIn("validBatteryCurrent(instantAmperage)", self.source)
         self.assertIn("validBatteryCurrent(amperage)", self.source)
         self.assertIn("(-100_000...100_000).contains(current)", self.source)
-        self.assertIn("let fallbackBatteryW = resolvedFallbackBatteryW(", self.source)
+        self.assertIn("let averageBatteryW = resolvedInstantBatteryW(", self.source)
+        self.assertIn("let fallbackBatteryW = averageBatteryW ?? 0", self.source)
         self.assertIn("fallbackBatteryW: fallbackBatteryW", self.source)
         self.assertNotIn("Double(amperage ?? 0)", self.source)
         self.assertIn("adapter == nil || adapter == 0", self.source)
@@ -419,6 +420,7 @@ class SamplerContractTests(unittest.TestCase):
                     "swiftc",
                     str(ROOT / "Core" / "PowerSnapshot.swift"),
                     str(SAMPLER_SOURCE),
+                    str(ROOT / "Core" / "USBDeviceConnectionReader.swift"),
                     str(ROOT / "Core" / "BatteryRuntimeEstimate.swift"),
                     str(ROOT / "Core" / "SystemBatteryHealth.swift"),
                     str(main),
@@ -856,6 +858,7 @@ class SamplerContractTests(unittest.TestCase):
                     "swiftc",
                     str(ROOT / "Core" / "PowerSnapshot.swift"),
                     str(SAMPLER_SOURCE),
+                    str(ROOT / "Core" / "USBDeviceConnectionReader.swift"),
                     str(ROOT / "Core" / "BatteryRuntimeEstimate.swift"),
                     str(ROOT / "Core" / "SystemBatteryHealth.swift"),
                     str(main),

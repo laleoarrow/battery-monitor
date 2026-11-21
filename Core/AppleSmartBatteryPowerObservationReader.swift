@@ -15,6 +15,12 @@ protocol AppleSmartBatteryPowerRawSnapshotReading {
     func readAllowlistedProperties(
         _ keys: [String]
     ) -> AppleSmartBatteryPowerRawSnapshot
+    func hasExternalUSBDevice() -> Bool
+}
+
+extension AppleSmartBatteryPowerRawSnapshotReading {
+    // Fixture/diagnostic backends do not query the host's unrelated USB devices.
+    func hasExternalUSBDevice() -> Bool { false }
 }
 
 struct AppleSmartBatteryPowerSample {
@@ -117,6 +123,7 @@ final class AppleSmartBatteryPowerObservationReader:
             value.percent = systemReading.percent ?? value.percent
             value.systemChargingState = systemReading.chargingState
             value.batteryHealthPercent = batteryHealthPercent()
+            value.hasConnectedUSBDevice = backend.hasExternalUSBDevice()
             trackerLock.lock()
             snapshot = batteryTimeFallback.applying(
                 to: value, properties: raw.properties,
@@ -958,6 +965,10 @@ private func projectedDictionary(
 struct SystemAppleSmartBatteryPowerRawSnapshotReader:
     AppleSmartBatteryPowerRawSnapshotReading
 {
+    func hasExternalUSBDevice() -> Bool {
+        USBDeviceConnectionReader.hasExternalDevice()
+    }
+
     func readAllowlistedProperties(
         _ keys: [String]
     ) -> AppleSmartBatteryPowerRawSnapshot {

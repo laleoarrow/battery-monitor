@@ -124,7 +124,7 @@ class ReduceMotionModeControlContractTests(unittest.TestCase):
         self.assertIn("case .liquidGlassAppearance = change", footer)
         self.assertIn("NotificationCenter.default.removeObserver(settingsObserver)", footer)
         refresh = footer.split("private func refreshDisplayOptions(reduceMotion:", 1)[1].split(
-            "@objc private func systemBatteryIconChanged", 1
+            "@objc private func showMenu", 1
         )[0]
         self.assertIn("window?.firstResponder === previousControl", refresh)
         self.assertIn("isDescendant(of: previousControl)", refresh)

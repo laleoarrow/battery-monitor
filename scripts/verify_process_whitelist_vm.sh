@@ -92,7 +92,7 @@ mkdir -p "$RUN_DIR/source"
 if [[ ! -f "$SHARE/scrollbar-only" ]]; then
     WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_top_processes.sh" "$SHARE/results/captures" > "$SHARE/results/capture.log" 2>&1
     WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_battery_time_indicator.sh" "$SHARE/results/battery-time-indicator" > "$SHARE/results/battery-time-indicator.log" 2>&1
-    wattson_run_script "$RUN_DIR/source/scripts/verify_interaction.sh" > "$SHARE/results/interaction.log" 2>&1
+    WATTSON_TEST_SETTINGS_SHORTCUTS_CLIPBOARD=1 wattson_run_script "$RUN_DIR/source/scripts/verify_interaction.sh" > "$SHARE/results/interaction.log" 2>&1
 fi
 WATTSON_RUN_GUI_TESTS=1 wattson_run_script "$RUN_DIR/source/scripts/verify_scrollbar.sh" "$SHARE/results/scrollbar" > "$SHARE/results/scrollbar.log" 2>&1
 GUEST

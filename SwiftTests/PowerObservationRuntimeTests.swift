@@ -277,6 +277,41 @@ final class PowerObservationRuntimeTests: XCTestCase {
         )
     }
 
+    func testMetadataOnlyCandidateWaitsForUsableHelperPowerBeforePublication() throws {
+        let cases: [(String, Bool, HelperPowerObservationFetchResult, Bool, Double)] = [
+            ("failed helper", true, .failed(.legacyV4Unavailable), false, 0),
+            ("V5 system", true, .v5(response(sequence: 1, pdtr: nil, pstr: 25)), true, 25),
+            ("V5 adapter", true, .v5(response(sequence: 1, pdtr: 40, pstr: nil)), true, 40),
+            ("V4 adapter", true, .legacyV4(.init(adapterW: 20, systemW: nil)), true, 20),
+            ("invalid helper", true, .legacyV4(.init(adapterW: .nan, systemW: .infinity)), false, 0),
+            ("unplugged adapter", false, .v5(response(sequence: 1, pdtr: 40, pstr: nil)), false, 0),
+            ("measured system zero", false, .v5(response(sequence: 1, pdtr: nil, pstr: 0)), true, 0),
+        ]
+        for (name, plugged, helper, available, systemW) in cases {
+            let backend = RuntimeBatteryBackend(properties: [
+                "CurrentCapacity": 60, "MaxCapacity": 100, "ExternalConnected": plugged,
+            ])
+            let runtime = PowerObservationRuntimeController(
+                batteryReader: AppleSmartBatteryPowerObservationReader(
+                    systemBatteryReading: { .init() }, batteryHealthPercent: { nil },
+                    backend: backend, clock: { 100 }, lowPowerMode: { false }
+                ),
+                helperObservation: { _ in helper }, clock: { 100 },
+                shadowRecorder: RuntimeShadowRecorder()
+            )
+            let candidate = try XCTUnwrap(runtime.sample(event: .normal).visibleSnapshot, name)
+            XCTAssertEqual(candidate.hasPowerReading, available, name)
+            XCTAssertEqual(candidate.systemW, systemW, accuracy: 0.001, name)
+            var availability = StartupAvailabilityReducer()
+            let publication = availability.finish(candidate, recordHistory: true)
+            XCTAssertEqual(publication.snapshot != nil, available, name)
+            XCTAssertEqual(publication.shouldRecordHistory, available, name)
+
+            backend.properties.removeValue(forKey: "ExternalConnected")
+            XCTAssertNil(runtime.sample(event: .normal).visibleSnapshot, name)
+        }
+    }
+
     func testRuntimeReadsBatteryFieldsOnceForVisibleAndShadowAcrossPowerStates() throws {
         let backend = RuntimeBatteryBackend(properties: [:])
         let reader = AppleSmartBatteryPowerObservationReader(

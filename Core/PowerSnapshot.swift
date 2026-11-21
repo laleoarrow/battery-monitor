@@ -35,12 +35,18 @@ struct PowerSnapshot {
     var batteryW: Double = 0
     /// System consumption. Always non-negative.
     var systemW: Double = 0
+    /// False for a raw candidate with no usable power evidence. Keep it until
+    /// helper merging completes, but never publish its fallback zeros as data.
+    var hasPowerReading: Bool = true
     /// Available measured power delivered to attached devices, summed across ports.
     /// `nil` means this hardware sample did not publish a usable measurement.
     /// A partial sum must not be subtracted to derive an exact Mac-only load.
     /// This is an auxiliary breakdown of `systemW`, not another power sink.
     var deviceOutputW: Double? = nil
     var deviceOutputIsComplete: Bool = true
+    /// Positive evidence of an enumerated external USB device, not evidence of
+    /// power direction or watts. False does not rule out a power-only accessory.
+    var hasConnectedUSBDevice: Bool = false
     var temperatureC: Double? = nil
     var cycleCount: Int = 0
     var lowPowerMode: Bool = false

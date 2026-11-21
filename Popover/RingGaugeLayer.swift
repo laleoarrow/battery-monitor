@@ -199,7 +199,7 @@ final class RingGaugeView: PopoverSection {
         switch metric {
         case .systemLoad:
             let hasPositiveDeviceOutput = snapshot.coherentDeviceOutputW.map { $0 > 0 } ?? false
-            caption = hasPositiveDeviceOutput ? "System Total" : "System Load"
+            caption = hasPositiveDeviceOutput || snapshot.hasConnectedUSBDevice ? "System Total" : "System Load"
             value = PopoverStyle.watts(snapshot.systemW)
         case .batteryPower:
             caption = PopoverStyle.batteryFlowLabel(snapshot)

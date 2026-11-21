@@ -19,7 +19,7 @@ final class PowerIconImageView: NSImageView {
     @discardableResult
     func configurePowerIcon(symbol: String, description: String, accent: NSColor,
                             side: CGFloat, inset: CGFloat) -> Bool {
-        guard Self.descriptor(for: symbol) != nil else {
+        guard symbol == "device.output.port" || Self.descriptor(for: symbol) != nil else {
             rendered = nil
             return false
         }
@@ -49,6 +49,10 @@ final class PowerIconImageView: NSImageView {
     static func image(for symbol: String, side: CGFloat = 32, inset: CGFloat = 4,
                       ink: NSColor = .black, accent: NSColor = .black,
                       increasedContrast: Bool = false) -> NSImage? {
+        if symbol == "device.output.port" {
+            return DeviceOutputIcon.image(side: side, ink: ink, accent: accent,
+                                          increasedContrast: increasedContrast)
+        }
         guard let (icon, fraction) = descriptor(for: symbol) else { return nil }
         return ModuleIconArtwork.powerImage(
             for: icon, side: side, inset: inset, chargeFraction: fraction,

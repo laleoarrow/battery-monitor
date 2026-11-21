@@ -31,8 +31,8 @@ final class FooterHoverIntegrationTests: XCTestCase {
         Settings.liquidGlassEnabled = glass
         setenv("WATTSON_FORCE_REDUCE_MOTION", reduceMotion ? "1" : "0", 1)
         let footer = PopoverFooterView()
-        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth, height: 78)
-        footer.update(mode: .auto, helperInstalled: helper, systemBatteryIconHidden: false, tint: .systemBlue)
+        footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth, height: PopoverFooterView.preferredHeight)
+        footer.update(mode: .auto, helperInstalled: helper, tint: .systemBlue)
         footer.layoutSubtreeIfNeeded()
         return (footer, descendants(footer).compactMap { $0 as? FooterHoverFeedbackView }.first!)
     }
@@ -59,7 +59,10 @@ final class FooterHoverIntegrationTests: XCTestCase {
                                                        : NSSize(width: 22, height: 20))
                 let expectedGap: CGFloat = glass && reduceMotion ? 6 : 0
                 XCTAssertEqual(regions[1].rect.minX - regions[0].rect.maxX, expectedGap, accuracy: 0.001)
-                XCTAssertGreaterThan(regions[0].rect.minY, 30, "The checkbox row must not gain a hover region")
+                XCTAssertEqual(regions[0].rect.minY, 10, accuracy: 0.001,
+                               "Hover regions must follow the compact mode row")
+                XCTAssertTrue(regions.allSatisfy { $0.rect.minY >= 10 },
+                              "The removed battery-visibility row must not leave a hover target")
             }
         }
     }
@@ -87,7 +90,7 @@ final class FooterHoverIntegrationTests: XCTestCase {
 
     func testResizingAndSwitchingPresentationRebuildsMatchingRegions() {
         let (footer, feedback) = footer(glass: false, reduceMotion: false)
-        footer.setFrameSize(NSSize(width: 300, height: 78))
+        footer.setFrameSize(NSSize(width: 300, height: PopoverFooterView.preferredHeight))
         footer.layoutSubtreeIfNeeded()
         XCTAssertEqual(feedback.regionsForTest[0].rect.width, (300 - 46) / 3, accuracy: 0.001)
         guard #available(macOS 26.0, *) else { return }

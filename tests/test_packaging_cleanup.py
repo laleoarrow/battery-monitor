@@ -335,6 +335,81 @@ wattson_run /usr/bin/python3 "$TREE"
                 pids = [int(leader.read_text()), int(leaf.read_text())]
                 self.assertFalse(any(self.active(pid) for pid in pids), f"live owned PIDs: {pids}")
 
+    def test_separate_group_workers_are_reaped_without_stopping_another_session(self):
+        tree = self.root / "separate_group.py"
+        tree.write_text('''
+import os, pathlib, signal, subprocess, sys, time
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
+if sys.argv[1] == "leaf":
+    if os.getpgrp() != os.getpid():
+        os.setpgrp()
+    pathlib.Path(os.environ["LEAF_PID"]).write_text(str(os.getpid()))
+    pathlib.Path(os.environ["READY"]).touch()
+    while True:
+        output = pathlib.Path(os.environ["OWNED"])
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "late.o").write_text("compiler output")
+        time.sleep(0.03)
+pathlib.Path(os.environ["LEADER_PID"]).write_text(str(os.getpid()))
+subprocess.Popen([sys.executable, __file__, "leaf"])
+while not pathlib.Path(os.environ["READY"]).exists():
+    time.sleep(0.01)
+if sys.argv[1] in ("0", "7"):
+    sys.exit(int(sys.argv[1]))
+while True:
+    time.sleep(0.05)
+''', encoding="utf-8")
+        sentinel_ready = self.root / "sentinel-ready"
+        sentinel = self.start_process(
+            ["/usr/bin/python3", str(tree), "leaf"],
+            env=dict(self.env, READY=str(sentinel_ready), LEAF_PID=str(self.root / "sentinel.pid"),
+                     OWNED=str(self.root / "caller-sentinel")),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        for mode, number, expected in [("signal", signal.SIGHUP, 129),
+                                       ("signal", signal.SIGINT, 130),
+                                       ("signal", signal.SIGTERM, 143),
+                                       ("timeout", None, 124), ("0", None, 0), ("7", None, 7)]:
+            with self.subTest(mode=mode, signal=number):
+                ready = self.root / "ready"
+                ready.unlink(missing_ok=True)
+                leader, leaf = self.root / "leader.pid", self.root / "leaf.pid"
+                command = "wattson_run_timeout 0.6" if mode == "timeout" else "wattson_run"
+                process = self.start_process(
+                    ["/bin/bash", "-c", self.prefix + 'mkdir -p "$OWNED"\n'
+                     'wattson_cleanup_add_dir "$OWNED"\n'
+                     + command + ' /usr/bin/python3 "$TREE" "$MODE"\n'],
+                    env=dict(self.env, TREE=str(tree), MODE=mode, READY=str(ready),
+                             LEADER_PID=str(leader), LEAF_PID=str(leaf)),
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cleanup_grace=65,
+                )
+                deadline = time.monotonic() + 4
+                while not ready.exists() and process.poll() is None and time.monotonic() < deadline:
+                    time.sleep(0.02)
+                self.assertTrue(ready.exists(), "separate-group worker did not become ready")
+                worker = int(leaf.read_text())
+                self.addCleanup(self.stop_fixture_process, worker)
+                self.assertNotEqual(os.getpgid(worker), int(leader.read_text()))
+                self.assertEqual(os.getsid(worker), int(leader.read_text()))
+                if number is not None:
+                    process.send_signal(number)
+                try:
+                    output, error = process.communicate(timeout=8)
+                except subprocess.TimeoutExpired:
+                    self.stop_fixture_process(worker)
+                    self.finish_process(process)
+                    self.fail("owned worker escaped its process group and kept the output pipe open")
+                self.assertEqual(process.returncode, expected, output + error)
+                self.assertFalse(self.active(worker), "separate-group compiler must finish before file cleanup")
+                self.assertFalse(pathlib.Path(self.env["OWNED"]).exists())
+                time.sleep(0.1)
+                self.assertFalse(pathlib.Path(self.env["OWNED"]).exists(), "late output recreated cleaned scratch")
+                self.assertTrue(sentinel_ready.exists())
+                self.assertIsNone(sentinel.poll(), "another session using the same script must survive")
+                self.assertTrue((self.root / "caller-sentinel/late.o").exists())
+        sentinel.kill()
+        sentinel.wait(timeout=2)
+
     def test_nested_script_signals_wait_for_inner_unmount_and_cleanup(self):
         tree = self.create_owned_tree()
         inner_root = self.root / "inner-owned"
@@ -398,6 +473,51 @@ wattson_run_script "$INNER_SCRIPT"
                 ])
                 self.assertFalse(any(self.active(pid) for pid in pids), f"live nested PIDs: {pids}")
 
+    def test_session_query_failure_still_stops_the_group_and_captured_workers(self):
+        tree = self.create_owned_tree()
+        source = tree.read_text().replace(
+            'subprocess.Popen([sys.executable, __file__, "leaf"])',
+            'subprocess.Popen([sys.executable, __file__, "leaf"], preexec_fn=os.setpgrp)',
+        ).replace('while True:\n    time.sleep(0.05)', '''while True:
+    if len(sys.argv) > 1 and sys.argv[1] == "leaf":
+        output = pathlib.Path(os.environ["OWNED"])
+        output.mkdir(parents=True, exist_ok=True)
+        (output / "late.o").write_text("late compiler output")
+    time.sleep(0.05)''')
+        tree.write_text(source)
+        runner = self.lib / "run_owned.py"
+        runner.write_text(runner.read_text().replace('"/bin/ps"', 'os.environ["STUB_PS"]'))
+        self.stub("ps", '''
+if [[ "$*" == '-axo pid=,uid=' ]]; then
+    count=0
+    [[ ! -f "$PS_COUNT" ]] || read -r count < "$PS_COUNT"
+    count=$((count + 1))
+    printf '%s\n' "$count" > "$PS_COUNT"
+    [[ "$count" != "$FAIL_QUERY" ]] || exit 72
+fi
+exec /bin/ps "$@"
+''')
+        for query in (1, 2):
+            with self.subTest(failed_query=query):
+                ready = self.root / "ready"
+                ready.unlink(missing_ok=True)
+                count = self.root / "ps-count"
+                count.unlink(missing_ok=True)
+                leader, leaf = self.root / "leader.pid", self.root / "leaf.pid"
+                result = self.run_shell(
+                    'mkdir -p "$OWNED"\nwattson_cleanup_add_dir "$OWNED"\n'
+                    'wattson_run_timeout 0.5 /usr/bin/python3 "$TREE"\n',
+                    TREE=str(tree), READY=str(ready), LEADER_PID=str(leader), LEAF_PID=str(leaf),
+                    STUB_PS=str(self.bin / "ps"), PS_COUNT=str(count), FAIL_QUERY=str(query),
+                )
+                self.assertEqual(result.returncode, 127, result.stderr)
+                self.assertIn("Could not verify owned session cleanup", result.stderr)
+                self.assertFalse(self.active(int(leader.read_text())))
+                self.assertFalse(self.active(int(leaf.read_text())))
+                self.assertFalse(pathlib.Path(self.env["OWNED"]).exists())
+                time.sleep(0.1)
+                self.assertFalse(pathlib.Path(self.env["OWNED"]).exists(), "late output recreated cleaned scratch")
+
     def test_outer_cleanup_preserves_an_inner_script_mount_after_detach_failure(self):
         parent, mount, marker = self.seed_mount()
         inner = self.root / "inner-failure.sh"
@@ -429,6 +549,7 @@ wattson_run_script "$INNER_SCRIPT"
         runner = self.lib / "run_owned.py"
         runner.write_text(runner.read_text().replace('"/bin/ps"', 'os.environ["STUB_PS"]'))
         self.stub("ps", '''
+if [[ "$*" != '-axo pid=,uid=,comm=' ]]; then exec /bin/ps "$@"; fi
 for role in OWNED OTHER; do
     if [[ "$role" == OWNED ]]; then
         pid="$OWNED_PID"; executable="$EXACT_BINARY"

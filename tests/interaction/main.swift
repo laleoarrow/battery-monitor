@@ -1242,6 +1242,11 @@ flowView.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
 flowView.layoutSubtreeIfNeeded()
 flowView.update(snapshot: sharedMotionSnapshot, animated: false)
 flowView.setAnimationsEnabled(true)
+check("离窗 Energy Flow 不启动运动", flowView.flowMetricsForTest() == nil)
+let flowWindow = NSWindow(contentRect: flowView.frame, styleMask: [.borderless],
+                          backing: .buffered, defer: false)
+flowWindow.contentView = flowView
+defer { flowView.setAnimationsEnabled(false); flowWindow.contentView = nil }
 
 Settings.ringMetrics = Settings.defaultRingMetrics
 let ringView = RingGaugeView()
@@ -1318,6 +1323,116 @@ check("三模块非粒子动画使用同一功率倍率",
       abs(flowMotion.layerSpeed - ringMotion.layerSpeed) < 0.005
           && abs(flowMotion.layerSpeed - laneMotion.layerSpeed) < 0.005)
 
+// ---- 8a. 新混供流星服从真实弹窗与辅助功能生命周期 ----
+if !screenLocked {
+    let originalOverride = ProcessInfo.processInfo.environment["WATTSON_FORCE_REDUCE_MOTION"]
+    setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+    let mixedController = PopoverController()
+    let mixedUSB = PowerSnapshot(percent: 44, plugged: true, adapterW: 30,
+                                 batteryW: -9.7, systemW: 39.7, deviceOutputW: 12.2)
+    mixedController.update(snapshot: mixedUSB, history: [39.7], peak: 39.7, degraded: false)
+    mixedController.toggle(relativeTo: button)
+    func firstFlow(in view: NSView?) -> PowerFlowView? {
+        guard let view else { return nil }
+        if let flow = view as? PowerFlowView { return flow }
+        return view.subviews.lazy.compactMap { firstFlow(in: $0) }.first
+    }
+    if let flow = firstFlow(in: mixedController.contentViewForTest) {
+        let runtime = flow.fusionParticleLayerForTest
+        let ready = runApplication(until: {
+            mixedController.isShownForTest && !runtime.pendingPreparationForTest
+                && runtime.cachedFrameBytesForTest > 0
+        }, timeout: 30)
+        check("真实混供弹窗完成三维流星准备", ready && flow.topologyForTest == "mixedOutputSplit")
+        func mixedGradients(in view: NSView) -> [CAGradientLayer] {
+            var visited = Set<ObjectIdentifier>()
+            var fields: [CAGradientLayer] = []
+            func visitLayer(_ layer: CALayer?) {
+                guard let layer, visited.insert(ObjectIdentifier(layer)).inserted else { return }
+                if let field = layer as? CAGradientLayer { fields.append(field) }
+                visitLayer(layer.mask)
+                (layer.sublayers ?? []).forEach(visitLayer)
+            }
+            func visitView(_ view: NSView) {
+                visitLayer(view.layer)
+                view.subviews.forEach(visitView)
+            }
+            visitView(view)
+            return fields.filter { field in
+                var ancestor: CALayer? = field
+                while let layer = ancestor {
+                    if layer.isHidden || layer.opacity <= 0 { return false }
+                    ancestor = layer.superlayer
+                }
+                return true
+            }
+        }
+        let fields = mixedGradients(in: flow)
+        func presentedPositions() -> [CGFloat] {
+            fields.compactMap { $0.presentation()?.position.x }
+        }
+        let presentationReady = runApplication(until: {
+            fields.count == 5 && presentedPositions().count == 5
+        }, timeout: 2)
+        let firstPresentationTime = CACurrentMediaTime()
+        let firstPositions = presentedPositions()
+        spin(0.22)
+        let secondPositions = presentedPositions()
+        let sampleInterval = CACurrentMediaTime() - firstPresentationTime
+        let fieldPeriod = flow.bounds.width
+        func forwardDistance(_ from: CGFloat, _ to: CGFloat) -> CGFloat {
+            let remainder = (to - from).truncatingRemainder(dividingBy: fieldPeriod)
+            return remainder < 0 ? remainder + fieldPeriod : remainder
+        }
+        func isSynchronized(_ positions: [CGFloat]) -> Bool {
+            guard positions.count == 5, let first = positions.first else { return false }
+            return positions.allSatisfy {
+                let gap = forwardDistance(first, $0)
+                return min(gap, fieldPeriod - gap) < 0.75
+            }
+        }
+        let travelled = zip(firstPositions, secondPositions).map { forwardDistance($0.0, $0.1) }
+        check("混供亮峰初始基准居中，真实呈现持续向右移动",
+              abs(flow.mixedGradientPeakXForTest - 164) < 0.001 && presentationReady
+                  && travelled.count == 5 && travelled.allSatisfy { $0 > 2 && $0 < fieldPeriod / 2 },
+              "间隔 \(sampleInterval)s，五束位移 \(travelled)")
+        check("混供五束真实流光在两个时刻都保持同相",
+              isSynchronized(firstPositions) && isSynchronized(secondPositions),
+              "首次 \(firstPositions)，再次 \(secondPositions)")
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
+        NSWorkspace.shared.notificationCenter.post(
+            name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: NSWorkspace.shared)
+        spin(0.3)
+        check("运行中减少动态效果关闭流星与其他内容动画",
+              mixedController.runningModuleAnimationCountForTest == 0
+                  && !runtime.pendingPreparationForTest)
+        setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
+        NSWorkspace.shared.notificationCenter.post(
+            name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+            object: NSWorkspace.shared)
+        check("取消减少动态效果后混供恢复",
+              runApplication(until: { !runtime.pendingPreparationForTest
+                  && mixedController.runningModuleAnimationCountForTest > 0 }, timeout: 30))
+        mixedController.update(snapshot: mixedUSB, history: [39.7], peak: 39.7, degraded: true)
+        spin(0.1)
+        check("失败读数停止混供流星且不再准备旧数据",
+              mixedController.runningModuleAnimationCountForTest == 0
+                  && !runtime.pendingPreparationForTest)
+        mixedController.handleOutsideClick()
+        spin(0.8)
+        check("混供弹窗关闭后无残留动画",
+              !mixedController.isShownForTest && mixedController.runningAnimationCountForTest == 0)
+    } else { check("混供真实弹窗可访问生产Energy Flow", false) }
+    mixedController.handleOutsideClick()
+    mixedController.retireClassicHostForTest()
+    if let originalOverride { setenv("WATTSON_FORCE_REDUCE_MOTION", originalOverride, 1) }
+    else { unsetenv("WATTSON_FORCE_REDUCE_MOTION") }
+    NSWorkspace.shared.notificationCenter.post(
+        name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
+        object: NSWorkspace.shared)
+}
+
 // ---- 9. 紧凑顶栏覆盖所有供电状态，不截断也不越界 ----
 let header = PopoverHeaderView()
 header.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
@@ -1384,7 +1499,7 @@ do {
     footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                           height: PopoverFooterView.preferredHeight)
     footer.update(mode: .auto, helperInstalled: true,
-                  systemBatteryIconHidden: false, tint: .systemBlue)
+                  tint: .systemBlue)
     let footerWindow = NSWindow(contentRect: footer.bounds,
                                  styleMask: [.titled, .closable],
                                  backing: .buffered, defer: false)
@@ -1395,28 +1510,43 @@ do {
     func footerDescendants(_ view: NSView) -> [NSView] {
         view.subviews.flatMap { [$0] + footerDescendants($0) }
     }
-    if let battery = footerDescendants(footer).compactMap({ $0 as? NSButton }).first(where: {
-        $0.action == NSSelectorFromString("systemBatteryIconChanged:")
-    }) {
-        func footerContains(_ text: String) -> Bool {
-            footerDescendants(footer).compactMap { $0 as? NSTextField }
-                .contains { !$0.isHidden && $0.stringValue == text }
-        }
-        for phase: SystemBatteryIconReadStatus in [.notRequested, .checking, .failed(.requestFailed)] {
-            footer.update(mode: .auto, helperInstalled: true,
-                          systemBatteryIconHidden: nil, tint: .systemBlue, readStatus: phase)
-            footer.layoutSubtreeIfNeeded()
-            check("battery unknown phase disables mutation", !battery.isEnabled && battery.state == .mixed)
-            check("battery pending is not reported as failure",
-                  footerContains("Status Unavailable") == (phase == .failed(.requestFailed)))
-            check("battery reading has explicit feedback", footerContains("Reading…") == (phase == .checking))
-        }
-        footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue, readStatus: .ready)
-        check("battery read recovers checkbox and removes status",
-              battery.isEnabled && battery.state == .off && !footerContains("Status Unavailable")
-                  && !footerContains("Reading…"))
-    } else { check("battery footer control exists", false) }
+    let batteryMenuContent = PopoverContentViewController()
+    var batteryMenuRequests: [Bool] = []
+    var finishBatteryMenuWrite: ((Bool) -> Void)?
+    batteryMenuContent.setSystemBatteryIconToggleHandler { requested, completion in
+        batteryMenuRequests.append(requested)
+        finishBatteryMenuWrite = completion
+    }
+    for phase: SystemBatteryIconReadStatus in [.notRequested, .checking, .failed(.requestFailed)] {
+        batteryMenuContent.updateSystemBatteryIconState(nil, readStatus: phase)
+        let menu = batteryMenuContent.quickMenuForTest(helperInstalled: true)
+        if let battery = menu.items.first(where: { $0.action == NSSelectorFromString("toggleSystemBatteryIcon:") }) {
+            menu.update()
+            check("battery unknown menu phase disables mutation", !battery.isEnabled && battery.state == .mixed)
+            check("battery pending menu is not reported as failure",
+                  battery.title.contains("Status Unavailable") == (phase == .failed(.requestFailed)))
+            check("battery reading has explicit menu feedback", battery.title.contains("Reading…") == (phase == .checking))
+            _ = NSApp.sendAction(battery.action!, to: battery.target, from: battery)
+            check("disabled battery menu action cannot mutate", batteryMenuRequests.isEmpty)
+        } else { check("battery quick-menu control exists", false) }
+    }
+    batteryMenuContent.updateSystemBatteryIconState(false)
+    let batteryMenu = batteryMenuContent.quickMenuForTest(helperInstalled: true)
+    if let battery = batteryMenu.items.first(where: { $0.action == NSSelectorFromString("toggleSystemBatteryIcon:") }) {
+        check("battery read recovers menu control", battery.isEnabled && battery.state == .off
+              && battery.title == "Hide System Battery Icon")
+        let index = batteryMenu.index(of: battery)
+        check("battery visibility is grouped with menu-bar and login settings",
+              index > 0 && batteryMenu.items[index - 1].title == "Show Battery Percentage in Menu Bar"
+                  && batteryMenu.items[index + 1].title.hasPrefix("Launch at Login"))
+        batteryMenu.performActionForItem(at: index)
+        check("native menu action uses the authoritative toggle", batteryMenuRequests == [true] && !battery.isEnabled)
+        batteryMenuContent.updateSystemBatteryIconState(true)
+        finishBatteryMenuWrite?(true)
+        check("battery menu write completes from shared authority", battery.state == .on && battery.isEnabled)
+    } else { check("battery quick-menu control exists", false) }
+    check("battery visibility no longer occupies footer row", !footerDescendants(footer).compactMap { $0 as? NSButton }
+        .contains { $0.title == "Hide System Battery Icon" })
     if let baseline = footerDescendants(footer).compactMap({ $0 as? ModeSliderView }).first,
        let native = footerDescendants(footer).compactMap({ $0 as? NativeModeSegmentedControl }).first,
        let menu = footerDescendants(footer).compactMap({ $0 as? NSButton }).first(where: {
@@ -1463,7 +1593,7 @@ do {
                   baseline.isHidden && native.isHidden && !glass.isHiddenOrHasHiddenAncestor
                       && footerWindow.firstResponder === glass.keyboardFocusView
                       && glass.convert(glass.bounds, to: footer)
-                          == NSRect(x: 0, y: 36, width: originalModeFrame.width, height: 38)
+                          == NSRect(x: 0, y: 10, width: originalModeFrame.width, height: 38)
                       && glassButtons.count == 3
                       && glassButtons.map(\.title) == ["Auto", "Low Power", "High Power"]
                       && native.cell?.isBordered == originalNativeBordered)
@@ -1483,11 +1613,11 @@ do {
                       && glass.layer?.backgroundColor == nil
                       && glassButtons.allSatisfy { $0.isBordered && $0.bezelStyle == .glass
                           && $0.borderShape == .capsule && $0.frame.height == 38 }
-                      && modeSurfaceFrame == NSRect(x: 0, y: 36, width: footer.bounds.width - 46, height: 38))
+                      && modeSurfaceFrame == NSRect(x: 0, y: 10, width: footer.bounds.width - 46, height: 38))
             check("原生玻璃菜单按钮可点击且不与档位控件重叠",
                   menu.isBordered && menu.bezelStyle == .glass
                       && menu.borderShape == .circle
-                      && glassMenuFrame == NSRect(x: footer.bounds.width - 38, y: 36, width: 38, height: 38)
+                      && glassMenuFrame == NSRect(x: footer.bounds.width - 38, y: 10, width: 38, height: 38)
                       && glassMenuFrame.minX - modeSurfaceFrame.maxX == 8)
             let menuLocalPoint = NSPoint(x: glassMenuFrame.midX, y: glassMenuFrame.midY)
             let localPointHit = footer.hitTest(menuLocalPoint)
@@ -1733,7 +1863,7 @@ if #available(macOS 26.0, *) {
     footer.frame = NSRect(x: 0, y: 0, width: PopoverStyle.contentWidth,
                           height: PopoverFooterView.preferredHeight)
     footer.update(mode: .auto, helperInstalled: true,
-                  systemBatteryIconHidden: false, tint: .systemBlue)
+                  tint: .systemBlue)
     let window = NSWindow(contentRect: footer.bounds, styleMask: [.titled, .closable],
                           backing: .buffered, defer: false)
     window.isReleasedWhenClosed = false
@@ -1746,9 +1876,9 @@ if #available(macOS 26.0, *) {
     if let a2 = a2Descendants(footer).compactMap({ $0 as? InteractiveGlassModeControl }).first,
        let classic = a2Descendants(footer).compactMap({ $0 as? ModeSliderView }).first,
        let native = a2Descendants(footer).compactMap({ $0 as? NativeModeSegmentedControl }).first {
-        check("正常动态效果选择 A2 并保持原有底栏高度",
+        check("正常动态效果选择 A2 并保持紧凑底栏高度",
               !a2.isHiddenOrHasHiddenAncestor && classic.isHidden && native.isHidden
-                  && footer.frame.height == 78
+                  && footer.frame.height == 52
                   && a2.frame.width == footer.bounds.width + 24 && a2.frame.height == 62)
         let padding = NSPoint(x: a2.frame.midX, y: a2.frame.minY + 2)
         let hit = footer.hitTest(footer.convert(padding, to: footer.superview))
@@ -1778,7 +1908,7 @@ if #available(macOS 26.0, *) {
         a2.beginDragForTest(startX: 10)
         let origin = a2.dragOriginForTest(translationX: 70)
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         check("A2 共享拖动状态路径连续移动但不调用 helper 意图",
               origin.map { abs($0 - 70) < 0.01 } == true && requests.isEmpty)
         a2.endDragForTest(translationX: 90)
@@ -1795,13 +1925,13 @@ if #available(macOS 26.0, *) {
         check("A2 待确认状态跨经典主题来回切换而不丢失",
               a2.enabledModesForTest.isEmpty && a2.selectedModeForTest == .low && requests == [.low])
         footer.update(mode: .high, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         completion?(nil)
         check("A2 失败回滚到 owner 最新观测并恢复可用模式",
               a2.selectedModeForTest == .high && a2.enabledModesForTest.contains(.auto)
                   && a2.enabledModesForTest.contains(.low) && requests == [.low])
         footer.update(mode: .auto, helperInstalled: true,
-                      systemBatteryIconHidden: false, tint: .systemBlue)
+                      tint: .systemBlue)
         a2.beginDragForTest(startX: 10)
         let escapeGeneration = a2.cancellationGenerationForTest
         a2.cancelOperation(nil)
@@ -1882,7 +2012,7 @@ if #available(macOS 26.0, *) {
             // Configure the authoritative owner as well as its child. This
             // isolated fixture does not install or consult a real helper.
             owner.update(mode: .auto, helperInstalled: true,
-                         systemBatteryIconHidden: false, tint: .systemBlue)
+                         tint: .systemBlue)
             var menuRequests = 0
             owner.onShowMenu = { anchor in
                 if anchor.window === owner.window { menuRequests += 1 }
@@ -1892,7 +2022,7 @@ if #available(macOS 26.0, *) {
             root.layoutSubtreeIfNeeded()
             owner.scrollToVisible(owner.bounds)
             CATransaction.flush()
-            let menuCircle = NSRect(x: owner.bounds.maxX - 38, y: 36, width: 38, height: 38)
+            let menuCircle = NSRect(x: owner.bounds.maxX - 38, y: 10, width: 38, height: 38)
             func entranceGeometrySettled() -> Bool {
                 guard let layer = root.layer, let presentation = layer.presentation() else { return false }
                 return presentation.opacity == layer.opacity
@@ -1914,7 +2044,7 @@ if #available(macOS 26.0, *) {
             if let window = owner.window {
                 for offset in [NSPoint(x: 13, y: 7), NSPoint(x: -13, y: -7)] {
                     let location = owner.convert(NSPoint(
-                        x: owner.bounds.maxX - 19 + offset.x, y: 55 + offset.y
+                        x: owner.bounds.maxX - 19 + offset.x, y: 29 + offset.y
                     ), to: nil)
                     let expected = menuRequests + 1
                     for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
@@ -1944,7 +2074,7 @@ if #available(macOS 26.0, *) {
                   panel.glassPanelForTest != nil && panel.contentViewForTest === root
                       && !a2.isHiddenOrHasHiddenAncestor && requests == 0)
             owner.update(mode: .auto, helperInstalled: true,
-                         systemBatteryIconHidden: false, tint: .systemBlue)
+                         tint: .systemBlue)
             a2.beginDragForTest(startX: 10)
             a2.endDragForTest(translationX: 90)
             check("重开后的新 A2 手势状态路径可正常提交一次", requests == 1,
@@ -2527,13 +2657,27 @@ let previousMainMenu = NSApp.mainMenu
 NSApp.mainMenu = nil
 settingsOwner.installMainMenuForTest()
 let appMenu = NSApp.mainMenu?.items.first?.submenu
+let fileMenu = NSApp.mainMenu?.item(withTitle: "File")?.submenu
+let windowMenu = NSApp.mainMenu?.item(withTitle: "Window")?.submenu
 let settingsMenuItem = appMenu?.items.first { $0.title == "Settings…" }
+let closeMenuItem = fileMenu?.items.first { $0.title == "Close" }
+let minimizeMenuItem = windowMenu?.item(withTitle: "Minimize")
 check("Settings 命令位于标准应用菜单",
       settingsMenuItem?.action == NSSelectorFromString("showSettings")
           && settingsMenuItem?.keyEquivalent == ","
           && settingsMenuItem?.keyEquivalentModifierMask == [.command])
 check("应用菜单保留退出命令",
       appMenu?.items.contains { $0.title == "Quit Wattson" } == true)
+check("文件菜单提供标准关闭窗口命令",
+      closeMenuItem?.action == #selector(NSWindow.performClose(_:))
+          && closeMenuItem?.target == nil
+          && closeMenuItem?.keyEquivalent == "w"
+          && closeMenuItem?.keyEquivalentModifierMask == [.command])
+check("窗口菜单提供标准最小化命令",
+      minimizeMenuItem?.action == #selector(NSWindow.performMiniaturize(_:))
+          && minimizeMenuItem?.target == nil
+          && minimizeMenuItem?.keyEquivalent == "m"
+          && minimizeMenuItem?.keyEquivalentModifierMask == [.command])
 
 let policyBeforeSettings = app.activationPolicy()
 settingsOwner.openPopoverForSettingsCommandTest(relativeTo: button)
@@ -2621,6 +2765,96 @@ check("Command-Comma 关闭后重开同一窗口",
           && commandPresentationState?.displayClock == false,
       "handled=\(commandHandled), visible=\(firstSettingsWindow?.isVisible == true), key=\(firstSettingsWindow?.isKeyWindow == true), active=\(app.isActive), keyTitle=\(reopenedSettingsKeyTitle)")
 interactionSection.onRefresh = nil
+
+func postCommand(
+    _ character: String, keyCode: UInt16, to window: NSWindow?,
+    modifiers: NSEvent.ModifierFlags = [.command]
+) -> Bool {
+    guard let window, window.isKeyWindow, let event = NSEvent.keyEvent(
+        with: .keyDown, location: .zero, modifierFlags: modifiers,
+        timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber,
+        context: nil, characters: character, charactersIgnoringModifiers: character,
+        isARepeat: false, keyCode: keyCode
+    ) else { return false }
+    app.postEvent(event, atStart: false)
+    return true
+}
+
+let settingsMinimized = postCommand("m", keyCode: 46, to: firstSettingsWindow)
+    && runApplication(until: { firstSettingsWindow?.isMiniaturized == true }, timeout: 2.5)
+check("Command-M 经 AppKit 事件循环最小化 Settings 窗口", settingsMinimized)
+
+settingsOwner.showSettings()
+let restoredSettingsBecameKey = runApplication(
+    until: { firstSettingsWindow?.isKeyWindow == true && firstSettingsWindow?.isMiniaturized == false },
+    timeout: 2.5
+)
+check("最小化后 Settings 命令恢复同一窗口",
+      restoredSettingsBecameKey && firstSettingsWindow === settingsOwner.settingsWindowForTest)
+
+let settingsHidden = postCommand("h", keyCode: 4, to: firstSettingsWindow)
+    && runApplication(until: { firstSettingsWindow?.isVisible == false }, timeout: 2.5)
+check("Command-H 隐藏菜单栏模式下的 Settings 窗口", settingsHidden)
+
+settingsOwner.showSettings()
+let unhiddenSettingsBecameKey = runApplication(
+    until: { !app.isHidden && firstSettingsWindow?.isKeyWindow == true },
+    timeout: 2.5
+)
+check("隐藏后 Settings 命令恢复同一窗口",
+      unhiddenSettingsBecameKey && firstSettingsWindow === settingsOwner.settingsWindowForTest)
+
+if let firstSettingsWindow, unhiddenSettingsBecameKey {
+    let whitelist = ProcessWhitelistWindowController()
+    whitelist.present(asSheetFor: firstSettingsWindow)
+    let sheet = whitelist.window
+    let sheetBecameKey = runApplication(until: { sheet?.isKeyWindow == true }, timeout: 2.5)
+    if sheetBecameKey, let editor = sheet?.firstResponder as? NSTextView {
+        let sample = "Wattson Shortcut Test"
+        editor.insertText(sample, replacementRange: editor.selectedRange())
+        editor.setSelectedRange(NSRange(location: 0, length: 0))
+        let wholeSample = NSRange(location: 0, length: sample.utf16.count)
+        let selected = postCommand("a", keyCode: 0, to: sheet)
+            && runApplication(until: { editor.selectedRange() == wholeSample }, timeout: 2.5)
+        check("Command-A 选中白名单编辑框的全部文字", selected)
+
+        if ProcessInfo.processInfo.environment["WATTSON_TEST_SETTINGS_SHORTCUTS_CLIPBOARD"] == "1" {
+            let copied = postCommand("c", keyCode: 8, to: sheet)
+                && runApplication(until: { NSPasteboard.general.string(forType: .string) == sample }, timeout: 2.5)
+            check("Command-C 复制选中的白名单文字", copied)
+            let cut = postCommand("x", keyCode: 7, to: sheet)
+                && runApplication(until: { editor.string.isEmpty }, timeout: 2.5)
+            check("Command-X 剪切选中的白名单文字", cut)
+            let pasted = postCommand("v", keyCode: 9, to: sheet)
+                && runApplication(until: { editor.string == sample }, timeout: 2.5)
+            check("Command-V 将剪贴板文字粘贴到白名单编辑框", pasted)
+            let undone = postCommand("z", keyCode: 6, to: sheet)
+                && runApplication(until: { editor.string.isEmpty }, timeout: 2.5)
+            check("Command-Z 撤销白名单编辑", undone)
+            let redone = postCommand("Z", keyCode: 6, to: sheet, modifiers: [.command, .shift])
+                && runApplication(until: { editor.string == sample }, timeout: 2.5)
+            check("Shift-Command-Z 重做白名单编辑", redone)
+        }
+    } else {
+        check("白名单编辑框获得键盘焦点", false)
+    }
+    let sheetClosed = postCommand("\u{1b}", keyCode: 53, to: sheet, modifiers: []) && runApplication(
+        until: { firstSettingsWindow.attachedSheet == nil && sheet?.isVisible == false },
+        timeout: 2.5
+    )
+    check("Escape 关闭白名单并释放设置窗口的模态状态", sheetClosed)
+    if !sheetClosed { whitelist.close() }
+}
+
+let settingsKeyAfterSheet = runApplication(
+    until: { firstSettingsWindow?.isKeyWindow == true }, timeout: 2.5
+)
+let settingsClosedWithCommandW = settingsKeyAfterSheet && postCommand("w", keyCode: 13, to: firstSettingsWindow)
+    && runApplication(until: { firstSettingsWindow?.isVisible == false }, timeout: 2.5)
+check("Command-W 经 AppKit 事件循环关闭 Settings 窗口",
+      settingsClosedWithCommandW,
+      "keyAfterSheet=\(settingsKeyAfterSheet), active=\(app.isActive), key=\(app.keyWindow?.title ?? "nil"), modal=\(app.modalWindow?.title ?? "nil")")
+
 check("Settings 未改变 LSUIElement 的 accessory 激活策略",
       policyBeforeSettings == .accessory
           && app.activationPolicy() == policyBeforeSettings)

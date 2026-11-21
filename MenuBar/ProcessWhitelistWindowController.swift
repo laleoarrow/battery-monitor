@@ -200,8 +200,17 @@ final class ProcessWhitelistWindowController: NSWindowController, NSTableViewDat
     }
 
     override func close() {
-        if let window { window.sheetParent?.endSheet(window) }
+        let parent = window?.sheetParent
+        let restoreParentFocus = window?.isKeyWindow == true
+        if let window { parent?.endSheet(window) }
         super.close()
+        if restoreParentFocus {
+            DispatchQueue.main.async { [weak parent] in
+                guard let parent, parent.isVisible, parent.attachedSheet == nil,
+                      NSApp.isActive, NSApp.keyWindow == nil else { return }
+                parent.makeKey()
+            }
+        }
     }
 
     func controlTextDidChange(_ notification: Notification) { refreshEditor() }

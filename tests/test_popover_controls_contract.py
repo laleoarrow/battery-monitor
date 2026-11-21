@@ -120,7 +120,7 @@ class PopoverControlsContractTests(unittest.TestCase):
             "\nprivate final class PopoverSurfaceView", 1
         )[0]
         refresh = footer.split("private func refreshDisplayOptions(reduceMotion:", 1)[1].split(
-            "\n    @objc private func systemBatteryIconChanged", 1
+            "\n    @objc private func showMenu", 1
         )[0]
         glass, classic = refresh.split("        } else {", 1)
         self.assertIn("if #available(macOS 26.0, *), Settings.usesLiquidGlass", glass)
@@ -207,10 +207,10 @@ class PopoverControlsContractTests(unittest.TestCase):
         footer = self.content.split("final class PopoverFooterView", 1)[1].split(
             "\nprivate final class PopoverSurfaceView", 1
         )[0]
-        self.assertIn("interactiveGlassControl?.frame = NSRect(x: -12, y: 24, width: bounds.width + 24, height: 62)", footer)
+        self.assertIn("interactiveGlassControl?.frame = NSRect(x: -12, y: -2, width: bounds.width + 24, height: 62)", footer)
         self.assertIn("static let opticalInset: CGFloat = 12", self.interactive_glass_mode)
         self.assertIn("bounds.insetBy(dx: Self.opticalInset, dy: Self.opticalInset)", self.interactive_glass_mode)
-        self.assertIn("static let preferredHeight: CGFloat = 78", footer)
+        self.assertIn("static let preferredHeight: CGFloat = 52", footer)
         self.assertIn("modeControl.frame = modeFrame", footer)
         self.assertIn("nativeModeControl.frame = modeFrame", footer)
 
@@ -247,20 +247,18 @@ class PopoverControlsContractTests(unittest.TestCase):
             "\nprivate final class PopoverSurfaceView", 1
         )[0]
         layout = footer.split("override func layout()", 1)[1].split("\n    func update(", 1)[0]
-        self.assertIn("static let preferredHeight: CGFloat = 78", footer)
-        self.assertIn("systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)", layout)
-        self.assertIn("statusMessage.frame = statusMessage.isHidden ? .zero", layout)
-        self.assertIn("NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)", layout)
-        self.assertIn("x: 0, y: 36, width: bounds.width - 46", layout)
+        self.assertIn("static let preferredHeight: CGFloat = 52", footer)
+        self.assertNotIn("systemBatteryIconButton", footer)
+        self.assertIn("x: 0, y: 10, width: bounds.width - 46", layout)
         self.assertIn("height: ModeSliderView.preferredHeight", layout)
         self.assertIn("modeControl.frame = modeFrame", layout)
         self.assertIn("nativeModeControl.frame = modeFrame", layout)
         glass, classic = layout.split("if Settings.usesLiquidGlass {", 1)[1].split("} else {", 1)
-        self.assertIn("glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)", glass)
+        self.assertIn("glassControls?.frame = NSRect(x: 0, y: 10, width: bounds.width, height: 38)", glass)
         self.assertIn("glassControlsContent.frame = glassControls?.bounds ?? .zero", glass)
         self.assertIn("glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)", glass)
         self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)", glass)
-        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)", classic)
+        self.assertIn("settingsButton.frame = NSRect(x: bounds.width - 22, y: 16, width: 22, height: 20)", classic)
         self.assertIn("static let preferredHeight: CGFloat = 38", self.glass_mode)
         self.assertIn("private static let buttonSpacing: CGFloat = 6", self.glass_mode)
         self.assertIn("bounds.width - CGFloat(buttons.count - 1) * Self.buttonSpacing", self.glass_mode)
@@ -439,9 +437,22 @@ class PopoverControlsContractTests(unittest.TestCase):
         self.assertIn("enabledModes:", self.content)
         self.assertIn("candidates = modes.indices.filter { enabled[$0] }", self.slider)
 
-    def test_system_battery_checkbox_is_in_the_footer(self):
-        self.assertIn('checkboxWithTitle: "Hide System Battery Icon"', self.content)
-        self.assertIn("onSystemBatteryIconToggle", self.content)
+    def test_system_battery_visibility_is_in_the_quick_menu(self):
+        footer, controller = self.content.split("final class PopoverFooterView", 1)[1].split(
+            "final class PopoverContentViewController", 1)
+        self.assertNotIn("systemBatteryIcon", footer)
+        self.assertIn('NSMenuItem(title: "Hide System Battery Icon"', controller)
+        self.assertIn("menu.autoenablesItems = false", controller)
+        self.assertLess(controller.index("menu.addItem(percentage)"),
+                        controller.index("menu.addItem(makeSystemBatteryIconMenuItem())"))
+        self.assertLess(controller.index("menu.addItem(makeSystemBatteryIconMenuItem())"),
+                        controller.index("let loginState = LoginItemController.state"))
+        action = controller.split("@objc private func toggleSystemBatteryIcon", 1)[1].split(
+            "private func showModuleMenu", 1)[0]
+        self.assertIn("systemBatteryIconReadStatus == .ready", action)
+        self.assertIn("!systemBatteryIconUpdateInFlight", action)
+        self.assertIn("handler(!hidden)", action)
+        self.assertIn("refreshSystemBatteryIconMenuItem()", action)
 
     def test_system_battery_state_is_queried_only_when_opening(self):
         # The query wakes the helper through launchd, so it must not run on the

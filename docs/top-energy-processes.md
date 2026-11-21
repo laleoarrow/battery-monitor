@@ -133,8 +133,9 @@ Changes apply to the current readings immediately and persist across launches.
 Remove a rule to show matching processes again. Rules match the displayed process
 name, without reading paths or command-line arguments. Filtering happens before
 the configured display count, within the helper's existing top-ten candidate
-list; exclusions can therefore leave fewer visible rows. When every returned
-candidate matches, the module shows **All processes are whitelisted**.
+list; exclusions can therefore leave fewer visible rows. The section shrinks to
+fit those rows instead of reserving empty slots. When every returned candidate
+matches, it retains one row for **All processes are whitelisted**.
 
 ## Ending a process
 

@@ -162,7 +162,8 @@ final class ModuleOrderViewTests: XCTestCase {
         for (first, second) in zip(sections, sections.dropFirst()) {
             assertVerticallyAdjacent(first, second)
         }
-        XCTAssertEqual(content.preferredHeight, 799 + TopProcessesView.preferredHeight(count: 3))
+        // Moving battery visibility to the quick menu reclaims its 26-point row.
+        XCTAssertEqual(content.preferredHeight, 773 + TopProcessesView.preferredHeight(count: 3))
     }
 
     func testLiveOrderRetainsObjectsDataHeightScrollFocusAndHistoryAttachment() throws {
@@ -311,8 +312,8 @@ final class ModuleOrderViewTests: XCTestCase {
 
         Settings.topProcessesCompact = true
         XCTAssertTrue(processView === content.moduleViewForTest(.topProcesses))
-        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 3, compact: true))
-        XCTAssertEqual(content.preferredHeight, fullHeight - 48)
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 1, compact: true))
+        XCTAssertEqual(content.preferredHeight, fullHeight - 16)
         XCTAssertEqual(row.accessibilityValue() as? String, reading)
         XCTAssertTrue(row.subviews.compactMap { $0 as? NSTextField }.last?.isHidden == true)
 
@@ -326,7 +327,7 @@ final class ModuleOrderViewTests: XCTestCase {
         Settings.topProcessesCompact = true
         XCTAssertEqual(content.preferredHeight, hiddenHeight)
         Settings.setModule(.topProcesses, visible: true)
-        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 3, compact: true))
+        XCTAssertEqual(processView.frame.height, TopProcessesView.preferredHeight(count: 1, compact: true))
         XCTAssertEqual(row.accessibilityValue() as? String, reading)
     }
 }

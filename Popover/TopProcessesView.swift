@@ -12,8 +12,9 @@ final class TopProcessesView: PopoverSection {
     private let rows = (0..<10).map { _ in ProcessRow() }
     private let actionFeedback = FooterHoverFeedbackView(frame: .zero)
     private var infoPopover: NSPopover?
-    private var count = 3
-    private var compact = false
+    private var count = Settings.topProcessCount
+    private var compact = Settings.topProcessesCompact
+    private var layoutRowCount = Settings.topProcessCount
     private var renderedState: TopProcessesState?
     private var renderedWhitelist: [ProcessWhitelistRule] = []
     private var whitelistMatcher = ProcessWhitelistMatcher(rules: [])
@@ -21,6 +22,11 @@ final class TopProcessesView: PopoverSection {
     private var selectedProcess: Selection?
     private var selectedAction: ProcessActionButton.Action = .forceQuit
     var forceQuitHandler: ((EnergyProcess) -> Void)?
+    var heightDidChange: ((CGFloat) -> Void)?
+
+    var contentHeight: CGFloat {
+        Self.preferredHeight(count: layoutRowCount, compact: compact)
+    }
 
     private enum Selection: Equatable {
         case identified(ProcessIdentity)
@@ -114,7 +120,7 @@ final class TopProcessesView: PopoverSection {
             row.frame = NSRect(x: 0, y: 28 + CGFloat(index) * rowHeight,
                                width: bounds.width, height: rowHeight)
         }
-        status.frame = NSRect(x: 0, y: 28 + (CGFloat(count) * rowHeight - 20) / 2,
+        status.frame = NSRect(x: 0, y: 28 + (CGFloat(layoutRowCount) * rowHeight - 20) / 2,
                               width: bounds.width, height: 20)
         actionFeedback.frame = bounds
         updateActionFeedback()
@@ -165,6 +171,7 @@ final class TopProcessesView: PopoverSection {
         let whitelist = Settings.processWhitelist
         guard renderedState != state || self.count != count || self.compact != compact
                 || renderedWhitelist != whitelist else { return }
+        let previousHeight = contentHeight
         if renderedWhitelist != whitelist {
             renderedWhitelist = whitelist
             whitelistMatcher = ProcessWhitelistMatcher(rules: whitelist)
@@ -183,14 +190,17 @@ final class TopProcessesView: PopoverSection {
         switch state {
         case .loading:
             processes = []
+            layoutRowCount = count
             status.stringValue = "Measuring…"
             status.setAccessibilityHelp("Measuring process CPU activity and idle wakeups over about one second.")
         case .unavailable:
             processes = []
+            layoutRowCount = count
             status.stringValue = "Unavailable"
             status.setAccessibilityHelp("Process activity readings require the Wattson helper and a successful sampling interval.")
         case .ready(let values):
             processes = Array(values.lazy.filter { !self.whitelistMatcher.matches($0.name) }.prefix(self.count))
+            layoutRowCount = max(processes.count, 1)
             let allHidden = !values.isEmpty && processes.isEmpty
             status.stringValue = allHidden ? "All processes are whitelisted" : "No active processes"
             status.setAccessibilityHelp(allHidden
@@ -228,6 +238,7 @@ final class TopProcessesView: PopoverSection {
         }
         needsLayout = true
         updateActionFeedback()
+        if contentHeight != previousHeight { heightDidChange?(contentHeight) }
     }
 
     private func select(_ selection: Selection?, action: ProcessActionButton.Action = .forceQuit) {

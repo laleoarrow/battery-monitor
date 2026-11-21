@@ -31,6 +31,7 @@ enum BatterySampler {
         snapshot.percent = systemReading.percent ?? snapshot.percent
         snapshot.systemChargingState = systemReading.chargingState
         snapshot.batteryHealthPercent = SystemBatteryHealth.shared.currentPercent()
+        snapshot.hasConnectedUSBDevice = USBDeviceConnectionReader.hasExternalDevice()
         var fallback = BatteryTimeFallback()
         return .snapshot(fallback.applying(
             to: snapshot, properties: properties ?? [:],
@@ -106,10 +107,17 @@ enum BatterySampler {
             instantAmperage: instantAmperage,
             amperage: amperage
         )
-        let fallbackBatteryW = resolvedFallbackBatteryW(
+        let averageBatteryW = resolvedInstantBatteryW(
             voltage: voltage,
+            instantAmperage: nil,
             amperage: amperage
         )
+        let fallbackBatteryW = averageBatteryW ?? 0
+        snapshot.hasPowerReading = telemetry["SystemLoad"] != nil
+            || telemetry["BatteryPower"] != nil
+            || (plugged && telemetry["SystemPowerIn"] != nil)
+            || (instantBatteryW.map { plugged || $0 <= 0 } ?? false)
+            || (averageBatteryW.map { plugged || $0 <= 0 } ?? false)
 
         // `IsCharging` can remain true while an undersized adapter is being
         // supplemented by the battery. Firmware has also emitted both raw sign
@@ -437,6 +445,7 @@ enum BatterySampler {
             fresh.adapterW = 0
             fresh.systemW = liveSystem
             fresh.batteryW = liveSystem > 0 ? -liveSystem : 0
+            fresh.hasPowerReading = true
             return fresh
         }
 
@@ -460,6 +469,7 @@ enum BatterySampler {
         } else {
             return snapshot
         }
+        fresh.hasPowerReading = true
         return fresh
     }
 

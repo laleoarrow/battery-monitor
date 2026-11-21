@@ -168,4 +168,51 @@ final class PowerPresentationStateTests: XCTestCase {
             }
         }
     }
+
+    func testUSBDeadbandUsesCapacityAndOfficialStateWithoutAFalseBatteryFlow() {
+        let flow = makeFlow()
+        for batteryW in [-0.2, 0, 0.2] {
+            flow.update(snapshot: PowerSnapshot(percent: 72, plugged: true,
+                adapterW: 32 + batteryW, batteryW: batteryW, systemW: 32,
+                deviceOutputW: 7.5, systemChargingState: .charging), animated: false)
+            XCTAssertEqual(flow.topologyForTest, "adapterOutputSplit")
+            XCTAssertEqual(flow.nodePresentationsForTest[1].caption, "Battery")
+            XCTAssertEqual(flow.nodePresentationsForTest[1].value, "72 %")
+            XCTAssertEqual(flow.branchThicknessesForTest[1], 0)
+        }
+        for (state, caption) in [(BatteryChargingState.full, "Battery · Full"),
+                                  (.notCharging, "Battery · Idle")] {
+            flow.update(snapshot: PowerSnapshot(percent: 99, plugged: true,
+                adapterW: 32, systemW: 32, deviceOutputW: 7.5,
+                systemChargingState: state), animated: false)
+            XCTAssertEqual(flow.nodePresentationsForTest[1].caption, caption)
+            XCTAssertEqual(flow.nodePresentationsForTest[1].value, "99 %")
+        }
+    }
+
+    func testFlowThemeIsConsistentForEachConditionIncludingZeroAdapter() {
+        let flow = makeFlow()
+        let fixtures: [(PowerSnapshot, NSColor)] = [
+            (.init(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2,
+                   systemW: 45.8, deviceOutputW: 7.5), PopoverStyle.green),
+            (.init(percent: 99, plugged: true, adapterW: 32, systemW: 32,
+                   deviceOutputW: 7.5, systemChargingState: .full), PopoverStyle.blue),
+            (.init(percent: 44, plugged: true, adapterW: 30, batteryW: -9.7,
+                   systemW: 39.7, deviceOutputW: 12.2), PopoverStyle.blue),
+            (.init(percent: 44, plugged: true, batteryW: -20,
+                   systemW: 20, deviceOutputW: 5), PopoverStyle.neutral),
+            (.init(percent: 44, batteryW: -20, systemW: 20, deviceOutputW: 5), PopoverStyle.neutral),
+        ]
+        for (snapshot, expected) in fixtures {
+            flow.update(snapshot: snapshot, animated: false)
+            XCTAssertEqual(flow.conditionColorForTest.usingColorSpace(.sRGB)?.cgColor.components,
+                           expected.usingColorSpace(.sRGB)?.cgColor.components)
+        }
+        let zeroMac = PowerSnapshot(percent: 44, plugged: true, adapterW: 10,
+                                    batteryW: -10, systemW: 20, deviceOutputW: 20)
+        flow.update(snapshot: zeroMac, animated: false)
+        XCTAssertEqual(flow.topologyForTest, "mixedOutputSplit")
+        XCTAssertEqual(flow.nodePresentationsForTest[2].value, "0.0 W")
+        XCTAssertEqual(flow.branchThicknessesForTest[1], 0)
+    }
 }

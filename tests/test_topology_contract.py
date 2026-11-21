@@ -9,86 +9,58 @@ class TopologyContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.source = SOURCE.read_text(encoding="utf-8")
+        cls.scene = (ROOT / "Popover" / "PowerFlowScene.swift").read_text(encoding="utf-8")
 
-    def test_has_three_layouts_and_all_four_power_states(self):
-        for layout in ("case adapterLed", "case batteryLed", "case batteryOutputSplit"):
-            self.assertIn(layout, self.source)
-        for state in ("case .charging", "case .pluggedIdle", "case .onBattery", "case .mixedSupply"):
-            self.assertIn(state, self.source)
+    def test_has_existing_and_usb_aware_layouts(self):
+        for layout in ("adapterLed", "batteryLed", "batteryOutputSplit",
+                       "adapterOutputSplit", "mixedOutputSplit"):
+            self.assertIn("case " + layout, self.source)
 
-    def test_device_split_requires_valid_on_battery_measurement(self):
-        split_gate = self.source.split(
-            "private func batteryOutputSplitDeviceW", 1
-        )[1].split("private func layoutMode", 1)[0]
-        self.assertIn("snapshot.state == .onBattery", split_gate)
-        self.assertIn("snapshot.batteryW < -PowerSnapshot.epsilon", split_gate)
+    def test_device_split_accepts_connection_hint_but_power_requires_measurement(self):
+        split_gate = self.scene.split("static func make(snapshot:", 1)[1].split(
+            "let nodes:", 1)[0]
         self.assertIn("snapshot.coherentDeviceOutputW", split_gate)
-        self.assertIn("deviceOutputW > 0", split_gate)
-        self.assertNotIn("deviceOutputW > PowerSnapshot.epsilon", split_gate)
+        self.assertIn("$0 > 0", split_gate)
+        self.assertIn("measuredOutput != nil || snapshot.hasConnectedUSBDevice", split_gate)
+        self.assertIn("let loads = snapshot.batteryW < -PowerSnapshot.epsilon", self.scene)
+        self.assertIn("? [snapshot.systemW - output, 0, output] : [0, 0, 0]", self.scene)
+        self.assertNotIn("$0 > PowerSnapshot.epsilon", split_gate)
 
-    def test_device_split_reuses_two_pipes_and_three_nodes(self):
-        split = self.source.split("case .batteryOutputSplit:", 1)[1]
-        self.assertIn("snapshot.systemW - deviceOutputW", split)
-        self.assertIn('caption: "Mac Load"', split)
-        self.assertIn('caption: "Device Output"', split)
-        self.assertIn('topology: "batteryOutputSplit.0"', split)
-        self.assertIn('topology: "batteryOutputSplit.1"', split)
+    def test_usb_is_a_peer_node_without_an_inline_duplicate(self):
+        self.assertIn("private let deviceNode = FlowNodeView()", self.source)
+        self.assertIn("[adapterNode, batteryNode, systemNode, deviceNode]", self.source)
+        self.assertNotIn("pluggedDeviceOutputReadout", self.source)
+        self.assertNotIn("deviceOutputReadoutSlotHeight", self.source)
+        self.assertIn("static let plotHeight: CGFloat = 224", self.source)
+        self.assertIn("static let preferredHeight: CGFloat = plotHeight", self.source)
+        self.assertIn("node.setCompact(scene.nodeCompact[index])", self.source)
 
-    def test_mixed_supply_keeps_adapter_blue_and_battery_orange(self):
-        # Orange carries information here: the charger cannot keep up and the
-        # battery is draining while plugged in.
-        mixed = self.source.split("case .mixedSupply:", 1)[1]
-        self.assertIn("tint: PopoverStyle.blue", mixed)
-        self.assertIn("tint: PopoverStyle.amber", mixed)
+    def test_each_condition_has_one_theme(self):
+        palette = self.source.split("private func conditionColor", 1)[1].split(
+            "private func watts", 1)[0]
+        self.assertIn("snapshot.plugged, snapshot.adapterW > 0", palette)
+        self.assertIn("PopoverStyle.neutral", palette)
+        self.assertIn("PopoverStyle.green : PopoverStyle.blue", palette)
+        self.assertNotIn("PopoverStyle.amber", self.source)
 
-    def test_keeps_exactly_two_pipe_bundles_and_three_node_views(self):
-        # Plugged Device Output is only an inline accessory below the existing
-        # plot. It must not grow the stable graph into a fourth node/third pipe.
-        self.assertIn("(0..<2).map", self.source)
-        self.assertIn("[adapterNode, batteryNode, systemNode]", self.source)
-        self.assertIn("pluggedDeviceOutputReadout", self.source)
-        self.assertNotIn("deviceOutputNode", self.source)
-        self.assertNotIn("bundles[2]", self.source)
+    def test_device_output_uses_the_shared_vector_icon(self):
+        artwork = (ROOT / "Popover" / "PowerIconView.swift").read_text()
+        self.assertIn('symbol == "device.output.port"', artwork)
+        self.assertIn('return DeviceOutputIcon.image(', artwork)
+        self.assertIn('symbol: "device.output.port"', self.source)
+        self.assertNotIn("deviceOutputPortTemplateImage", self.source)
+        self.assertNotIn("base64Encoded:", self.source)
 
-    def test_inline_device_accessory_preserves_the_existing_height_slot(self):
-        # The selected treatment is a surgical enhancement of the existing
-        # one-line readout, not a taller fourth-row card.
-        self.assertIn("deviceOutputReadoutSlotHeight: CGFloat = 22", self.source)
-        self.assertIn(
-            "plotHeight + deviceOutputReadoutSlotHeight + PopoverStyle.sectionPadding * 2",
-            self.source,
-        )
-
-    def test_device_output_uses_one_shared_port_icon_template(self):
-        icon_factory = self.source.split(
-            "fileprivate static func nodeIconImage", 1
-        )[1].split("private static func nodeSymbolImage", 1)[0]
-        plugged = self.source.split(
-            "private func configurePluggedDeviceOutputReadout", 1
-        )[1].split("private func configure(_ bundle", 1)[0]
-        on_battery = self.source.split("case .onBattery:", 1)[1].split(
-            "case .mixedSupply:", 1
-        )[0]
-
-        self.assertIn('case "device.output.port":', icon_factory)
-        self.assertIn('symbol: "device.output.port"', plugged)
-        self.assertIn('symbol: "device.output.port"', on_battery)
-        self.assertNotIn('symbol: "cable.connector.horizontal"', plugged)
-        self.assertNotIn('symbol: "cable.connector"', on_battery)
-
-    def test_layout_positions_depend_only_on_layout(self):
-        # Filling the gap left by a disconnected adapter puts the battery box
-        # straight on top of the adapter's caption.
-        self.assertIn("private func positions(for layout: FlowLayout)", self.source)
-        self.assertIn("Self.adapterLedPositions", self.source)
-        self.assertIn("Self.batteryLedPositions", self.source)
-
-    def test_every_pipe_uses_the_same_cubic_shape(self):
-        # Equal control-point counts are required for CAShapeLayer to
-        # interpolate between topologies rather than snap.
+    def test_layout_keeps_explicit_peer_positions_and_fixed_node_ends(self):
+        self.assertIn("private func applyPositions(_ scene: PowerFlowScene)", self.source)
+        self.assertIn("nodes = [point(40, 90), point(288, 129), point(288, 51)", self.scene)
+        self.assertIn("nodes = [point(40, 51), point(40, 129), point(288, 90)", self.scene)
         self.assertIn("path.move(to: start)", self.source)
         self.assertIn("path.addCurve(to: end, control1: control1, control2: control2)", self.source)
-        self.assertEqual(self.source.count("PipeGeometry(start:"), 2)
+        self.assertIn("jointWidth", self.source)
+        self.assertIn("twoInTwoOut ? 0.68 : 1", self.scene)
+        self.assertIn("layout == .mixedOutputSplit ? 146 : 53", self.scene)
+        self.assertIn("layout == .mixedOutputSplit ? 182 : jointX", self.scene)
 
     def test_plot_is_flipped(self):
         # Node and pipe coordinates are written with y growing downward. A
@@ -102,7 +74,7 @@ class TopologyContractTests(unittest.TestCase):
         self.assertIn("idleConnection", self.source)
         self.assertIn("lineDashPattern = [3, 6]", self.source)
 
-    def test_all_three_nodes_share_one_symbol_scale_and_visual_weight(self):
+    def test_all_nodes_share_one_symbol_scale_and_visual_weight(self):
         # Adapter, System, and Battery are peers in the same 36-point wells.
         # A smaller unconfigured CPU symbol makes the three-node diagram look
         # like it mixes two unrelated icon families.

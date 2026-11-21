@@ -95,13 +95,22 @@ final class PopoverRuntimeView: PopoverSection {
     }
     private let iconWell = CALayer()
     private let clock = NSImageView()
+    private let activityMonitorButton = PopoverButton()
+    private let hoverFeedback = FooterHoverFeedbackView()
+    private let openActivityMonitor: () -> Void
     private let title = NSTextField(labelWithString: "Estimated Battery Runtime")
     private let runtime = NSTextField(labelWithString: "")
     private let sourceIndicator = BatteryTimeIndicatorView()
     private var clockTint = PopoverStyle.neutral
     private var renderedClock: ClockAppearance?
 
-    init() {
+    init(openActivityMonitor: @escaping () -> Void = {
+        NSWorkspace.shared.openApplication(
+            at: URL(fileURLWithPath: "/System/Applications/Utilities/Activity Monitor.app"),
+            configuration: NSWorkspace.OpenConfiguration()
+        )
+    }) {
+        self.openActivityMonitor = openActivityMonitor
         super.init(height: Self.preferredHeight)
         iconWell.cornerRadius = 11
         iconWell.cornerCurve = .continuous
@@ -125,6 +134,17 @@ final class PopoverRuntimeView: PopoverSection {
         runtime.setAccessibilityHelp("macOS estimates remaining battery time for current usage. It changes with workload.")
         addSubview(runtime)
         addSubview(sourceIndicator)
+        activityMonitorButton.title = ""
+        activityMonitorButton.isBordered = false
+        activityMonitorButton.isTransparent = true
+        activityMonitorButton.toolTip = "Open Activity Monitor"
+        activityMonitorButton.setAccessibilityElement(true)
+        activityMonitorButton.setAccessibilityRole(.button)
+        activityMonitorButton.setAccessibilityLabel("Open Activity Monitor")
+        activityMonitorButton.target = self
+        activityMonitorButton.action = #selector(showActivityMonitor)
+        addSubview(activityMonitorButton)
+        addSubview(hoverFeedback)
         toolTip = "macOS estimates remaining battery time for current usage. It changes with workload."
         refreshAppearance()
     }
@@ -137,6 +157,10 @@ final class PopoverRuntimeView: PopoverSection {
             self.iconWell.frame = CGRect(x: 12, y: 22, width: 44, height: 44)
         }
         clock.frame = NSRect(x: 22, y: 32, width: 24, height: 24)
+        activityMonitorButton.frame = iconWell.frame
+        hoverFeedback.frame = bounds
+        hoverFeedback.update(regions: [.init(rect: iconWell.frame, enabled: true,
+                                             cornerRadius: iconWell.cornerRadius)])
         title.frame = NSRect(x: 68, y: 20, width: bounds.width - 80, height: 16)
         sourceIndicator.frame = NSRect(x: title.frame.maxX - ceil(title.intrinsicContentSize.width) - 24,
                                        y: title.frame.midY - 10, width: 20, height: 20)
@@ -242,8 +266,13 @@ final class PopoverRuntimeView: PopoverSection {
         needsLayout = true
     }
 
+    @objc private func showActivityMonitor() { openActivityMonitor() }
+
     func setAnimationsEnabled(_ enabled: Bool) { sourceIndicator.setAnimationsEnabled(enabled) }
-    func setPresentationActive(_ active: Bool) { sourceIndicator.setPresentationActive(active) }
+    func setPresentationActive(_ active: Bool) {
+        sourceIndicator.setPresentationActive(active)
+        hoverFeedback.setPresentationActive(active)
+    }
 
 #if DEBUG
     func layoutFitsForTest(snapshot: PowerSnapshot, degraded: Bool = false) -> Bool {
@@ -293,13 +322,13 @@ private final class PopoverButton: NSButton {
     }
 }
 
-/// Three-position mode control and system-battery visibility choice.
+/// Three-position mode control and access to the quick settings menu.
 ///
 /// The tactile 2A slider remains the baseline presentation. Classic Reduce
 /// Motion uses native segments; Liquid Glass prefers an interactive capsule,
 /// with native glass buttons when accessibility requires a still surface.
 final class PopoverFooterView: PopoverSection {
-    static let preferredHeight: CGFloat = 78
+    static let preferredHeight: CGFloat = 52
 
     private struct ModeControlPresentation {
         let selected: EnergyMode
@@ -340,12 +369,6 @@ final class PopoverFooterView: PopoverSection {
     private let modes: [EnergyMode] = [.auto, .low, .high]
     private lazy var modeControl = ModeSliderView(modes: modes)
     private lazy var nativeModeControl = NativeModeSegmentedControl(modes: modes)
-    private lazy var systemBatteryIconButton = PopoverButton(
-        checkboxWithTitle: "Hide System Battery Icon",
-        target: self,
-        action: #selector(systemBatteryIconChanged)
-    )
-    private let statusMessage = NSTextField(labelWithString: "")
     private let settingsButton = PopoverButton()
     private var glassControls: NSView?
     private var glassModeControl: NativeGlassModeControl?
@@ -360,15 +383,10 @@ final class PopoverFooterView: PopoverSection {
     private var currentTint = PopoverStyle.blue
     private var selectionGeneration = 0
     private var synchronizedModePresentation: ModeControlPresentation?
-    private var systemBatteryIconHidden: Bool?
-    private var systemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
-    private var helperInstalled = false
-    private var systemBatteryIconUpdateInFlight = false
     private var usesNativeModeControl = false
     private var displayOptionsObserver: NSObjectProtocol?
     private var settingsObserver: NSObjectProtocol?
     var onSelect: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
-    var onSystemBatteryIconToggle: ((Bool, @escaping (Bool) -> Void) -> Void)?
     var onShowMenu: ((NSView) -> Void)?
 
     init() {
@@ -387,19 +405,6 @@ final class PopoverFooterView: PopoverSection {
             self?.requestModeSelection(mode)
         }
         addSubview(nativeModeControl)
-
-        systemBatteryIconButton.controlSize = .small
-        systemBatteryIconButton.font = .systemFont(ofSize: 11, weight: .regular)
-        systemBatteryIconButton.allowsMixedState = true
-        systemBatteryIconButton.state = .mixed
-        systemBatteryIconButton.setAccessibilityHelp("Hide the built-in macOS battery icon in the menu bar")
-        addSubview(systemBatteryIconButton)
-
-        statusMessage.font = .systemFont(ofSize: 11, weight: .regular)
-        statusMessage.textColor = PopoverStyle.secondaryText
-        statusMessage.alignment = .right
-        statusMessage.isHidden = true
-        addSubview(statusMessage)
 
         settingsButton.image = NSImage(systemSymbolName: "slider.horizontal.3", accessibilityDescription: "Choose Modules")
         settingsButton.isBordered = false
@@ -442,24 +447,21 @@ final class PopoverFooterView: PopoverSection {
 
     override func layout() {
         super.layout()
-        systemBatteryIconButton.frame = NSRect(x: 0, y: 10, width: 168, height: 20)
-        statusMessage.frame = statusMessage.isHidden ? .zero
-            : NSRect(x: 168, y: 12, width: bounds.width - 168, height: 15)
-        let modeFrame = NSRect(x: 0, y: 36, width: bounds.width - 46,
+        let modeFrame = NSRect(x: 0, y: 10, width: bounds.width - 46,
                                height: ModeSliderView.preferredHeight)
         modeControl.frame = modeFrame
         nativeModeControl.frame = modeFrame
         if Settings.usesLiquidGlass {
             // Each button owns its glass. A single container batches the row
             // without adding an opaque segmented well or another glass layer.
-            glassControls?.frame = NSRect(x: 0, y: 36, width: bounds.width, height: 38)
+            glassControls?.frame = NSRect(x: 0, y: 10, width: bounds.width, height: 38)
             glassControlsContent.frame = glassControls?.bounds ?? .zero
             glassModeControl?.frame = NSRect(x: 0, y: 0, width: modeFrame.width, height: 38)
             settingsButton.frame = NSRect(x: bounds.width - 38, y: 0, width: 38, height: 38)
-            // Optical room is transparent and does not intercept the checkbox.
-            interactiveGlassControl?.frame = NSRect(x: -12, y: 24, width: bounds.width + 24, height: 62)
+            // Optical room stays transparent around the unchanged control row.
+            interactiveGlassControl?.frame = NSRect(x: -12, y: -2, width: bounds.width + 24, height: 62)
         } else {
-            settingsButton.frame = NSRect(x: bounds.width - 22, y: 42, width: 22, height: 20)
+            settingsButton.frame = NSRect(x: bounds.width - 22, y: 16, width: 22, height: 20)
         }
         hoverFeedback.frame = bounds
         if subviews.last !== hoverFeedback {
@@ -504,38 +506,7 @@ final class PopoverFooterView: PopoverSection {
         hoverFeedback.update(regions: regions)
     }
 
-    func update(mode: EnergyMode, helperInstalled: Bool, systemBatteryIconHidden: Bool?,
-                tint: NSColor, readStatus: SystemBatteryIconReadStatus = .ready) {
-        self.helperInstalled = helperInstalled
-        self.systemBatteryIconHidden = systemBatteryIconHidden
-        self.systemBatteryIconReadStatus = readStatus
-        if let systemBatteryIconHidden {
-            systemBatteryIconButton.state = systemBatteryIconHidden ? .on : .off
-            systemBatteryIconButton.isEnabled = helperInstalled && readStatus == .ready
-                && !systemBatteryIconUpdateInFlight
-        } else {
-            systemBatteryIconButton.state = .mixed
-            systemBatteryIconButton.isEnabled = false
-        }
-        if !helperInstalled {
-            statusMessage.stringValue = "Helper Not Installed"
-        } else {
-            switch readStatus {
-            case .notRequested: statusMessage.stringValue = ""
-            case .checking: statusMessage.stringValue = "Reading…"
-            case .ready: statusMessage.stringValue = ""
-            case .failed: statusMessage.stringValue = "Status Unavailable"
-            }
-        }
-        systemBatteryIconButton.setAccessibilityHelp(
-            "Hide the built-in macOS battery icon in the menu bar"
-                + (statusMessage.stringValue.isEmpty ? "" : ". " + statusMessage.stringValue)
-        )
-        let hideStatus = statusMessage.stringValue.isEmpty
-        if statusMessage.isHidden != hideStatus {
-            statusMessage.isHidden = hideStatus
-            needsLayout = true
-        }
+    func update(mode: EnergyMode, helperInstalled: Bool, tint: NSColor) {
         // High power is only a real detent on hardware that has it, and none
         // of them are reachable without the helper.
         enabledModes = helperInstalled ? [.auto, .low] : []
@@ -748,32 +719,6 @@ final class PopoverFooterView: PopoverSection {
         return false
     }
 
-    @objc private func systemBatteryIconChanged(_ sender: NSButton) {
-        guard let currentHidden = systemBatteryIconHidden else {
-            sender.state = .mixed
-            return
-        }
-        // Mixed state is display-only; invert the authoritative value, as Settings does.
-        let requested = !currentHidden
-        guard let onSystemBatteryIconToggle else {
-            sender.state = systemBatteryIconHidden == true ? .on : .off
-            NSSound.beep()
-            return
-        }
-        systemBatteryIconUpdateInFlight = true
-        sender.isEnabled = false
-        onSystemBatteryIconToggle(requested) { [weak self, weak sender] succeeded in
-            guard let self, let sender else { return }
-            self.systemBatteryIconUpdateInFlight = false
-            // The owner has already supplied the current authoritative value.
-            // An older completion must not overwrite a newer shared read.
-            sender.state = self.systemBatteryIconHidden.map { $0 ? .on : .off } ?? .mixed
-            sender.isEnabled = self.helperInstalled && self.systemBatteryIconHidden != nil
-                && self.systemBatteryIconReadStatus == .ready
-            if !succeeded { NSSound.beep() }
-        }
-    }
-
     @objc private func showMenu() { onShowMenu?(settingsButton) }
 
 #if DEBUG
@@ -838,6 +783,9 @@ private final class PopoverScrollView: NSScrollView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
+        // Keep both scrollbars clear of the rounded host without shrinking the viewport.
+        scrollerInsets = NSEdgeInsets(top: GlassPopoverShape.cornerRadius, left: 0,
+                                      bottom: GlassPopoverShape.cornerRadius, right: 0)
         // The visible Flow control is independent of AppKit's overlay fade.
         // The native slot still owns the original gutter and document geometry.
         flowScroller.scrollerStyle = .legacy
@@ -942,6 +890,11 @@ final class PopoverContentViewController: NSViewController {
     private var latestHistoryTiming: HistoryChartTiming?
     private var systemBatteryIconHidden: Bool?
     private var systemBatteryIconReadStatus: SystemBatteryIconReadStatus = .notRequested
+    private var systemBatteryIconUpdateInFlight = false
+    private weak var systemBatteryIconMenuItem: NSMenuItem?
+#if DEBUG
+    private var systemBatteryIconHelperInstalledForTest: Bool?
+#endif
     private var modeSelectHandler: ((EnergyMode, @escaping (EnergyMode?) -> Void) -> Void)?
     private var systemBatteryIconToggleHandler:
         ((Bool, @escaping (Bool) -> Void) -> Void)?
@@ -1024,7 +977,7 @@ final class PopoverContentViewController: NSViewController {
         if isVisible(.lanes) { total += LaneView.preferredHeight }
         if isVisible(.history) { total += HistoryView.preferredHeight }
         if isVisible(.topProcesses) {
-            total += TopProcessesView.preferredHeight(count: Settings.topProcessCount, compact: Settings.topProcessesCompact)
+            total += topProcessesView.contentHeight
         }
         return total + 24
     }
@@ -1109,7 +1062,7 @@ final class PopoverContentViewController: NSViewController {
     ) {
         systemBatteryIconHidden = hidden
         systemBatteryIconReadStatus = readStatus
-        updateFooter()
+        refreshSystemBatteryIconMenuItem()
     }
 
     func refreshEnergyModeState() {
@@ -1186,9 +1139,16 @@ final class PopoverContentViewController: NSViewController {
         stack.addArrangedSubview(footer)
 
         let processesHeight = topProcessesView.heightAnchor.constraint(
-            equalToConstant: TopProcessesView.preferredHeight(count: Settings.topProcessCount, compact: Settings.topProcessesCompact)
+            equalToConstant: topProcessesView.contentHeight
         )
         topProcessesHeight = processesHeight
+        topProcessesView.heightDidChange = { [weak self] height in
+            guard let self else { return }
+            self.topProcessesHeight?.constant = height
+            if !self.topProcessesView.isHidden && self.isVisible(.topProcesses) {
+                self.heightDidChange?(self.preferredHeight)
+            }
+        }
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -1215,13 +1175,6 @@ final class PopoverContentViewController: NSViewController {
             }
             handler(mode, completion)
         }
-        footer.onSystemBatteryIconToggle = { [weak self] hidden, completion in
-            guard let handler = self?.systemBatteryIconToggleHandler else {
-                completion(false)
-                return
-            }
-            handler(hidden, completion)
-        }
         footer.onShowMenu = { [weak self] button in self?.showModuleMenu(button) }
         applyModuleVisibility()
     }
@@ -1233,10 +1186,9 @@ final class PopoverContentViewController: NSViewController {
         footer.update(
             mode: EnergyModeController.current,
             helperInstalled: HelperClient.isInstalled,
-            systemBatteryIconHidden: systemBatteryIconHidden,
-            tint: PopoverStyle.stateColor(latestSnapshot.state),
-            readStatus: systemBatteryIconReadStatus
+            tint: PopoverStyle.stateColor(latestSnapshot.state)
         )
+        refreshSystemBatteryIconMenuItem()
     }
 
     private func observeSettingsChanges() {
@@ -1259,15 +1211,8 @@ final class PopoverContentViewController: NSViewController {
                 guard let self else { return }
                 self.ringView.reloadMetrics()
                 self.updateModule(.ring)
-            case .processWhitelist:
+            case .processWhitelist, .topProcessCount, .topProcessesCompact:
                 self?.updateModule(.topProcesses)
-            case .topProcessCount, .topProcessesCompact:
-                guard let self else { return }
-                self.topProcessesHeight?.constant = TopProcessesView.preferredHeight(
-                    count: Settings.topProcessCount, compact: Settings.topProcessesCompact
-                )
-                self.updateModule(.topProcesses)
-                self.heightDidChange?(self.preferredHeight)
             default:
                 break
             }
@@ -1315,8 +1260,13 @@ final class PopoverContentViewController: NSViewController {
         ]
         for (module, moduleView) in views {
             let wasHidden = moduleView.isHidden
+            // Refresh a retained sample before showing the process module, so
+            // its height is current even while the popover is closed.
+            if module == .topProcesses && wasHidden && isVisible(module) {
+                updateModule(module)
+            }
             moduleView.isHidden = !isVisible(module)
-            if presentationActive && wasHidden && !moduleView.isHidden {
+            if presentationActive && wasHidden && !moduleView.isHidden && module != .topProcesses {
                 updateModule(module)
             }
         }
@@ -1336,8 +1286,79 @@ final class PopoverContentViewController: NSViewController {
         }
     }
 
+    private var systemBatteryIconHelperInstalled: Bool {
+#if DEBUG
+        if let override = systemBatteryIconHelperInstalledForTest { return override }
+#endif
+        return HelperClient.isInstalled
+    }
+
+    private func makeSystemBatteryIconMenuItem() -> NSMenuItem {
+        let item = NSMenuItem(title: "Hide System Battery Icon",
+                              action: #selector(toggleSystemBatteryIcon), keyEquivalent: "")
+        item.target = self
+        systemBatteryIconMenuItem = item
+        refreshSystemBatteryIconMenuItem()
+        return item
+    }
+
+    private func refreshSystemBatteryIconMenuItem() {
+        guard let item = systemBatteryIconMenuItem else { return }
+        let suffix: String
+        if !systemBatteryIconHelperInstalled { suffix = "Full Installer Required" }
+        else if systemBatteryIconUpdateInFlight { suffix = "Updating…" }
+        else {
+            switch systemBatteryIconReadStatus {
+            case .notRequested: suffix = ""
+            case .checking: suffix = "Reading…"
+            case .ready: suffix = systemBatteryIconHidden == nil ? "Status Unavailable" : ""
+            case .failed: suffix = "Status Unavailable"
+            }
+        }
+        item.title = "Hide System Battery Icon" + (suffix.isEmpty ? "" : " (\(suffix))")
+        item.toolTip = "Hide the built-in macOS battery icon in the menu bar"
+        item.state = systemBatteryIconHidden.map { $0 ? .on : .off } ?? .mixed
+        item.isEnabled = systemBatteryIconHelperInstalled && systemBatteryIconHidden != nil
+            && systemBatteryIconReadStatus == .ready && !systemBatteryIconUpdateInFlight
+    }
+
+    @objc private func toggleSystemBatteryIcon(_ sender: NSMenuItem) {
+        guard systemBatteryIconHelperInstalled, systemBatteryIconReadStatus == .ready,
+              !systemBatteryIconUpdateInFlight, let hidden = systemBatteryIconHidden else {
+            refreshSystemBatteryIconMenuItem()
+            return
+        }
+        guard let handler = systemBatteryIconToggleHandler else {
+            NSSound.beep()
+            return
+        }
+        systemBatteryIconUpdateInFlight = true
+        refreshSystemBatteryIconMenuItem()
+        handler(!hidden) { [weak self] succeeded in
+            guard let self else { return }
+            let finish = { [weak self] in
+                guard let self else { return }
+                self.systemBatteryIconUpdateInFlight = false
+                // Use the newest shared read; a closed menu or an old callback
+                // must not restore an obsolete value or finish a newer read.
+                self.refreshSystemBatteryIconMenuItem()
+                if !succeeded { NSSound.beep() }
+            }
+            if Thread.isMainThread { finish() }
+            else { DispatchQueue.main.async(execute: finish) }
+        }
+    }
+
     private func showModuleMenu(_ sender: NSView) {
+        makeQuickMenu().popUp(positioning: nil,
+                             at: NSPoint(x: 0, y: sender.bounds.maxY + 4), in: sender)
+    }
+
+    private func makeQuickMenu() -> NSMenu {
         let menu = NSMenu(title: "Modules")
+        // The controller owns the pending/unknown guards; AppKit must not
+        // automatically re-enable a target/action item with no known state.
+        menu.autoenablesItems = false
         makeModuleMenuItems().forEach(menu.addItem)
 
         menu.addItem(.separator())
@@ -1346,6 +1367,7 @@ final class PopoverContentViewController: NSViewController {
         percentage.target = self
         percentage.state = Settings.showsMenuBarPercentage ? .on : .off
         menu.addItem(percentage)
+        menu.addItem(makeSystemBatteryIconMenuItem())
 
         let loginState = LoginItemController.state
         let loginTitle: String
@@ -1402,7 +1424,7 @@ final class PopoverContentViewController: NSViewController {
         quit.target = self
         menu.addItem(quit)
 
-        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: sender.bounds.maxY + 4), in: sender)
+        return menu
     }
 
     @objc private func quitApp() {
@@ -1440,6 +1462,11 @@ final class PopoverContentViewController: NSViewController {
 #if DEBUG
     var scrollViewForTest: NSScrollView { scrollView }
     var flowScrollbarForTest: FlowScroller { scrollView.flowScroller }
+
+    func quickMenuForTest(helperInstalled: Bool) -> NSMenu {
+        systemBatteryIconHelperInstalledForTest = helperInstalled
+        return makeQuickMenu()
+    }
 
     func presentSettingsFromQuickMenuForTest() {
         showSettings()

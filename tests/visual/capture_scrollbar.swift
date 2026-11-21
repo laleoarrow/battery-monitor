@@ -151,6 +151,16 @@ private final class Probe: NSObject, NSApplicationDelegate {
                         } else {
                             try check(controller.flowScrollbarForTest.isHidden, "Hidden retains Flow artwork")
                         }
+                        if style != .hidden {
+                            for bottom in [false, true] {
+                                scroll.contentView.scroll(to: .init(x: 0, y: bottom ? controller.preferredHeight - scroll.contentView.bounds.height : 0))
+                                scroll.reflectScrolledClipView(scroll.contentView)
+                                try validateCornerClearance(controller, style: style,
+                                    name: "\(scheme.rawValue)-\(fixture.0)-\(nativeStyle.rawValue)-\(bottom ? "bottom" : "top")")
+                            }
+                            scroll.contentView.scroll(to: offset)
+                            scroll.reflectScrolledClipView(scroll.contentView)
+                        }
                         records.append(["case": "\(scheme.rawValue)-\(fixture.0)-\(nativeStyle.rawValue)-\(style.rawValue)",
                                         "bodyGeometry": baseline, "offset": NSStringFromPoint(offset), "passed": true])
                     }
@@ -175,27 +185,48 @@ private final class Probe: NSObject, NSApplicationDelegate {
             window.makeKeyAndOrderFront(nil)
         }
 
-        Settings.scrollbarStyle = .flow
-        controller.setViewportHeight(240)
-        try await dragToBoundary(controller.flowScrollbarForTest, window: window, bottom: true)
-        try check(abs(scroll.contentView.bounds.minY - (controller.preferredHeight - 240)) < 2, "Native thumb drag did not reach bottom")
-        try await dragToBoundary(controller.flowScrollbarForTest, window: window, bottom: false)
-        try check(scroll.contentView.bounds.minY < 2, "Native thumb drag did not reach top")
-        for style in Settings.ScrollbarStyle.allCases {
-            Settings.scrollbarStyle = style
-            scroll.contentView.scroll(to: NSPoint(x: 0, y: 100))
-            scroll.reflectScrolledClipView(scroll.contentView)
-            guard let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -80, wheel2: 0, wheel3: 0),
-                  let event = NSEvent(cgEvent: cg) else { throw failure("Cannot create wheel fixture") }
-            if style == .flow { controller.flowScrollbarForTest.scrollWheel(with: event) }
-            else { scroll.scrollWheel(with: event) }
-            try await pause(0.08)
-            try check(scroll.contentView.bounds.minY > 100, "Native wheel fails in \(style.rawValue)")
+        for nativeStyle in [NSScroller.Style.overlay, .legacy] {
+            controller.setViewportHeight(240)
+            scroll.scrollerStyle = nativeStyle
+            scroll.tile()
+            for style in [Settings.ScrollbarStyle.flow, .simple] {
+                Settings.scrollbarStyle = style
+                scroll.flashScrollers()
+                try await pause(0.03)
+                guard let scroller: NSScroller = style == .flow ? controller.flowScrollbarForTest : scroll.verticalScroller else { throw failure("Missing drag scroller") }
+                try await dragToBoundary(scroller, window: window, bottom: true)
+                try check(abs(scroll.contentView.bounds.minY - (controller.preferredHeight - scroll.contentView.bounds.height)) < 2, "Native thumb drag did not reach bottom: \(nativeStyle.rawValue)/\(style.rawValue)")
+                try validateCornerClearance(controller, style: style, name: "drag-\(nativeStyle.rawValue)-bottom")
+                try await dragToBoundary(scroller, window: window, bottom: false)
+                try check(scroll.contentView.bounds.minY < 2, "Native thumb drag did not reach top: \(nativeStyle.rawValue)/\(style.rawValue)")
+                try validateCornerClearance(controller, style: style, name: "drag-\(nativeStyle.rawValue)-top")
+            }
+            for style in Settings.ScrollbarStyle.allCases {
+                Settings.scrollbarStyle = style
+                scroll.contentView.scroll(to: NSPoint(x: 0, y: 100))
+                scroll.reflectScrolledClipView(scroll.contentView)
+                guard let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -80, wheel2: 0, wheel3: 0),
+                      let event = NSEvent(cgEvent: cg) else { throw failure("Cannot create wheel fixture") }
+                if style == .flow { controller.flowScrollbarForTest.scrollWheel(with: event) }
+                else { scroll.scrollWheel(with: event) }
+                try await pause(0.08)
+                try check(scroll.contentView.bounds.minY > 100, "Native wheel fails in \(nativeStyle.rawValue)/\(style.rawValue)")
+            }
         }
-        Settings.scrollbarStyle = .flow
-        scroll.contentView.scroll(to: .zero)
-        scroll.reflectScrolledClipView(scroll.contentView)
-        try await observeMotion(controller, window: window, background: background)
+        for (name, nativeStyle) in [("overlay", NSScroller.Style.overlay), ("legacy", .legacy)] {
+            // Motion must start from settled geometry, independent of whichever
+            // native mode the preceding input matrix exercised last.
+            controller.setAnimationsEnabled(false)
+            Settings.scrollbarStyle = .flow
+            scroll.scrollerStyle = nativeStyle
+            scroll.tile()
+            controller.view.layoutSubtreeIfNeeded()
+            scroll.contentView.scroll(to: .zero)
+            scroll.reflectScrolledClipView(scroll.contentView)
+            try await pause(0.15)
+            try check(scroll.scrollerStyle == nativeStyle, "Motion fixture did not retain \(name) native mode")
+            try await observeMotion(controller, window: window, background: background, name: name)
+        }
         controller.setViewportHeight(controller.preferredHeight + 10)
         try check(controller.flowScrollbarForTest.isHidden, "No-overflow viewport retains Flow")
         try check(animationCount(controller.flowScrollbarForTest.layer) == 0, "No-overflow viewport animates")
@@ -231,6 +262,18 @@ private final class Probe: NSObject, NSApplicationDelegate {
             + Settings.Module.allCases.map { NSStringFromRect(controller.moduleViewForTest($0).convert(controller.moduleViewForTest($0).bounds, to: document)) }
     }
 
+    private func validateCornerClearance(_ controller: PopoverContentViewController, style: Settings.ScrollbarStyle, name: String) throws {
+        let scroll = controller.scrollViewForTest
+        guard let scroller: NSScroller = style == .flow ? controller.flowScrollbarForTest : scroll.verticalScroller else { throw failure("Missing corner-clearance scroller") }
+        let frame = scroller.convert(scroller.bounds, to: scroll)
+        let knob = scroller.convert(scroller.rect(for: .knob), to: scroll)
+        let safe = scroll.bounds.insetBy(dx: 0, dy: 26).insetBy(dx: -0.5, dy: -0.5)
+        try check(!frame.isEmpty && safe.contains(frame), "Scrollbar frame overlaps rounded corner: \(name)/\(style.rawValue): \(frame)")
+        try check(!knob.isEmpty && safe.contains(knob), "Scrollbar knob overlaps rounded corner: \(name)/\(style.rawValue): \(knob)")
+        records.append(["case": "corner-\(name)-\(style.rawValue)", "scrollerFrame": NSStringFromRect(frame),
+                        "knobFrame": NSStringFromRect(knob), "cornerSafeBounds": NSStringFromRect(safe), "passed": true])
+    }
+
     @MainActor private func dragToBoundary(_ scroller: NSScroller, window: NSWindow, bottom: Bool) async throws {
         let knob = scroller.rect(for: .knob)
         let slot = scroller.rect(for: .knobSlot)
@@ -255,7 +298,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try await pause(0.08)
     }
 
-    @MainActor private func observeMotion(_ controller: PopoverContentViewController, window: NSWindow, background: NSWindow) async throws {
+    @MainActor private func observeMotion(_ controller: PopoverContentViewController, window: NSWindow, background: NSWindow, name: String) async throws {
         let scroller = controller.flowScrollbarForTest
         setenv("WATTSON_FORCE_REDUCE_MOTION", "0", 1)
         scroller.refreshAppearance()
@@ -266,12 +309,16 @@ private final class Probe: NSObject, NSApplicationDelegate {
               let points = capsule.sublayers, points.count == 5 else { throw failure("Missing Flow capsule or five points") }
         try check(capsule.masksToBounds && capsule.cornerRadius > 0 && capsule.bounds.width == 6, "Flow is not clipped to its 6pt capsule")
         try check(animationCount(scroller.layer) == 5, "Flow should animate exactly five points")
-        try capture(window, background: background, name: "motion-start")
+        try capture(window, background: background, name: "motion-\(name)-start")
         var previous: [(CGFloat, Float)] = []
+        var previousSampleTime: CFTimeInterval = 0
+        var previousBeginTimes: [CFTimeInterval] = []
         var resets = 0, downward = 0, frames = 0, uneven = 0
         var samples: [[String: Any]] = []
         let start = CACurrentMediaTime()
         while CACurrentMediaTime() - start < 5.2 {
+            let sampleTime = CACurrentMediaTime()
+            let beginTimes = points.map { $0.animation(forKey: "flow")?.beginTime ?? -1 }
             let values = points.map { point -> (CGFloat, Float) in
                 let sample = point.presentation() ?? point
                 return (sample.position.y, sample.opacity)
@@ -288,41 +335,60 @@ private final class Probe: NSObject, NSApplicationDelegate {
                     let delta = (value.0 - previous[index].0) * (scroller.isFlipped ? 1 : -1)
                     if delta < -capsule.bounds.height / 2 {
                         resets += 1
-                        try check(value.1 <= 0.01 && previous[index].1 <= 0.01, "Point visibly returns to top")
+                        let transparent = value.1 <= 0.01 && previous[index].1 <= 0.01
+                        if !transparent {
+                            let diagnostic: [String: Any] = [
+                                "failure": "Point visibly returns to top", "pointIndex": index, "frame": frames,
+                                "elapsedSeconds": sampleTime - start, "sampleIntervalSeconds": sampleTime - previousSampleTime,
+                                "previousPositions": previous.map { Double($0.0) }, "positions": values.map { Double($0.0) },
+                                "previousOpacity": previous.map { Double($0.1) }, "opacity": values.map { Double($0.1) },
+                                "capsuleHeight": capsule.bounds.height, "isFlipped": scroller.isFlipped,
+                                "nativeStyle": controller.scrollViewForTest.scrollerStyle.rawValue,
+                                "previousBeginTimes": previousBeginTimes, "beginTimes": beginTimes,
+                                "layerSpeed": scroller.layer?.speed ?? -1, "samples": samples,
+                            ]
+                            try JSONSerialization.data(withJSONObject: diagnostic, options: [.prettyPrinted, .sortedKeys])
+                                .write(to: directory.appendingPathComponent("motion-\(name)-failure.json"), options: .atomic)
+                        }
+                        try check(transparent, "Point visibly returns to top")
                     } else {
                         try check(delta >= -0.15, "Point visibly moves upward")
                         if delta > 0.05 { downward += 1 }
                     }
                 }
             }
-            previous = values
-            if frames % 20 == 0 {
-                samples.append(["seconds": CACurrentMediaTime() - start,
+            samples.append(["seconds": sampleTime - start,
+                                "sampleIntervalSeconds": previous.isEmpty ? 0 : sampleTime - previousSampleTime,
                                 "positions": values.map { Double($0.0) },
                                 "opacity": values.map { Double($0.1) },
-                                "beginTimes": points.map { $0.animation(forKey: "flow")?.beginTime ?? -1 },
+                                "beginTimes": beginTimes,
+                                "capsuleHeight": capsule.bounds.height,
                                 "layerSpeed": scroller.layer?.speed ?? -1])
-            }
+            previous = values
+            previousSampleTime = sampleTime
+            previousBeginTimes = beginTimes
             frames += 1
             try await pause(1 / 60)
         }
         try JSONSerialization.data(withJSONObject: ["frames": frames, "resets": resets,
             "downward": downward, "uneven": uneven, "samples": samples], options: [.prettyPrinted, .sortedKeys])
-            .write(to: directory.appendingPathComponent("motion-samples.json"), options: .atomic)
+            .write(to: directory.appendingPathComponent("motion-\(name)-samples.json"), options: .atomic)
         try check(frames >= 20 && resets >= 5 && downward > frames && uneven >= frames * 9 / 10,
                   "Flow motion is missing or evenly spaced: frames=\(frames), resets=\(resets), downward=\(downward), uneven=\(uneven)")
         try check(!scroller.isHidden && scroller.alphaValue > 0.99 && !capsule.isHidden, "Flow faded away after five seconds")
-        try capture(window, background: background, name: "motion-after-five-seconds")
+        try capture(window, background: background, name: "motion-\(name)-after-five-seconds")
         setenv("WATTSON_FORCE_REDUCE_MOTION", "1", 1)
         scroller.refreshAppearance()
         try check(animationCount(scroller.layer) == 0, "Reduce Motion leaves animations running")
         let staticPoints = points.map(\.position)
         try await pause(0.15)
         try check(points.map(\.position) == staticPoints, "Reduce Motion moves points")
-        try capture(window, background: background, name: "reduced-motion")
-        motion = ["durationSeconds": CACurrentMediaTime() - start, "sampledFrames": frames,
+        try capture(window, background: background, name: "reduced-motion-\(name)")
+        motion[name] = ["durationSeconds": CACurrentMediaTime() - start, "sampledFrames": frames,
                   "transparentResets": resets, "downwardSteps": downward, "unevenFrames": uneven,
-                  "visibleUpwardSteps": 0, "visibleClippingFailures": 0, "reducedMotionStatic": true]
+                  "visibleUpwardSteps": 0, "visibleClippingFailures": 0, "reducedMotionStatic": true,
+                  "nativeStyle": controller.scrollViewForTest.scrollerStyle.rawValue,
+                  "scrollerFrame": NSStringFromRect(scroller.frame), "capsuleHeight": capsule.bounds.height]
     }
 
     @MainActor private func captureSettings(background: NSWindow, name: String) async throws {

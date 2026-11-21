@@ -43,6 +43,8 @@ private final class Probe: NSObject, NSApplicationDelegate {
     private let isSettingsOnly: Bool
     private var isFocusedCapture: Bool { isModuleOnly || isGradientComparison || isCompactOnly || isSettingsOnly }
     private var records: [[String: Any]] = []
+    private var whitelistHeightRecords: [[String: Any]] = []
+    private var scrollbarCornerRecords: [[String: Any]] = []
     private var item: NSStatusItem?
     private var backdrop: NSWindow?
     private var popover: PopoverController?
@@ -56,6 +58,12 @@ private final class Probe: NSObject, NSApplicationDelegate {
         ("mixed-supply", PowerSnapshot(percent: 18, plugged: true, adapterW: 28, batteryW: -31.7, systemW: 59.7, temperatureC: 38.6, cycleCount: 116, batteryTimeEstimate: .notCharging)),
         ("low-battery", PowerSnapshot(percent: 14, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, batteryTimeEstimate: .remaining(18))),
         ("low-power", PowerSnapshot(percent: 67, batteryW: -12, systemW: 12, temperatureC: 32.4, cycleCount: 116, lowPowerMode: true, batteryTimeEstimate: .remaining(310))),
+        ("charging-usb", PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5, systemChargingState: .charging)),
+        ("mixed-usb", PowerSnapshot(percent: 44, plugged: true, adapterW: 30, batteryW: -9.7, systemW: 39.7, deviceOutputW: 12.2)),
+        ("full-usb", PowerSnapshot(percent: 99, plugged: true, adapterW: 48.7, systemW: 48.7, deviceOutputW: 14.1, systemChargingState: .full)),
+        ("idle-usb", PowerSnapshot(percent: 100, plugged: true, adapterW: 32, systemW: 32, deviceOutputW: 7.5, systemChargingState: .notCharging)),
+        ("partial-usb", PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, deviceOutputW: 7.5, deviceOutputIsComplete: false)),
+        ("invalid-usb", PowerSnapshot(percent: 72, plugged: true, adapterW: 68, batteryW: 22.2, systemW: 45.8, deviceOutputW: -1)),
     ]
     private let processFixtures: [(name: String, impact: Double, cpu: Double, wakeups: Double)] = [
         ("Safari", 84, 72, 240),
@@ -188,14 +196,17 @@ private final class Probe: NSObject, NSApplicationDelegate {
                 for (name, snapshot) in samples {
                     try await actualPopover(button, background: background, name: "\(theme)-\(scheme.rawValue)-\(name)-3", count: 3, sample: snapshot)
                 }
-                for count in [1, 10] {
-                    try await actualPopover(button, background: background, name: "\(theme)-\(scheme.rawValue)-on-battery-\(count)", count: count, sample: samples[2].1)
+                try await actualPopover(button, background: background, name: "\(theme)-\(scheme.rawValue)-on-battery-1", count: 1, sample: samples[2].1)
+                for (name, snapshot) in samples.prefix(6) {
+                    try await actualPopover(button, background: background, name: "\(theme)-\(scheme.rawValue)-\(name)-10", count: 10, sample: snapshot)
                 }
                 try await actualSettings(background: background, name: "settings-\(theme)-\(scheme.rawValue)")
             }
         }
         let evidence: [String: Any] = [
             "schema": 1, "assertions": assertions, "failures": 0, "cases": records,
+            "whitelistHeightChanges": whitelistHeightRecords,
+            "scrollbarCorners": scrollbarCornerRecords,
             "highContrast": PopoverStyle.isHighContrast(NSApp.effectiveAppearance),
             "mode": isSettingsOnly ? "settings-only" : isCompactOnly ? "compact-only" : isGradientComparison ? "gradient-comparison" : isModuleOnly ? "module-only" : "full-matrix",
             "method": isSettingsOnly
@@ -360,7 +371,10 @@ private final class Probe: NSObject, NSApplicationDelegate {
         try await pause(0.02)
         controller.view.layoutSubtreeIfNeeded()
         guard let list = descendants(controller.view).compactMap({ $0 as? TopProcessesView }).first else { throw failure("Missing process list") }
-        try validate(list, count: count, expectedProcesses: state.visibleProcesses(limit: count))
+        let displayed = state.visibleProcesses(limit: count)
+        let heightCount: Int
+        if case .ready = state { heightCount = displayed.count } else { heightCount = count }
+        try validate(list, count: heightCount, expectedProcesses: displayed)
         guard !window.isVisible else { throw failure("Layout window unexpectedly visible") }
         let bounds = controller.view.bounds
         guard let bitmap = controller.view.bitmapImageRepForCachingDisplay(in: bounds) else { throw failure("No layout bitmap") }
@@ -382,7 +396,7 @@ private final class Probe: NSObject, NSApplicationDelegate {
               let document = scroll.documentView,
               let list = descendants(content).compactMap({ $0 as? TopProcessesView }).first,
               let footer = descendants(content).compactMap({ $0 as? PopoverFooterView }).first else { throw failure("Missing actual popup hierarchy") }
-        footer.update(mode: .auto, helperInstalled: true, systemBatteryIconHidden: false, tint: PopoverStyle.stateColor(sample.state))
+        footer.update(mode: .auto, helperInstalled: true, tint: PopoverStyle.stateColor(sample.state))
         try validate(list, count: count, expectedProcesses: Array(processes.prefix(count)))
         let scrolling = document.bounds.height > scroll.contentView.bounds.height + 1
         for position in scrolling ? ["top", "bottom"] : ["full"] {
@@ -399,9 +413,121 @@ private final class Probe: NSObject, NSApplicationDelegate {
             try await whitelistAction(list, window: window, background: background, name: name)
             try await hostedHelp(list, controller: controller, background: background, name: name + "-help")
         }
+        if count == 10 {
+            try await scrollbarCorners(content, window: window, scroll: scroll, document: document,
+                                       background: background, name: name)
+            try await whitelistHeightChanges(list, controller: controller, window: window,
+                                             scroll: scroll, document: document, footer: footer,
+                                             background: background, name: name)
+        }
         controller.handleOutsideClick()
         popover = nil
         try await pause(0.2)
+    }
+
+    @MainActor private func scrollbarCorners(_ content: NSView, window: NSWindow, scroll: NSScrollView,
+                                             document: NSView, background: NSWindow, name: String) async throws {
+        let previousStyle = Settings.scrollbarStyle
+        let previousOffset = scroll.contentView.bounds.origin
+        defer {
+            Settings.scrollbarStyle = previousStyle
+            scroll.contentView.scroll(to: previousOffset)
+            scroll.reflectScrolledClipView(scroll.contentView)
+        }
+        guard let flow = descendants(content).compactMap({ $0 as? FlowScroller }).first,
+              let native = scroll.verticalScroller else { throw failure("Missing popup scrollbars") }
+        for style in [Settings.ScrollbarStyle.flow, .simple] {
+            Settings.scrollbarStyle = style
+            for bottom in [false, true] {
+                scroll.contentView.scroll(to: .init(x: 0, y: bottom ? max(0, document.bounds.height - scroll.contentView.bounds.height) : 0))
+                scroll.reflectScrolledClipView(scroll.contentView)
+                scroll.flashScrollers()
+                try await pause(0.04)
+                content.layoutSubtreeIfNeeded()
+                let scroller: NSScroller = style == .flow ? flow : native
+                let frame = scroller.convert(scroller.bounds, to: scroll)
+                let knob = scroller.convert(scroller.rect(for: .knob), to: scroll)
+                let safe = scroll.bounds.insetBy(dx: 0, dy: 26).insetBy(dx: -0.5, dy: -0.5)
+                let edge = bottom ? "bottom" : "top"
+                try check(!frame.isEmpty && safe.contains(frame), "Popup scrollbar crosses rounded corner: \(name)/\(style.rawValue)/\(edge): \(frame)")
+                try check(!knob.isEmpty && safe.contains(knob), "Popup scrollbar knob crosses rounded corner: \(name)/\(style.rawValue)/\(edge)")
+                let fields: [String: Any] = ["case": name, "scrollbarStyle": style.rawValue, "position": edge,
+                                             "scrollerFrame": NSStringFromRect(frame), "knobFrame": NSStringFromRect(knob),
+                                             "cornerSafeBounds": NSStringFromRect(safe), "passed": true]
+                scrollbarCornerRecords.append(fields)
+                if name.contains("on-battery") {
+                    try composite(window, background: background, name: name + "-scrollbar-\(style.rawValue)-\(edge)", fields: fields)
+                }
+            }
+        }
+    }
+
+    @MainActor private func whitelistHeightChanges(_ list: TopProcessesView, controller: PopoverController,
+                                                   window: NSWindow, scroll: NSScrollView, document: NSView,
+                                                   footer: PopoverFooterView, background: NSWindow,
+                                                   name: String) async throws {
+        let previousRules = Settings.processWhitelist
+        let previousCompact = Settings.topProcessesCompact
+        defer {
+            Settings.processWhitelist = previousRules
+            Settings.topProcessesCompact = previousCompact
+        }
+        let values = processes
+        for compact in [false, true] {
+            Settings.topProcessesCompact = compact
+            for remaining in [9, 3, 0, 10] {
+                Settings.processWhitelist = values.prefix(values.count - remaining).map {
+                    ProcessWhitelistRule(pattern: $0.name, mode: .exact)
+                }
+                try await pause(0.06)
+                window.contentView?.layoutSubtreeIfNeeded()
+                let displayed = Array(values.suffix(remaining))
+                try validate(list, count: remaining, expectedProcesses: displayed, compact: compact)
+                scroll.contentView.scroll(to: .init(x: 0, y: max(0, document.bounds.height - scroll.contentView.bounds.height)))
+                scroll.reflectScrolledClipView(scroll.contentView)
+                try await pause(0.03)
+                let visible = scroll.documentVisibleRect.insetBy(dx: -0.5, dy: -0.5)
+                let listFrame = list.convert(list.bounds, to: document)
+                let footerFrame = footer.convert(footer.bounds, to: document)
+                try check(controller.isShownForTest && window.isVisible, "Whitelist resize dismissed popup: \(name)")
+                try check(Settings.topProcessCount == 10, "Whitelist changed configured process limit: \(name)")
+                try check(visible.contains(listFrame) && visible.contains(footerFrame), "Whitelist resize clips list or footer: \(name)/\(compact)/\(remaining)")
+                try check(abs(footerFrame.minY - listFrame.maxY) < 0.5, "Whitelist resize leaves a gap before footer: \(name)/\(compact)/\(remaining)")
+                let bottomPadding = list.processRowsForTest.last.map { list.bounds.maxY - $0.frame.maxY }
+                if let lastRow = list.processRowsForTest.last, let lastProcess = displayed.last {
+                    try check(visible.contains(lastRow.convert(lastRow.bounds, to: document)), "Last displayed process cannot be scrolled into view: \(name)")
+                    let point = lastRow.convert(NSPoint(x: 30, y: 10), to: nil)
+                    for click in 0..<2 {
+                        for type in [NSEvent.EventType.leftMouseDown, .leftMouseUp] {
+                            guard let event = NSEvent.mouseEvent(with: type, location: point, modifierFlags: .command,
+                                timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber,
+                                context: nil, eventNumber: click, clickCount: 1, pressure: 1) else { throw failure("Cannot create resized process-row click") }
+                            window.sendEvent(event)
+                        }
+                        if click == 0 {
+                            let action = descendants(lastRow).compactMap { $0 as? ProcessActionButton }.first
+                            try check(list.selectedProcessForTest == lastProcess && action?.actionKind == .whitelist && action?.isHidden == false,
+                                      "Resized last row selects the wrong process: \(name)/\(compact)/\(remaining)")
+                        } else {
+                            try check(list.selectedProcessForTest == nil, "Second row click did not clear selection: \(name)")
+                        }
+                    }
+                } else {
+                    try check(descendants(list).compactMap { $0 as? NSTextField }.contains {
+                        !$0.isHiddenOrHasHiddenAncestor && $0.stringValue == "All processes are whitelisted"
+                    }, "All-whitelisted status is missing: \(name)")
+                }
+                whitelistHeightRecords.append(["case": name, "compact": compact, "visibleProcessCount": remaining,
+                                               "listHeight": list.bounds.height, "footerGap": footerFrame.minY - listFrame.maxY,
+                                               "lastRowBottomPadding": bottomPadding.map { Double($0) as Any } ?? NSNull(), "passed": true])
+                if remaining == 9 {
+                    try composite(window, background: background, name: name + "-whitelist-nine-" + (compact ? "compact" : "detailed"),
+                                  fields: ["configuredProcessCount": 10, "visibleProcessCount": 9, "compact": compact,
+                                           "listFrame": NSStringFromRect(listFrame), "footerFrame": NSStringFromRect(footerFrame),
+                                           "lastRowBottomPadding": bottomPadding.map { Double($0) as Any } ?? NSNull(), "nativeWindowEventDispatch": true])
+                }
+            }
+        }
     }
 
     @MainActor private func whitelistAction(_ list: TopProcessesView, window: NSWindow, background: NSWindow, name: String) async throws {
@@ -585,6 +711,9 @@ private final class Probe: NSObject, NSApplicationDelegate {
         let rows = list.subviews.filter { $0.identifier?.rawValue == "top-processes.row" && !$0.isHidden }
         let bars = list.barGeometryForTest
         try check(rows.count == expectedProcesses.count && bars.count == expectedProcesses.count, "Incorrect visible process-row count")
+        if let lastRow = rows.last {
+            try check(abs(list.bounds.maxY - lastRow.frame.maxY - 8) < 0.1, "Process section retains an empty row after its last visible process")
+        }
         for (index, process) in expectedProcesses.enumerated() {
             let bar = bars[index]
             let expectedRatio = CGFloat(min(max(process.energyImpact / 100, 0), 1))

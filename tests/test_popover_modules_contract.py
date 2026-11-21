@@ -128,14 +128,21 @@ class PopoverModulesContractTests(unittest.TestCase):
 
     def test_particles_keep_their_independent_timing(self):
         particles = self.flow.split("func rebuildParticles", 1)[1].split(
-            "final class PowerFlowView", 1
+            "\n    }", 1
         )[0]
-        self.assertIn("let duration = 2.4 * spread", particles)
-        self.assertIn("let multiplier = CGFloat(2.4 / period)", particles)
+        retiming = self.flow.split("private func retimeParticles", 1)[1].split(
+            "\n    }", 1
+        )[0]
+        self.assertIn("} ?? (2.4 * spread)", particles)
+        self.assertIn("ride.duration = duration", particles)
+        self.assertIn("fade.duration = duration", particles)
+        self.assertIn("retimeParticles(period: period)", particles)
+        self.assertIn("let multiplier = CGFloat(2.4 / period)", retiming)
+        self.assertIn("setAnimationSpeed($0, multiplier: multiplier)", retiming)
         self.assertNotIn("VisualEncoding.motionPeriod", particles)
-        self.assertIn("let particlePeriod = 2.4 / Double(motionMultiplier)", self.flow)
-        self.assertIn("period: particlePeriod", self.flow)
-        self.assertIn("startFlow(multiplier: motionMultiplier", self.flow)
+        self.assertNotIn("VisualEncoding.motionPeriod", retiming)
+        self.assertIn("period: 2.4 / Double(VisualEncoding.multiplier(latest.totalInputW))", self.flow)
+        self.assertIn("startFlow(multiplier: VisualEncoding.multiplier(latest.totalInputW)", self.flow)
 
     def test_lane_length_is_proportional_to_its_own_wattage(self):
         # Normalising against a fixed ceiling renders 108 W and 32 W at nearly
@@ -226,12 +233,33 @@ class PopoverModulesContractTests(unittest.TestCase):
         self.assertIn("if reduceMotion { stopEntranceAnimation() }", refresh)
 
     def test_full_battery_breathing_stops_and_stays_stopped_when_hidden(self):
-        idle = self.flow.split("case .pluggedIdle:", 1)[1].split(
-            "case .onBattery:", 1
+        nodes = self.flow.split("private func configureNodes", 1)[1].split(
+            "\n    }", 1
         )[0]
-        self.assertIn("setBreathing(animationsEnabled", idle)
-        disabling = self.flow.split("func setAnimationsEnabled(_ enabled: Bool)", 1)[1]
-        self.assertIn("stopBreathing", disabling)
+        idle = nodes.split("case .adapterLed, .adapterOutputSplit:", 1)[1].split(
+            "case .batteryLed, .mixedOutputSplit:", 1
+        )[0]
+        self.assertIn("let charging = snapshot.batteryW > PowerSnapshot.epsilon", idle)
+        self.assertIn("batteryNode.setBreathing(!charging && (motionEnabled ?? animationsEnabled)", idle)
+        disabling = self.flow.split("func setAnimationsEnabled(_ enabled: Bool)", 1)[1].split(
+            "\n    }", 1
+        )[0]
+        self.assertIn("animationsEnabled = enabled", disabling)
+        self.assertIn("if enabled { update(snapshot: latest, animated: false) }", disabling)
+        self.assertIn("stopMotion()", disabling.split("else {", 1)[1])
+        stop_motion = self.flow.split("private func stopMotion(", 1)[1].split(
+            "\n    }", 1
+        )[0]
+        self.assertIn("stopBreathing()", stop_motion)
+        breathing = self.flow.split("func setBreathing(_ on: Bool", 1)[1].split(
+            "\n    }", 1
+        )[0]
+        self.assertRegex(breathing, r"guard on else \{\s*stopBreathing\(\)\s*return")
+        stopped = self.flow.split("func stopBreathing()", 1)[1].split(
+            "\n    }", 1
+        )[0]
+        self.assertIn('removeAnimation(forKey: "breathe")', stopped)
+        self.assertIn("breathingColor = nil", stopped)
 
     def test_ring_paths_are_rebuilt_by_layout_not_telemetry(self):
         layout = self.ring.split("override func layout()", 1)[1].split(
