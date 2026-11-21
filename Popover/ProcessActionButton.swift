@@ -115,8 +115,15 @@ final class ProcessActionButton: NSButton {
         path.addClip()
         let reflection = NSRect(x: frame.minX, y: frame.maxY - frame.height * 0.48,
                                 width: frame.width, height: frame.height * 0.48)
+        // macOS 27 supplies a brighter specular highlight in the native bezel.
+        let reflectionAlpha: CGFloat
+        if #available(macOS 27, *) {
+            reflectionAlpha = dark ? 0.08 : 0.12
+        } else {
+            reflectionAlpha = dark ? 0.16 : 0.24
+        }
         NSGradient(starting: .white.withAlphaComponent(0),
-                   ending: .white.withAlphaComponent(dark ? 0.16 : 0.24))?
+                   ending: .white.withAlphaComponent(reflectionAlpha))?
             .draw(in: reflection, angle: 90)
         NSGraphicsContext.restoreGraphicsState()
         NSColor.white.withAlphaComponent(dark ? 0.22 : 0.46).setStroke()

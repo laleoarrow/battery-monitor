@@ -273,9 +273,11 @@ private struct InteractiveGlassModeView: View {
     @FocusState private var focusedIndex: Int?
     @Namespace private var trackSpace
 
-    // Clear restores the dark glass highlights; Regular keeps the selected
-    // capsule visible against a white background in Light appearance.
-    private var controlGlass: Glass { colorScheme == .dark ? .clear : .regular }
+    private var controlGlass: Glass {
+        // Let the native material adapt the backdrop behind the mode labels.
+        if #available(macOS 27, *) { return .regular }
+        return colorScheme == .dark ? .clear : .regular
+    }
 
     var body: some View {
         GlassEffectContainer(spacing: 0) {
