@@ -2180,14 +2180,17 @@ if #available(macOS 26.0, *), !screenLocked {
             continue
         }
         // The menu-bar clock can move the status item while the panel is open.
-        func expectedPanelFrame(contentSize: NSSize) -> NSRect? {
-            guard let window = button.window, let screen = window.screen else { return nil }
+        func panelTracksAnchor(contentSize: NSSize) -> Bool {
+            guard let window = button.window, let screen = window.screen else { return false }
             let anchor = window.convertToScreen(button.convert(button.bounds, to: nil))
-            return PopoverPlacement.resolve(
+            guard let expected = PopoverPlacement.resolve(
                 anchor: anchor, displays: [.init(frame: screen.frame, visibleFrame: screen.visibleFrame)],
                 naturalSize: contentSize, glassMargin: GlassPopoverPanel.contentInset,
                 showsArrow: Settings.showPopoverArrow
-            )?.glassPanelFrame(margin: GlassPopoverPanel.contentInset)
+            )?.glassPanelFrame(margin: GlassPopoverPanel.contentInset) else { return false }
+            // AppKit can place a half-point horizontal center on a whole point.
+            return panel.frame.size == expected.size && panel.frame.minY == expected.minY
+                && abs(panel.frame.minX - expected.minX) <= 0.5
         }
         let materialViews = panel.contentView?.subviews.compactMap { $0 as? GlassPopoverMaterialView } ?? []
         let material = materialViews.first
@@ -2281,7 +2284,7 @@ if #available(macOS 26.0, *), !screenLocked {
             root.layoutSubtreeIfNeeded()
             check("[ARROW-OPTION] \(style.rawValue) 恢复箭头回到原始完整布局",
                   panel.showsArrow && material.showsArrow
-                      && panel.frame == expectedPanelFrame(contentSize: localBodyWithArrow.size)
+                      && panelTracksAnchor(contentSize: localBodyWithArrow.size)
                       && panel.bodyFrame == localBodyWithArrow
                       && root.frame.height == viewportWithArrow
                       && controller.glassPanelForTest === panel,
@@ -2329,7 +2332,7 @@ if #available(macOS 26.0, *), !screenLocked {
                       !fields.isEmpty && currentFields.map(ObjectIdentifier.init) == fieldIDs
                           && currentFields.map(\.stringValue) == fieldValues
                           && currentFields.map(\.frame) == fieldFrames
-                          && panel.frame == expectedPanelFrame(contentSize: contentFrame.size)
+                          && panelTracksAnchor(contentSize: contentFrame.size)
                           && root.frame == contentFrame && a2.frame == controlFrame
                           && a2.selectedModeForTest == selectedMode && a2.enabledModesForTest == enabledModes
                           && controller.cachedPercentForTest == headerSnapshots[0].percent
@@ -2346,10 +2349,10 @@ if #available(macOS 26.0, *), !screenLocked {
                       applied && panel.appearance?.name == scheme.appearance?.name
                           && controller.glassPanelForTest === panel && controller.contentViewForTest === root
                           && root.frame == contentFrame
-                          && panel.frame == expectedPanelFrame(contentSize: contentFrame.size)
+                          && panelTracksAnchor(contentSize: contentFrame.size)
                           && fields.map(\.stringValue) == fieldValues && fields.map(\.frame) == fieldFrames
                           && modeRequests == 0 && batteryRequests == 0,
-                      "applied=\(applied) panel=\(panel.frame) expected=\(String(describing: expectedPanelFrame(contentSize: contentFrame.size)))")
+                      "applied=\(applied) panel=\(panel.frame) statusWindow=\(String(describing: button.window?.frame))")
                 checkInstalledHost("\(style.rawValue) 主题选择后内容仍完整", glass: true)
             }
         } else { check("\(style.rawValue) 明暗测试具备完整生产内容与 A2", false) }
