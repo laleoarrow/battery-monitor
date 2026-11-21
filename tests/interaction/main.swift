@@ -2179,6 +2179,16 @@ if #available(macOS 26.0, *), !screenLocked {
             check("\(style.rawValue) 使用真实独立玻璃面板", false)
             continue
         }
+        // The menu-bar clock can move the status item while the panel is open.
+        func expectedPanelFrame(contentSize: NSSize) -> NSRect? {
+            guard let window = button.window, let screen = window.screen else { return nil }
+            let anchor = window.convertToScreen(button.convert(button.bounds, to: nil))
+            return PopoverPlacement.resolve(
+                anchor: anchor, displays: [.init(frame: screen.frame, visibleFrame: screen.visibleFrame)],
+                naturalSize: contentSize, glassMargin: GlassPopoverPanel.contentInset,
+                showsArrow: Settings.showPopoverArrow
+            )?.glassPanelFrame(margin: GlassPopoverPanel.contentInset)
+        }
         let materialViews = panel.contentView?.subviews.compactMap { $0 as? GlassPopoverMaterialView } ?? []
         let material = materialViews.first
         let foreground = originalRoot?.superview
@@ -2223,6 +2233,7 @@ if #available(macOS 26.0, *), !screenLocked {
            let document = scroll.documentView {
             let bodyWithArrow = panel.convertToScreen(panel.bodyFrame)
             let frameWithArrow = panel.frame
+            let localBodyWithArrow = panel.bodyFrame
             let viewportWithArrow = root.frame.height
             let extraViewport = min(PopoverPlacement.glassArrowHeight,
                                     max(0, document.bounds.height - viewportWithArrow))
@@ -2270,8 +2281,8 @@ if #available(macOS 26.0, *), !screenLocked {
             root.layoutSubtreeIfNeeded()
             check("[ARROW-OPTION] \(style.rawValue) 恢复箭头回到原始完整布局",
                   panel.showsArrow && material.showsArrow
-                      && panel.frame == frameWithArrow
-                      && panel.convertToScreen(panel.bodyFrame) == bodyWithArrow
+                      && panel.frame == expectedPanelFrame(contentSize: localBodyWithArrow.size)
+                      && panel.bodyFrame == localBodyWithArrow
                       && root.frame.height == viewportWithArrow
                       && controller.glassPanelForTest === panel,
                   "panelArrow=\(panel.showsArrow) materialArrow=\(material.showsArrow) "
@@ -2297,7 +2308,6 @@ if #available(macOS 26.0, *), !screenLocked {
             let fieldIDs = fields.map(ObjectIdentifier.init)
             let fieldValues = fields.map(\.stringValue)
             let fieldFrames = fields.map(\.frame)
-            let panelFrame = panel.frame
             let contentFrame = root.frame
             let controlFrame = a2.frame
             let selectedMode = a2.selectedModeForTest
@@ -2318,7 +2328,8 @@ if #available(macOS 26.0, *), !screenLocked {
                 check("\(style.rawValue) 明暗切换保持全部展示文字、数值和布局且不写电源模式",
                       !fields.isEmpty && currentFields.map(ObjectIdentifier.init) == fieldIDs
                           && currentFields.map(\.stringValue) == fieldValues
-                          && currentFields.map(\.frame) == fieldFrames && panel.frame == panelFrame
+                          && currentFields.map(\.frame) == fieldFrames
+                          && panel.frame == expectedPanelFrame(contentSize: contentFrame.size)
                           && root.frame == contentFrame && a2.frame == controlFrame
                           && a2.selectedModeForTest == selectedMode && a2.enabledModesForTest == enabledModes
                           && controller.cachedPercentForTest == headerSnapshots[0].percent
@@ -2334,9 +2345,11 @@ if #available(macOS 26.0, *), !screenLocked {
                 check("\(style.rawValue) 用户主题 \(scheme.rawValue) 即时生效并保留打开的面板",
                       applied && panel.appearance?.name == scheme.appearance?.name
                           && controller.glassPanelForTest === panel && controller.contentViewForTest === root
-                          && root.frame == contentFrame && panel.frame == panelFrame
+                          && root.frame == contentFrame
+                          && panel.frame == expectedPanelFrame(contentSize: contentFrame.size)
                           && fields.map(\.stringValue) == fieldValues && fields.map(\.frame) == fieldFrames
-                          && modeRequests == 0 && batteryRequests == 0)
+                          && modeRequests == 0 && batteryRequests == 0,
+                      "applied=\(applied) panel=\(panel.frame) expected=\(String(describing: expectedPanelFrame(contentSize: contentFrame.size)))")
                 checkInstalledHost("\(style.rawValue) 主题选择后内容仍完整", glass: true)
             }
         } else { check("\(style.rawValue) 明暗测试具备完整生产内容与 A2", false) }
